@@ -1,0 +1,108 @@
+
+#--------------------- reset master branch
+rem git reset --hard e3f645d12bd3945cf3b8bc122e3cbd837b49355f
+rem git status
+
+rem sync with remote master
+git push --force origin master
+
+rem git merge dev //add new changes
+rem git status
+rem git push
+
+#-------------------- switch to old commit
+#git checkout 22ec5e35832a146596a59a4bd5cf4795274ee7e3
+git checkout 385d0fd31e252d76e4ec8b1b43029fff76106337
+
+#return
+#git checkout dev
+
+#git checkout -b test
+#git chekout master
+
+#Push local branch 'test' on GitHub
+#git push origin origin:refs/heads/test
+
+#--------------------------- create submodule
+#git submodule add https://github.com/romanlaptev/bookmarks.git projects/bookmarks/bookmarks-cache
+
+#pull submodule on remote repositories
+#sudo git submodule update --init --recursive
+#git submodule update
+
+#git config --global push.default current
+#
+
+#---------------------------------------------------
+git rm -r --cached projects/geolocation #remove directory from git cache (for .gitignore work)
+
+
+#---------------------------------------------------
+#git clone https://github.com/romanlaptev/romanlaptev.heroku.com/
+#git clone https://github.com/romanlaptev/romanlaptev2.herokuapp.com/
+#git clone  https://github.com/romanlaptev/romanlaptev.gearhostpreview.com
+#git clone  https://github.com/romanlaptev/games_mod.git
+#git clone  https://github.com/romanlaptev/bookmarks.git
+#git clone  https://github.com/romanlaptev/cors-anywhere.git
+#git clone https://github.com/romanlaptev/geolocation.git
+#git clone https://app1795.scm.azurewebsites.net/app1795.git
+
+
+============================= Clone local (non-bare) repositore, config for push commit, update base repository
+
+on 192.168.56.101 (vbox-mac109):
+
+
+- git clone ssh://root@192.168.56.102/home/www/sites/romanlaptev.github.io
+- cd romanlaptev.github.io
+- change test.txt
+- git commit -am "test commit, from vbox-mac109"
+
+1.git push error
+
+remote: error: refusing to update checked out branch: refs/heads/dev
+remote: error: By default, updating the current branch in a non-bare repository
+remote: error: is denied, because it will make the index and work tree inconsistent
+remote: error: with what you pushed, and will require ‘git reset —hard’ to match
+remote: error: the work tree to HEAD.
+remote: error:
+remote: error: You can set ‘receive.denyCurrentBranch’ configuration variable to
+remote: error: ‘ignore’ or ‘warn’ in the remote repository to allow pushing into
+remote: error: its current branch; however, this is not recommended unless you
+remote: error: arranged to update its work tree to match what you pushed in some
+remote: error: other way.
+remote: error:
+remote: error: To squelch this message and still keep the default behaviour, set
+remote: error: ‘receive.denyCurrentBranch’ configuration variable to ‘refuse’.
+To ssh://root@192.168.56.102/home/www/sites/romanlaptev.github.io
+
+2. On 192.168.56.102 (vbox5-sites):
+
+	git config —global receive.denyCurrentBranch warn
+
+	git push
+
+root’s password:
+Counting objects: 7, done.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 322 bytes | 0 bytes/s, done.
+Total 3 (delta 2), reused 0 (delta 0)
+remote: warning: updating the current branch
+To ssh://root@192.168.56.102/home/www/sites/romanlaptev.github.io
+9d6724b..4b6fb14 dev -> dev
+----------
+
+On 192.168.56.102:
+— git status
+— git reset —hard
+— git status
+— git push
+
+Changes test.txt will be copied to base repository
+
+================== change URL local repository for future commit to base repository
+
+#old url = ssh://root@192.168.56.102/home/www/sites/romanlaptev.github.io
+#new url = http://github.com/romanlaptev/romanlaptev.github.io.git
+git remote set-url origin http://github.com/romanlaptev/romanlaptev.github.io.git
+
