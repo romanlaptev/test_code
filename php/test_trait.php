@@ -1,6 +1,7 @@
+<?php
 //(PHP 5 >= 5.4.0)
 //https://www.php.net/manual/ru/language.oop5.traits.php
-<?php
+//https://www.youtube.com/watch?v=UKO281qhhKQ
 
 trait BaseModel {
 
