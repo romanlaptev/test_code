@@ -35,10 +35,11 @@ class Course {
 	}
 }//end class
 
+
 $arr2 = array();
 
-$course1 = new Course(1, "First course", "the most difficult of courses....");
-$course2 = new Course(2, "Second course", "...easiest of courses");
+$course1 = new Course(3, "course 3", "the most difficult of courses....");
+$course2 = new Course(4, "course 4", "...easiest of courses");
 
 $arr2[]=$course1;
 $arr2[]=$course2;
@@ -46,5 +47,16 @@ $arr2[]=$course2;
 echo "<pre>";
 print_r( $arr2 );
 echo "</pre>";
+
+//-----------------
+$arr3 = array(
+	new Course(5, "Course5", "the most difficult of courses...."),
+	new Course(6, "Course6", "...easiest of courses")
+);
+
+echo "<pre>";
+print_r( $arr3 );
+echo "</pre>";
+
 
 ?>
