@@ -2,12 +2,17 @@
 
 echo "getcwd = ".getcwd();
 echo "<br/>\n";
-echo "__FILE__ = ".__FILE__;
+
+echo "__FILE__ : ".__FILE__;
 echo "<br/>\n";
+echo "__LINE__, num line in script file: ".__LINE__;
+echo "<br/>\n";
+
 echo "__DIR__ = ".__DIR__;
 echo "<br/>\n";
 echo "dirname(__FILE__) = ".dirname(__FILE__);
 echo "<br/>\n";
+
 
 
 echo "<pre>";
