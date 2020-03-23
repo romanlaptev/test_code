@@ -32,6 +32,9 @@ $obj1 = new FirstClass();
 echo "OBJ1: <pre>";
 print_r( $obj1);
 echo "</pre>";
+if( is_object($obj1) ){
+	echo "OBJ1 is an object......!!!!!!!"."<br>\n";
+}
 
 $obj2 = clone $obj1;
 
@@ -103,6 +106,5 @@ echo "</pre>";
 echo "OBJ6: <pre>";
 print_r( $obj6);
 echo "</pre>";
-
 
 ?>

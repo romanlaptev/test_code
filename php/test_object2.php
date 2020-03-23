@@ -58,5 +58,15 @@ echo "<pre>";
 print_r( $arr3 );
 echo "</pre>";
 
+//================
+$arr4 = array(
+	[ "course_id" => 7, "title" => "Course7", "description" => "the most difficult of courses...."],
+	[ "course_id" => 8, "title" => "Course8", "description" => "...easiest of courses"]
+);
+//print_r($arr4 );
+echo $arr4[0]["title"];
+echo "\n";
 
+$testObj = (object)$arr4;
+print_r( $testObj );
 ?>
