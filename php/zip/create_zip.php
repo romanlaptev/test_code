@@ -1,6 +1,7 @@
 <?php
 //https://www.php.net/manual/ru/ziparchive.open.php
 //https://webfanat.com/article_id/?id=186
+//error_reporting (E_ERROR | E_WARNING | E_PARSE);
 
 error_reporting(E_ALL|E_STRICT);
 ini_set('display_errors', 1);

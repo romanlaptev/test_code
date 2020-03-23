@@ -10,6 +10,15 @@
    echo $test_string; 
    echo "<br/>\n"; 
 
+	$testReplace = str_replace("o","O",$str1);
+	echo $testReplace; 
+	echo "<br/>\n"; 
+
+//========================
+//   $n1= strrpos($dir_path, "/"); //поиск последней позиции, где встречается символ "/".
+//   $url = substr($dir_path, 0, $n1);
+//	$report_line = rtrim ($report_line);// удалить в строке отчета конечный пробел
+
 //========================
    $str = "one; two; three; four; five";
    $arr = explode(";", $str);
