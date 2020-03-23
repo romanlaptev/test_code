@@ -81,6 +81,16 @@ fclose($handle);
 */
 
 /*
+  $fd = fopen($filename,"r");
+  while (!feof($fd)) 
+    {
+      $buffer = fgets($fd);
+      echo $buffer;
+    }
+  fclose ($fd);
+*/
+
+/*
 	$handle = fopen ($filename, "r");
 	$content = fread ($handle, filesize ($filename));
 	fclose ($handle);
@@ -191,5 +201,21 @@ fclose($handle);
   }
 
  fclose($fp);
+*/
+
+
+//header("Content-type: application/vnd.ms-excel");
+//readfile("book1.xls");
+
+//fwrite.php
+/*
+  $filename = 'test.txt';
+  $fp = fopen($filename, "a+");
+  for($k=1; $k<=10; $k++) {
+   fwrite($fp, "Hi. This is a only test...8-) <br> \n");
+  }
+
+  fclose($fp);
+  include ("test.txt"); 
 */
 ?>

@@ -103,4 +103,51 @@ function list_dir ($dirname)
 
   }
 */
+
+/*
+  print "<b>Directory:</b></br>\n";
+  $handle=opendir(".");
+
+  while ($file = readdir($handle)) 
+    {
+     if (is_dir("$file")) 
+       { 
+        print "$file</br>\n";
+       }
+    }
+
+  closedir($handle);
+
+  print "######################</br>\n";
+
+  print "<b>Files:</b></br>\n";
+
+  $handle=opendir(".");
+  while ($file = readdir($handle)) 
+    {
+     if (is_file("$file")) 
+       { 
+        print "$file</br>\n";
+       }
+    }
+  closedir($handle);
+*/
+
+/*
+  $handle=opendir(".");
+  print "Directory handle: $handle</br>\n";
+  print "Files:</br>\n";
+  while ($file = readdir($handle)) 
+    {
+     print "$file</br>\n";
+
+     $filename="$file";
+     $fd=fopen($filename,"r");
+     $current=fread($fd,filesize($filename));
+     fclose($fd);
+
+     print("$current </br>\n");
+    }
+  closedir($handle);
+*/
 ?>

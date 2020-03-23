@@ -13,11 +13,42 @@
 	$testReplace = str_replace("o","O",$str1);
 	echo $testReplace; 
 	echo "<br/>\n"; 
+/*
+	$file = str_replace ('{$title/}', $title, $file);
+	$file = str_replace ('{$head/}', $head, $file);
+	$file = str_replace ('{$body/}', $body, $file);
+	$file = str_replace ('{$menu/}', $catalog, $file);	
+*/
 
 //========================
 //   $n1= strrpos($dir_path, "/"); //поиск последней позиции, где встречается символ "/".
 //   $url = substr($dir_path, 0, $n1);
 //	$report_line = rtrim ($report_line);// удалить в строке отчета конечный пробел
+//strlen($string)
+
+//$str=iconv("utf-8", "windows-1251", "Текст cp1251.");
+//echo $str."<br/>\n";
+
+//   $test_code = ord($str_res);
+//   if (($test_code < 192) || ($test_code > 223)) {
+//       echo .......; 
+//     }
+//   echo ($test_code); 
+
+//$pos = strpos("Hello, world!", "world");
+//echo $pos."<br>\n"; //7
+
+//$str = "dfhd@ffs@dfskfk@asas";
+//$substr_count = strspn($str,"df");
+//echo ($substr_count);//2
+
+//$url = "http://www.softtime.ru";
+//$sub_str = strstr($url,"w");
+//echo ($sub_str);
+
+//$str1 = "@#$%^&*dsdfdfпапавп";
+//$str2 = urlencode ($str1);
+//echo($str2);
 
 //========================
    $str = "one; two; three; four; five";
@@ -26,6 +57,9 @@ echo "<pre>";
 print_r( $arr );
 echo "</pre>";
 echo "\n";
+
+//$str = "one two three for five";
+//$str_exp = split (" ", $str);
 
 //======================== heredoc syntax
 $nowDoc = 123;
