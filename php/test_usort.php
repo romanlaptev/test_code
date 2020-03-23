@@ -3,6 +3,7 @@
 //https://www.youtube.com/watch?v=IhPkWLRCjvQ
 //https://www.php.net/manual/ru/functions.anonymous.php
 //https://www.php.net/manual/ru/function.usort.php
+$urls = array();
 $urls = [
 	"http://htmllab.ru",
 	"http://www.sepcialist.ru",
