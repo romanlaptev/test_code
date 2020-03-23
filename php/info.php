@@ -1,19 +1,20 @@
 <?php
+
 echo "getcwd = ".getcwd();
-echo "<hr>";
+echo "<br/>\n";
 echo "__FILE__ = ".__FILE__;
-echo "<hr>";
+echo "<br/>\n";
 echo "__DIR__ = ".__DIR__;
-echo "<hr>";
+echo "<br/>\n";
 echo "dirname(__FILE__) = ".dirname(__FILE__);
-echo "<hr>";
+echo "<br/>\n";
 
 
 echo "<pre>";
 //http://php.net/manual/ru/function.ini-get-all.php
 print_r(ini_get_all());
 echo "</pre>";
-echo '<hr>';
+echo '\n';
 
 echo "<pre>";
 foreach (getallheaders() as $name => $value)
@@ -75,4 +76,9 @@ echo "</pre>";
 echo "<hr>";
 
 phpinfo();
+
+echo "List of the defined constants: <pre>";
+print_r( get_defined_constants() );
+echo "<pre>\n";
+
 ?>
