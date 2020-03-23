@@ -10,6 +10,9 @@ $urls = [
 ];
 
 function func1( $a, $b){
+    if ($a == $b) {
+        return 0;
+    }
 	return $a < $b ? 1 : -1;
 }
 
@@ -22,7 +25,9 @@ echo "</pre>";
 //============================
 $arr2 = [	"c",	"b",	"a",	"d" ];
 usort( $arr2, function ( $a, $b){
-	return $a > $b ? 1 : -1;
+    if ($a == $b) {
+        return 0;
+    }	return $a > $b ? 1 : -1;
 });
 
 echo "<pre>";
@@ -33,7 +38,9 @@ echo "</pre>";
 $arr3 = [7,	2,	4,	1 ];
 
 $sort_func = function ( $a, $b){
-	return $a > $b ? 1 : -1;
+    if ($a == $b) {
+        return 0;
+    }	return $a > $b ? 1 : -1;
 };
 
 usort( $arr3, $sort_func );
@@ -52,7 +59,9 @@ $arr4 = [
 ];
 
 $sort_func2 = function ( $a, $b){
-	return $a["num"] > $b["num"] ? 1 : -1;
+    if ($a["num"] == $b["num"]) {
+        return 0;
+    }	return $a["num"] > $b["num"] ? 1 : -1;
 };
 
 usort( $arr4, $sort_func2 );
