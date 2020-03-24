@@ -19,9 +19,16 @@ echo "<br/>\n";
 echo "d = ".$d;//101
 echo "<br/>\n";
 
+echo "e = ".$e;
+echo "<br/>\n";
+
 function func1( &$a ){//!!!!!
-	global $d;
+
+	global $d;//use global variable
 	$d += $a;
+
+	global $e;//define new global variable
+	$e = 200;
 
 	return ++$a;
 }
@@ -84,6 +91,34 @@ print_r( $p );
 echo "</pre>\n";
 }//end
 
+//========================== Return array
+function formatSize($bytes)
+{
+    $kbytes = $bytes / 1024;
+    $mbytes = $kbytes / 1024;
+    $gbytes = $mbytes / 1024;
+
+	//return ["bytes" => $bytes, "kbytes" => $kbytes, "mbytes" => $mbytes, "gbytes" => $gbytes];
+    return [$bytes, $kbytes, $mbytes, $gbytes];
+}
+//-------- dynamic creation of variables
+list ($bytes, $kbytes, $mbytes, $gbytes) = formatSize(18642678);
+echo "Mbytes: " . $mbytes;
+echo "<br/>\n";
+
+//--------
+function formatSize2($bytes)
+{
+	list ($bytes, $kbytes, $mbytes, $gbytes) = formatSize($bytes);
+	return ["bytes" => $bytes, "kbytes" => $kbytes, "mbytes" => $mbytes, "gbytes" => $gbytes];
+}
+
+echo "File size:";
+echo "<pre>\n";
+print_r( formatSize2( 2097152 ) );
+echo "</pre>\n";
+
+
 
 //========================== default parameters, https://github.com/igorsimdyanov
 function getSum($left = 10, $right = 5)
@@ -98,6 +133,33 @@ echo getSum(5);    //10
 echo "<br/>\n";
 
 echo getSum(5, 0); //5
+echo "<br/>\n";
+
+//============================= STATIC variable
+function counter()
+{
+    static $counter = 0;//!!!!!!!!!!!!!!!!!!!!!!!!
+    return ++$counter;
+}
+
+echo counter();//1
+echo "<br/>\n";
+
+echo counter();//2
+echo "<br/>\n";
+
+//=============================== Dynamic function
+function hello()
+{
+    return 'Hello!';
+}
+function bye()
+{
+    return 'Bye!';
+}
+
+$var = rand(0, 1) ? 'hello' : 'bye';
+echo $var();
 echo "<br/>\n";
 
 ?>
