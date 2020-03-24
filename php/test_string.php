@@ -20,6 +20,35 @@
 	$file = str_replace ('{$menu/}', $catalog, $file);	
 */
 
+$str = '[b]Это[/b] очень жирный [b]текст[/b].';
+echo str_replace(['[b]', '[/b]'], ['', ''], $str, $number);
+echo "<br />\n";
+
+echo "Осуществлено замен: $number";
+echo "<br />\n";
+
+/*
+	$textNote = str_replace("&quot;", "\"", $textNote);
+	$textNote = str_replace("&amp;", "&", $textNote);
+	$textNote = str_replace("&lt;", "<", $textNote);
+	$textNote = str_replace("&gt;", ">", $textNote);
+*/
+
+//========================
+	$textNote = "<script>alert('test');</script>";
+	$textMessage = htmlspecialchars($textNote) ;
+echo $textMessage;
+echo "<br/>\n";
+
+//======================== FILTER
+/*
+$text = "\t\t\thello\r\nphp\r\ntext\n";
+echo $text;
+
+echo nl2br( $str );
+echo "<br/>\n";
+*/
+
 //========================
 //   $n1= strrpos($dir_path, "/"); //поиск последней позиции, где встречается символ "/".
 //   $url = substr($dir_path, 0, $n1);
@@ -61,6 +90,11 @@ echo "\n";
 //$str = "one two three for five";
 //$str_exp = split (" ", $str);
 
+$arr = ['Сидоров', 'Иван', 'Петрович'];
+echo implode(' - ', $arr); // Сидоров - Иван - Петрович
+echo "\n";
+
+
 //======================== heredoc syntax
 $nowDoc = 123;
 echo <<<EOF
@@ -94,6 +128,64 @@ Example #8 Simple syntax example
 $nowDoc
 </td></tr></table></body></html>
 EOF;
+
+//=====================
+$str = 'Привет, мир!';
+echo "В строке '$str' " . strlen($str) . " байт<br />\n"; // 21 (russian symbols - two bytes !!!!!)
+echo "В строке '$str' " . mb_strlen($str) . " символов<br />\n"; // 12
+
+//=====================
+$str = 'Здесь может быть любой текст';
+echo wordwrap($str, 10, "<br />\n");
+/*
+Здесь<br />
+может<br />
+быть<br />
+любой<br />
+текст
+*/
+echo "<br />\n";
+
+//======================
+$numbers = [23, 45, 34, 2, 12];
+
+$str = serialize($numbers);
+echo $str;
+echo "<br />\n";
+
+$arr = unserialize($str);
+echo "<pre>";
+print_r($arr);
+echo "</pre>\n";
+
+//=========================== JSON
+$arr = [
+    'employee' => 'Иван Иванов',
+    'phones' => [
+        '916 153 2854',
+        '916 643 8420'
+    ]
+];
+echo json_encode($arr);
+echo "<br />\n";
+//------------
+
+echo json_encode($arr, JSON_UNESCAPED_UNICODE);
+echo "<br />\n";
+
+//------------
+$json = '{"employee":"Иван Иванов","phones":["916 153 2854","916 643 8420"]}';
+$arr = json_decode($json, false);
+echo "<pre>";
+print_r($arr);
+echo "</pre>\n";
+
+//------------
+$arr = json_decode($json, true);
+echo "<pre>";
+print_r($arr);
+echo "</pre>\n";
+
 
 ?>
 
