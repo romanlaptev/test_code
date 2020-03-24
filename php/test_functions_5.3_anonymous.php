@@ -8,11 +8,11 @@ echo "<br/>\n";
 // PHP => 5.3.0
 //https://www.php.net/manual/ru/functions.anonymous.php
 
-$echoList = function (...$str)
+$echoList = function ($str)
 {
     foreach ($str as $v) {
         echo "$v<br />\n";
     }
 };
-$echoList('PHP', 'Python', 'Ruby', 'JavaScript');
+$echoList( ['PHP', 'Python', 'Ruby', 'JavaScript'] );
 ?>
