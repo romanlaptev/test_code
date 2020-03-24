@@ -1,11 +1,12 @@
 <?php
-echo PHP_VERSION;//5.6.40-0+deb8u7
+echo "Your PHP version: ". PHP_VERSION;//5.6.40-0+deb8u7
 echo "<br/>\n";
 //echo phpversion();
 //echo "<br/>\n";
 
 //send variable $a to the function as link
 $a = 1;
+$d = 100;
 
 $b = func1( $a );
 
@@ -15,7 +16,13 @@ echo "<br/>\n";
 echo "b = ".$b;//2
 echo "<br/>\n";
 
+echo "d = ".$d;//101
+echo "<br/>\n";
+
 function func1( &$a ){//!!!!!
+	global $d;
+	$d += $a;
+
 	return ++$a;
 }
 

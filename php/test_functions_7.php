@@ -1,5 +1,5 @@
 <?php
-echo PHP_VERSION;//5.6.40-0+deb8u7
+echo "Your PHP version: ". PHP_VERSION;//5.6.40-0+deb8u7
 echo "<br/>\n";
 //echo phpversion();
 //echo "<br/>\n";
