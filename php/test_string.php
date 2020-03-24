@@ -132,7 +132,7 @@ EOF;
 //=====================
 $str = 'Привет, мир!';
 echo "В строке '$str' " . strlen($str) . " байт<br />\n"; // 21 (russian symbols - two bytes !!!!!)
-echo "В строке '$str' " . mb_strlen($str) . " символов<br />\n"; // 12
+echo "В строке '$str' " . mb_strlen($str) . " символов<br />\n"; // 12 ....need PHP-extension mbstring!!!!!!
 
 //=====================
 $str = 'Здесь может быть любой текст';
