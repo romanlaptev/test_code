@@ -125,13 +125,14 @@ echo "<br/>\n";
 }//end switch
 
 if ( $define_func ) {
-	function echoList(...$items)// "..." -!!!!! PHP => 5.6
+	function echoList( $items)// "..." -!!!!! PHP => 5.6
 	{
-		foreach ($items as $v) {
-		    echo "$v<br />\n";
-		}
+//		foreach ($items as $v) {
+//		    echo "$v<br />\n";
+//		}
 	}
-	echoList('PHP', 'Python', 'Ruby', 'JavaScript');
+	//echoList ('PHP', 'Python', 'Ruby', 'JavaScript');
+	echoList ('PHP');
 }
 
 ?>
