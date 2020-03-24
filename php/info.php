@@ -13,6 +13,37 @@ echo "<br/>\n";
 echo "dirname(__FILE__) = ".dirname(__FILE__);
 echo "<br/>\n";
 
+//https://www.php.net/manual/en/function.version-compare.php
+//if (version_compare(PHP_VERSION, '5.0.0', '>=')) {
+    //echo 'I am at least PHP version 5.0.0, my version: ' . PHP_VERSION . "\n";
+//}
+//By default, version_compare() returns -1 if the first version is lower than the second, 0 if they are equal, and 1 if the second is lower. 
+$res = version_compare( PHP_VERSION, '5.6.0' );
+//echo "version_compare: ". $res;
+//echo "<br/>\n";
+
+switch( $res ){
+
+	case -1:
+//echo PHP_VERSION;
+echo phpversion();
+echo "Your PHP version < 5.6.0" ;
+echo "<br/>\n";
+	break;
+
+	case 0:
+echo phpversion();
+echo "Your PHP version === 5.6.0" ;
+echo "<br/>\n";
+	break;
+
+	case 1:
+echo phpversion();
+echo "Your PHP version > 5.6.0" ;
+echo "<br/>\n";
+	break;
+
+}//end switch
 
 
 echo "<pre>";

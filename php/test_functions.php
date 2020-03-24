@@ -1,4 +1,9 @@
 <?php
+echo PHP_VERSION;//5.6.40-0+deb8u7
+echo "<br/>\n";
+//echo phpversion();
+//echo "<br/>\n";
+
 //send variable $a to the function as link
 $a = 1;
 
@@ -90,12 +95,24 @@ echo "<br/>\n";
 
 
 //====================== send any number of arguments, https://github.com/igorsimdyanov
-function echoList(...$items)// "..." -!!!!! PHP => 5.6
-{
-    foreach ($items as $v) {
-        echo "$v<br />\n";
-    }
-}
-echoList('PHP', 'Python', 'Ruby', 'JavaScript');
+//By default, version_compare() returns -1 if the first version is lower than the second, 0 if they are equal, and 1 if the second is lower. 
+$res = version_compare( PHP_VERSION, '5.6.0' );
+switch( $res ){
+	case -1:
+	break;
 
+	case 0:
+	case 1:
+{
+	function echoList(...$items)// "..." -!!!!! PHP => 5.6
+	{
+		foreach ($items as $v) {
+		    echo "$v<br />\n";
+		}
+	}
+	echoList('PHP', 'Python', 'Ruby', 'JavaScript');
+}
+	break;
+
+}//end switch
 ?>
