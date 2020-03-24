@@ -93,4 +93,14 @@ echo "<br/>\n";
 echo getSum(5, 0); //5
 echo "<br/>\n";
 
+
+//====================== send any number of arguments, https://github.com/igorsimdyanov
+function echoList(...$items)// "..." -!!!!! PHP => 5.6
+{
+	foreach ($items as $v) {
+	    echo "$v<br />\n";
+	}
+}
+echoList( 'PHP', 'Python', 'Ruby', 'JavaScript' );
+
 ?>
