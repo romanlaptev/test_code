@@ -43,7 +43,7 @@ function func3()
 
 
 //======================== send OPTIONS array
-//$arguments = [ "a" => 1, "b" => 2, "c" => 3];
+
 $arguments = [
 	"data" => [ "a" => 1, "b" => 2, "c" => 3],
 	"wrapType" => "menu2",
@@ -73,5 +73,29 @@ echo "</pre>\n";
 }//end
 
 
+//========================== default parameters, https://github.com/igorsimdyanov
+function getSum($left = 10, $right = 5)
+{
+    $sum = $left + $right;
+    return $sum;
+}
+echo getSum();     // 5
+echo "<br/>\n";
+
+echo getSum(5);    //10
+echo "<br/>\n";
+
+echo getSum(5, 0); //5
+echo "<br/>\n";
+
+
+//====================== send any number of arguments, https://github.com/igorsimdyanov
+function echoList(...$items)// "..." -!!!!! PHP => 5.6
+{
+    foreach ($items as $v) {
+        echo "$v<br />\n";
+    }
+}
+echoList('PHP', 'Python', 'Ruby', 'JavaScript');
 
 ?>
