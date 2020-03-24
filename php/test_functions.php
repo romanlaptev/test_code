@@ -95,6 +95,8 @@ echo "<br/>\n";
 
 
 //====================== send any number of arguments, https://github.com/igorsimdyanov
+$define_func = false;
+
 //By default, version_compare() returns -1 if the first version is lower than the second, 0 if they are equal, and 1 if the second is lower. 
 $res = version_compare( PHP_VERSION, '5.6.0' );
 echo "version_compare: ". $res;
@@ -117,8 +119,12 @@ echo "<br/>\n";
 echo phpversion();
 echo "Your PHP version > 5.6.0" ;
 echo "<br/>\n";
-/*
-{
+		$define_func = true;
+	break;
+
+}//end switch
+
+if ( $define_func ) {
 	function echoList(...$items)// "..." -!!!!! PHP => 5.6
 	{
 		foreach ($items as $v) {
@@ -127,8 +133,5 @@ echo "<br/>\n";
 	}
 	echoList('PHP', 'Python', 'Ruby', 'JavaScript');
 }
-*/
-	break;
 
-}//end switch
 ?>
