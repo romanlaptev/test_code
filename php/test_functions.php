@@ -29,5 +29,15 @@ function func2( array &$arr1 ){
 	$arr1[2] = 6;
 }//end
 
+//========================
+$c = func3();
+echo "c = ".$c;
+echo "<br/>\n";
+
+function func3() : int
+{
+	$_a = 8;
+	return $_a++;
+}//end
 
 ?>
