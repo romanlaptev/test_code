@@ -34,11 +34,11 @@ $c = func3();
 echo "c = ".$c;
 echo "<br/>\n";
 
-function func3() : int //PHP 7
+//function func3() : int //PHP 7
+function func3()
 {
-	$_a = "8a";
-	//return ++$_a;
-	return $_a;
+	$_a = 8;
+	return ++$_a;
 }//end
 
 ?>
