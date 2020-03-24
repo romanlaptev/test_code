@@ -37,7 +37,7 @@ echo "<br/>\n";
 function func3() : int
 {
 	$_a = 8;
-	return $_a++;
+	return ++$_a;
 }//end
 
 ?>
