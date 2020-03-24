@@ -41,4 +41,37 @@ function func3()
 	return ++$_a;
 }//end
 
+
+//======================== send OPTIONS array
+//$arguments = [ "a" => 1, "b" => 2, "c" => 3];
+$arguments = [
+	"data" => [ "a" => 1, "b" => 2, "c" => 3],
+	"wrapType" => "menu2",
+	"templateID" =>  "tpl-copyright",
+	"templateListItemID" => "tpl-schedule-table--tr"
+];
+
+func4( $arguments );
+
+function func4( $params ) {
+	$p = [
+		"data" => null,
+		"type"  =>  "list",
+		"wrapType" => "menu",
+		"templateID" =>  false,
+		"templateListItemID" => false
+	];
+
+	//extend options object $p
+	foreach( $params as $key=>$item ){
+		$p[ $key ] = $item;
+	}//next
+
+echo "<pre>\n";
+print_r( $p );
+echo "</pre>\n";
+}//end
+
+
+
 ?>
