@@ -40,6 +40,10 @@ echo "<br />\n";
 echo $textMessage;
 echo "<br/>\n";
 
+//https://www.php.net/manual/ru/function.strip-tags.php
+echo strip_tags('<p>String without HTML tags</p>');
+echo "<br/>\n";
+
 //======================== FILTER
 /*
 $text = "\t\t\thello\r\nphp\r\ntext\n";
