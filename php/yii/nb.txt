@@ -1,3 +1,6 @@
+		$this->redirect(Yii::app()->homeUrl);
+//=======================
+
 //https://www.dbhelp.ru/yii-model/page/
 /*
 $db->createCommand('INSERT INTO `customer` (`name`) VALUES (:name)', [
