@@ -13,7 +13,10 @@ $this->redirect(Yii::app()->homeUrl);
 echo Yii::app()->basePath;
 echo "<br/>";
 
-//=======================
+
+
+
+//==================================================== DB
 
 //https://www.dbhelp.ru/yii-model/page/
 /*
@@ -22,8 +25,11 @@ $db->createCommand('INSERT INTO `customer` (`name`) VALUES (:name)', [
 ])->execute();
 */
 
-//=====================
+//------------
+		$model = new Element();
+		$model->deleteAll();
 
+//-------------
 		$model = new Element();
 
 		//$test = $model->findByAttributes( array(  'code' => $data[1][2] ) );
