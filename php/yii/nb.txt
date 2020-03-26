@@ -1,0 +1,66 @@
+//https://www.dbhelp.ru/yii-model/page/
+/*
+$db->createCommand('INSERT INTO `customer` (`name`) VALUES (:name)', [
+    ':name' => 'Qiang',
+])->execute();
+*/
+
+//=====================
+
+		$model = new Element();
+
+		//$test = $model->findByAttributes( array(  'code' => $data[1][2] ) );
+		//$test = $model->findByPk( $data[1][2] );
+//echo "<pre>";	
+//print_r($test);
+//echo "</pre>";	
+
+//=====================
+	private function saveCatalogToDB( $data )
+	{
+echo "<pre>";	
+print_r($data);
+//print_r($model);
+echo "</pre>";	
+
+		$model = new Element();
+
+		$row = $data[1];
+		
+		$product = $model->findByPk( $row[2] );//check product code
+		
+ 		if( ! $product ){ // Add new product
+			$model->code = $row[2];
+			$model->name = $row[0];
+			$model->category_path = $row[1];
+			$model->description = $row[3];
+			if( !empty( $row[4] ) ) {
+				$model->image_url = $row[4];
+			}
+			if( $model->validate() ) {
+				$model->save();
+			} else {
+echo "validate error...";		
+echo "<br/>";
+			}
+ 		
+ 		}
+ 		if( $product ){ // Update product
+			$product->name = $row[0];
+			$product->category_path = $row[1];
+			$product->description = $row[3];
+			if( !empty( $row[4] ) ) {
+				$product->image_url = $row[4];
+			}
+			if( $product->validate() ) {
+					$product->save();
+				} else {
+echo "validate error...";		
+echo "<br/>";
+			}
+ 		}
+
+
+		$this->render('import');
+	}//end
+
