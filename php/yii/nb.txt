@@ -1,3 +1,5 @@
+		$p['version'] = Yii::getVersion();
+
 echo CHtml::submitButton('Сформировать');
 echo CHtml::link('News', '?r=news/index');
 echo CHtml::link('News', array('news/index'));
@@ -7,13 +9,26 @@ echo CHtml::link('News', array('news/index'));
 	echo CHtml::link( "edit", array("course/update",'id'=>$course->course_id), array('target' => '', 'class' => 'action-link') );
 	echo CHtml::link( "delete course", array("course/delete",'id'=>$course->course_id), array('target' => '', 'class' => 'action-link') );
 
+echo CHtml::link("SiteController",array('site/index'));
 //===============================
 $this->redirect(Yii::app()->homeUrl);
 
 echo Yii::app()->basePath;
 echo "<br/>";
 
+//----------------------
+			if($model->validate() && $model->login())
+				$this->redirect(Yii::app()->user->returnUrl);
 
+//-------------------
+//путь к приложению 
+Yii::getPathofAlias("webroot") 
+
+//название темы
+Yii::app()->theme->name
+
+//строка запроса
+Yii::app()->request->requestUri
 
 
 //==================================================== DB
@@ -86,4 +101,200 @@ echo "<br/>";
 
 		$this->render('import');
 	}//end
+
+//-------------------------------------
+		$ya_fotki=new YandexFotki;
+		$ya_fotki->title='тестовая запись';
+		$ya_fotki->description='test description';
+		$ya_fotki->save();
+
+		$data = YandexFotki::model()->findAll();
+		$this->render('index', array('data' => $data) );
+
+
+//------------------------------------- SQLITE
+	public function actionPlaces()
+	{
+		$file = 'sqlite:'.dirname(__FILE__).'/../../db/places.sqlite';
+		$db = new PDO($file) or die("Could not open database");
+
+		$query = "SELECT p.url,p.title,p.visit_count FROM moz_places as p ORDER BY p.visit_count;";
+		$result = $db->query($query);
+		$result->setFetchMode(PDO::FETCH_ASSOC);
+
+		$p = array();
+		foreach ($result as $row )
+		{
+			$p[]=$row;
+		}
+	
+		$this->render('places', array('param'=>$p));
+	}
+
+
+//-----------------------------------------------
+		if ($_REQUEST['action']=="create_db")
+		{
+			$dsn="mysql:host=localhost";
+			$user="root";
+			$password="master";
+			$connection = new CDbConnection($dsn,$user,$password);
+			//$connection=Yii::app()->db;
+			$sql="
+create database if not exists db1;
+use db1;
+create table if not exists tbl_1
+(
+	id int(10) not null primary key auto_increment,
+	title varchar(255) not null,
+	user_id int(10),
+	category_id int (10),
+	description text
+) default charset=utf8 collate=utf8_unicode_ci;";
+
+			$command=$connection->createcommand($sql);
+			$command->execute();
+		}
+
+		$this->render('index');
+	}
+
+//------------------------------------------
+	public function actionTest()
+	{
+
+		$model = new Tbl_1;
+//echo "<pre>";
+//print_r($model);
+//echo "</pre>";
+/*
+		$model->title="News 1";
+		$model->user_id=1;
+		$model->category_id=2;
+		$model->description="desc news 1";
+		$model->save();
+
+		$model->title="News 2";
+		$model->user_id=1;
+		$model->category_id=2;
+		$model->description="desc news 2";
+		$model->save();
+
+		$model->title="News 3";
+		$model->user_id=2;
+		$model->category_id=1;
+		$model->description="desc news 3";
+		$model->save();
+
+*/
+
+
+		$condition="id=:id";
+		$params=array(":id"=>1);
+		$result=Tbl_1::model()->find($condition,$params);
+//echo "<pre>";
+//print_r($result);
+//echo "</pre>";
+echo $result->title;
+echo "<br>";
+
+//Обновление записи
+		$result->title="mod News 1";
+		$result->save();
+
+/*
+		$condition="user_id=:user_id";
+		$params=array(":user_id"=>1);
+		$result=Tbl_1::model()->findAll($condition,$params);
+//echo "<pre>";
+//print_r($result);
+//echo "</pre>";
+		foreach ($result as $row)
+		{
+echo $row->title;
+echo "<br>";
+		}
+*/
+
+
+		$this->render('index');
+	}
+
+//---------------------------
+class Tbl_1 extends CActiveRecord
+{
+
+	public static function model($classname=__CLASS__)
+	{
+		return parent::model($classname);
+	}
+
+	public function tablename()
+	{
+		return "tbl_1";
+	}
+}
+
+
+//-------------------------------
+	public function actionDelete($id)
+	{
+		$this->loadModel($id)->delete();
+
+		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+		if(!isset($_GET['ajax']))
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+	}
+
+
+//------------------------------------------- DATAPROVIDER
+CONTROLLER
+	public function actionIndex()
+	{
+//echo "public function actionIndex()";
+//echo "<br>";
+		$dataProvider=new CActiveDataProvider('Lessons');
+		$this->render('index',array(
+			'dataProvider'=>$dataProvider,
+		));
+	}
+........
+VIEW
+<?php $this->widget('zii.widgets.CListView', array(
+	'dataProvider'=>$dataProvider,
+	'itemView'=>'_view',
+)); ?>
+
+<div class="view">
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('lesson_id')); ?>:</b>
+	<?php echo CHtml::link(CHtml::encode($data->lesson_id), array('view', 'id'=>$data->lesson_id)); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('course_id')); ?>:</b>
+	<?php echo CHtml::encode($data->course_id); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('url')); ?>:</b>
+	<?php echo CHtml::encode($data->url); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('title')); ?>:</b>
+	<?php echo CHtml::encode($data->title); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('description')); ?>:</b>
+	<?php echo CHtml::encode($data->description); ?>
+	<br />
+
+</div>
+//-------------------------------------------
+
+
+//-------------------------------------------
+$courses = Courses::model()->findAllBySql(
+"SELECT * FROM Courses WHERE id NOT IN (SELECT courses_id FROM users_has_courses WHERE users_id=:u)",
+array(':u'=>2));
+
+
 
