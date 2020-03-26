@@ -1,4 +1,8 @@
-		$this->redirect(Yii::app()->homeUrl);
+$this->redirect(Yii::app()->homeUrl);
+
+echo Yii::app()->basePath;
+echo "<br/>";
+
 //=======================
 
 //https://www.dbhelp.ru/yii-model/page/
