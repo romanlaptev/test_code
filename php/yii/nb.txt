@@ -1,3 +1,13 @@
+echo CHtml::submitButton('Сформировать');
+echo CHtml::link('News', '?r=news/index');
+echo CHtml::link('News', array('news/index'));
+
+
+	echo CHtml::link( $course->title, array("course/view",'id'=>$course->course_id) );
+	echo CHtml::link( "edit", array("course/update",'id'=>$course->course_id), array('target' => '', 'class' => 'action-link') );
+	echo CHtml::link( "delete course", array("course/delete",'id'=>$course->course_id), array('target' => '', 'class' => 'action-link') );
+
+//===============================
 $this->redirect(Yii::app()->homeUrl);
 
 echo Yii::app()->basePath;
