@@ -183,6 +183,7 @@ fclose($handle);
 
 */
 
+
 /*
  $res = mkdir("my_directory",0755)
         or die ("Don't create my_directory");
@@ -203,6 +204,19 @@ fclose($handle);
  fclose($fp);
 */
 
+/*
+		if ( !is_dir ( $images_dir ) ){
+			mkdir( $images_dir );
+		}
+		
+		if ( !is_writable( $images_dir )){
+$msg = "Can not write to <b>" .$images_dir."</b>";
+echo $this->_alert($msg, "error");
+exit;
+			//return false;
+		}
+*/
+
 
 //header("Content-type: application/vnd.ms-excel");
 //readfile("book1.xls");
@@ -218,4 +232,6 @@ fclose($handle);
   fclose($fp);
   include ("test.txt"); 
 */
+
+
 ?>
