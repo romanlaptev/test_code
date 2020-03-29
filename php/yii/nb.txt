@@ -33,6 +33,16 @@ Yii::app()->request->requestUri
 
 //==================================================== DB
 
+//https://www.yiiframework.com/doc/api/1.1/CActiveRecord
+		$related_categories =  Category::model()->findAllByAttributes ( 
+			array(  'parent_id' => $id )
+		);
+echo "<pre>";
+print_r($related_categories);
+echo "</pre>";
+//=========
+
+
 //https://www.dbhelp.ru/yii-model/page/
 /*
 $db->createCommand('INSERT INTO `customer` (`name`) VALUES (:name)', [
@@ -40,11 +50,11 @@ $db->createCommand('INSERT INTO `customer` (`name`) VALUES (:name)', [
 ])->execute();
 */
 
-//------------
+//=========
 		$model = new Element();
 		$model->deleteAll();
 
-//-------------
+//=========
 		$model = new Element();
 
 		//$test = $model->findByAttributes( array(  'code' => $data[1][2] ) );
@@ -102,7 +112,7 @@ echo "<br/>";
 		$this->render('import');
 	}//end
 
-//-------------------------------------
+//=========
 		$ya_fotki=new YandexFotki;
 		$ya_fotki->title='тестовая запись';
 		$ya_fotki->description='test description';
@@ -132,7 +142,7 @@ echo "<br/>";
 	}
 
 
-//-----------------------------------------------
+//=========
 		if ($_REQUEST['action']=="create_db")
 		{
 			$dsn="mysql:host=localhost";
