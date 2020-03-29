@@ -1,6 +1,5 @@
-<?
-
-$file = "news.xml";
+<?php
+$file = "data/news.xml";
 $map_array = array(
     "BOLD"     => "B",
     "EMPHASIS" => "I",

@@ -6,7 +6,7 @@
 <table>
 
 <?php
-$filename = "test_video.xml";
+$filename = "data/test_video.xml";
 
 // создаем новый объект XML
 //$dom = domxml_open_file($filename); 

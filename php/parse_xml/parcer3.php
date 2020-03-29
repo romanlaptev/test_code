@@ -67,7 +67,7 @@ xml_set_element_handler($parser,'saxStartElement','saxEndElement');
 xml_set_character_data_handler($parser,'saxCharacterData');
 xml_parser_set_option($parser,XML_OPTION_CASE_FOLDING,false);
 
-$filename = "test_video.xml";
+$filename = "data/test_video.xml";
 $xml = join('',file($filename));
 
 if (!xml_parse($parser,$xml,true))

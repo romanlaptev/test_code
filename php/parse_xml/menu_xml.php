@@ -1,6 +1,6 @@
-<?
+<?php
 //*************************************
-// Вывести на страницу форму редактирования menu2
+// Вывести на страницу menu2
 //*************************************
 function view_xml ($xml_file)
   {
@@ -13,12 +13,44 @@ function view_xml ($xml_file)
 		exit("Failed to open ".$xml_file);
 	  }
 	else
-	  echo "Use SimpleXML for read data from ".$xml_file."<br>\n"; 
+	  //echo "Use SimpleXML for read data from ".$xml_file."<br>\n"; 
+
+	$menu2 =  $xml->menu[1]; // считать menu2
+
+	//echo "<p><a href=\"".basename($_SERVER['SCRIPT_NAME'])."?action=edit\">edit</a></p>\n";
+	echo "<p><a href=\"#\" onClick=\"javascript:document.getElementById('div_edit_xml').style.display = ''\"> edit</a></p>\n";
+	echo "<div class=\"menu2\">\n";
+	//--------------------
+	for ($n1=0; $n1 < sizeof($menu2); $n1++)
+		{
+			echo "<p><a href=\"".$menu2->item[$n1]->a['href']."\" target=\"".$menu2->item[$n1]->a['target']."\">".$menu2->item[$n1]->a."</a></p>\n";
+		} //--------------------------- end for
+	echo "</div>\n";
+  }
+//-----------------------------------------------------end func
+
+//*************************************
+// Вывести на страницу форму редактирования menu2
+//*************************************
+function edit_xml ($xml_file)
+  {
+	//-----------------------------------------------------
+	// Считать из XML-файла данные 
+	//-----------------------------------------------------
+	$xml = simplexml_load_file($xml_file);
+	if ($xml == FALSE) 
+	  {
+		exit("Failed to open ".$xml_file);
+	  }
+	else
+	  //echo "Use SimpleXML for read data from ".$xml_file."<br>\n"; 
 
 	//$result = $xml->xpath('//main/menu'); 
 	$menu2 =  $xml->menu[1]; // считать menu2
 
+	echo "<div style='display:visible' class=\"edit_xml\" id='div_edit_xml'>\n";
 	echo "<br>\n";
+	echo "<p><a href=\"#\" onClick=\"javascript:document.getElementById('div_edit_xml').style.display = 'none'\"> x</a></p>\n";
 	echo "<form method=\"post\" name=\"form_edit_xml\" action=\"".basename($_SERVER['SCRIPT_NAME'])."\">\n";
 	echo "<fieldset>\n";
 	echo "<legend> Редактирование меню (XML) ".$xml[1]['title']."</legend>\n";
@@ -70,6 +102,7 @@ function view_xml ($xml_file)
 	echo "<input type=\"submit\" name=action value=\"save changes\">";
 	echo "</fieldset>";
 	echo "</form>\n";
+	echo "</div>\n";
   }
 //-----------------------------------------------------end func
  
@@ -80,12 +113,82 @@ function view_xml ($xml_file)
 //echo "<pre>";
 //print_r ($_REQUEST);
 //print_r ($_POST);
+//print_r ($_SERVER);
 //echo "</pre>";
 
 //$xml_file = "http://rlaptev.co.cc/www/xml/menu.xml";
-$xml_file = "menu.xml";
+$xml_file = "data/menu.xml";
 $charset = "utf-8";
 $tpl_p1 = "<html>\n<head>\n<meta http-equiv=Content-Type content=text/html; charset=$charset>\n
+<style>
+
+.menu1
+{
+	margin:10px;
+	padding:10px;
+
+	background:#072F07;
+	color:white;
+
+	border-style:double;
+	border-color: green;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 3px;
+	border-left-width: 0px;
+}
+
+.menu2
+{
+	float:left;
+	border:5px double green;
+	background: wheat; 		
+	color: white;
+	width: 150px;
+	padding-top:1px;
+	padding-bottom:1px;
+}
+
+.menu2 p
+{
+	width:120px;
+	height: 45px;
+	margin-left: auto;
+	margin-right: auto;
+	/*padding-left: 5px;*/
+
+	font-style: normal;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	text-decoration: none;
+	color: white;
+
+	background: darkgreen; 		
+
+	border-right: #000000 1px solid;
+	border-top: #ffffff 1px solid;
+	border-left: #ffffff 1px solid;
+	border-bottom: #000000 1px solid;
+
+	text-align: center;
+	/*vertical-align:middle;*/
+}
+
+A:link 
+{
+    color:orange;
+}
+
+A:visited 
+{
+    color:orange;
+}
+
+A:hover 
+{
+    color:orange;
+}
+</style>
+
 <script>
 function change_status(num)
 {
@@ -110,10 +213,27 @@ function change_status(num)
 		//frm.elements[elmnt].value='off';
 	  }
 }
+//---------------------- end func
+
+function processnode(nnodeid)
+{
+	if (document.getElementById(nnodeid).style.display == \"none\")
+	  {
+		document.getElementById(nnodeid).style.display = \"\"
+	  }
+	else
+	 {
+		document.getElementById(nnodeid).style.display = \"none\"
+	 }
+}
+//---------------------- end func
 </script>
 </head>\n<body>\n";
 $tpl_p2 = "</body>\n</html>\n";
 echo $tpl_p1;
+
+view_xml ($xml_file); // Вывести на страницу menu2
+edit_xml ($xml_file); // Вывести на страницу форму редактирования menu2
 
 if (isset($_REQUEST['action']))
   {
@@ -160,7 +280,11 @@ if  ($action == "save changes")
    }
 // -------------------- end action
 
-view_xml ($xml_file); // Вывести на страницу форму редактирования menu2
+//if  ($action == "edit")
+//   {
+	//edit_xml ($xml_file); // Вывести на страницу форму редактирования menu2
+//   }
+// -------------------- end action
 
 echo $tpl_p2;
 

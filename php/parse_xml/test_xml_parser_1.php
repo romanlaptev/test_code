@@ -1,13 +1,13 @@
-<?
-$file = "news.xml";
+<?php
+$file = "data/news.xml";
 $depth = array();
 
 function startElement($parser, $name, $attrs) {
     global $depth;
     for ($i = 0; $i < $depth[$parser]; $i++) {
-        print "  ";
+        print "---";
     }
-    print "$name\n";
+    print "$name<br/>\n";
     $depth[$parser]++;
 }
 

@@ -1,4 +1,4 @@
-<?
+<?php
 //*************************************
 // Вывести на страницу разделы закладок
 //*************************************
@@ -17,7 +17,7 @@ function view_xml ($xml)
 //-----------------------------------------------------------------
 			echo "<div style='display:none' class=\"section\" id=section_".$n1.">\n";
 			echo "<p>\n";
-echo "<a href=\"#\" onClick=\"javascript:document.getElementById('section_".$n1."_edit').style.display = '';init_section_name('".$xml->bookmarks->section[$n1]['keyword']."');\"> edit</a>\n";
+echo "<a href=\"".basename($_SERVER['SCRIPT_NAME'])."?action=edit&section_name=".$xml->bookmarks->section[$n1]['keyword']."\"> edit</a>\n";
 			echo "<a href=\"#\" onClick=\"javascript:document.getElementById('section_".$n1."').style.display = 'none'\"> x</a>\n";
 			echo "</p>\n";
 
@@ -37,69 +37,76 @@ echo "<a href=\"#\" onClick=\"javascript:document.getElementById('section_".$n1.
 //-----------------------------------------------------end func
 
 //*************************************
-// Вывести в скрытый div форму редактирования
+// Вывести форму редактирования
 //*************************************
-function edit_xml ($xml)
+function edit_xml ($xml,$section_name)
   {
+	// Создать форму для отредактированных полей, для их передачи в ф-цию сохранения изменений
+	echo "<form method=\"post\" name='form_post_values' action=\"".basename($_SERVER['SCRIPT_NAME'])."\">\n";
+	echo "<input type=\"hidden\" name=section_name value=\"".$section_name."\">";
+	echo "<input type='hidden' name='action' value='save changes'>";
+	echo "</form>\n";
+
 	echo "<div>\n";
 	for ($n1=0; $n1 < sizeof($xml->bookmarks->section); $n1++)
 		{
 			//echo $n1."<br>\n";
 			//--------------------
+			// Найти в разделах закладок, редактируемый раздел 
+			if ($section_name == $xml->bookmarks->section[$n1]['keyword'])
+			  {
+				echo "Edit ".$xml->bookmarks->section[$n1]['keyword'];
+				echo "<div style='display:visible' class=\"section_edit\" id=section_".$n1."_edit>\n";
+				echo "<p>\n";
+				echo "<a href=\"#\" onClick=\"javascript:document.getElementById('section_".$n1."_edit').style.display = 'none'\"> x</a>\n";
+				echo "</p>\n";
 
-			echo "<div style='display:none' class=\"section_edit\" id=section_".$n1."_edit>\n";
-			echo "<p>\n";
-			echo "<a href=\"#\" onClick=\"javascript:document.getElementById('section_".$n1."_edit').style.display = 'none'\"> x</a>\n";
-			echo "</p>\n";
+				//echo "<form method=\"post\" name=\"form_edit_xml_".$n1."\" action=\"".basename($_SERVER['SCRIPT_NAME'])."\">\n";
+				echo "<form method=\"post\" name=\"form_edit_xml_".$n1."\" action=''>\n";
+				echo "<fieldset>\n";
+				echo "<legend> Редактирование ".$xml->bookmarks->section[$n1]['title']."</legend>\n";
+				echo "<input type='button' name='remove_bookmark' value='remove bookmark'>";
+				echo "<input type='button' name='insert_bookmark' value='insert bookmark'>";
+				echo "<table>\n";
+				echo "<tr>\n";
+				echo "<td> link		</td>\n";
+				echo "<td>text		</td>\n";
+				echo "<td>check	</td>\n";
+				echo "</tr>\n";
 
-			//echo "<form method=\"post\" name=\"form_edit_xml_".$n1."\" action=\"".basename($_SERVER['SCRIPT_NAME'])."\">\n";
-			echo "<form method=\"post\" name=\"form_edit_xml_".$n1."\" action=''>\n";
-			echo "<fieldset>\n";
-			echo "<legend> Редактирование ".$xml->bookmarks->section[$n1]['title']."</legend>\n";
-			echo "<input type='button' name='remove_bookmark' value='remove bookmark'>";
-			echo "<input type='button' name='insert_bookmark' value='insert bookmark'>";
-			echo "<table>\n";
-			echo "<tr>\n";
-			echo "<td> link		</td>\n";
-			//echo "<td>target	</td>\n";
-			echo "<td>text		</td>\n";
-			echo "<td>check	</td>\n";
-			echo "</tr>\n";
+				for ($n2=0; $n2 < sizeof($xml->bookmarks->section[$n1]->a); $n2++)
+					{
+						echo "<tr>\n";
 
-			for ($n2=0; $n2 < sizeof($xml->bookmarks->section[$n1]->a); $n2++)
-				{
-					echo "<tr>\n";
-
-					echo "<td>\n";
-					$name=$xml->bookmarks->section[$n1]['keyword']."_href[$n2]";
-					$href=$xml->bookmarks->section[$n1]->a[$n2]['href'];
+						echo "<td>\n";
+						$name=$xml->bookmarks->section[$n1]['keyword']."_href[$n2]";
+						$href=$xml->bookmarks->section[$n1]->a[$n2]['href'];
 echo "<input type=\"text\" value=\"".$href."\" name=\"$name\" onChange=\"javascript:change_text('href[$n2]',this.value);this.style.color = 'red';\">\n";
-					echo "</td>\n";
+						echo "</td>\n";
 
-					echo "<td>\n";
-					$name=$xml->bookmarks->section[$n1]['keyword']."_text[$n2]";
-					$value=$xml->bookmarks->section[$n1]->a[$n2];
+						echo "<td>\n";
+						$name=$xml->bookmarks->section[$n1]['keyword']."_text[$n2]";
+						$value=$xml->bookmarks->section[$n1]->a[$n2];
 echo "<input type=\"text\" value=\"".$value."\" name=\"$name\" onChange=\"javascript:change_text('text[$n2]',this.value);this.style.color = 'red';\">\n";
-					echo "</td>\n";
+						echo "</td>\n";
 
-					echo "<td>\n";
-					echo "<input type='checkbox' value='' name=\"".$xml->bookmarks->section[$n1]['keyword']."_check[$n2]\">\n";
-					echo "</td>\n";
+						echo "<td>\n";
+						echo "<input type='checkbox' value='' name=\"".$xml->bookmarks->section[$n1]['keyword']."_check[$n2]\">\n";
+						echo "</td>\n";
 
-					echo "</tr>\n";
+						echo "</tr>\n";
 
-				} //--------------------------- end for
+					} //--------------------------- end for
 
-			echo "</table>\n";
+				echo "</table>\n";
 
-			//echo "<input type=\"hidden\" name=section_name value=\"".$xml->bookmarks->section[$n1]['keyword']."\">";
-			echo "<input type='button' name='action' value=\"save changes\" onClick=\"form_post_values.submit();\">";
-			//echo "<input type=\"submit\" name='action' value=\"save changes\">";
-			echo "</fieldset>";
-			echo "</form>\n";
-			echo "</div>\n";
-//-----------------------------------------------------------------
+				echo "<input type='button' name='action' value=\"save changes\" onClick=\"form_post_values.submit();\">";
+				//echo "<input type=\"submit\" name='action' value=\"save changes\">";
+				echo "</fieldset>";
+				echo "</form>\n";
+				echo "</div>\n";
 
+			  } // --------------- end if
 		} //--------------------------- end for
 	echo "</div>\n";
   }
@@ -172,14 +179,9 @@ div.section_edit
 <script>
 function change_text(name,text)
 {
-	//alert ('Change text!'+name);
-	//document.getElementById('+name+').style.color = 'red';
-	//var frm = document.form_edit_xml_0;
-	//frm.elements[name].style.color='red';
-
 	// добавить измененный текст в список переменых для POST-отправки
 	document.form_post_values.innerHTML = 
-document.form_post_values.innerHTML + \"<input type='text' name='\"+name+\"' value='\"+text+\"'>\";
+document.form_post_values.innerHTML + \"<input type='hidden' name='\"+name+\"' value='\"+text+\"'>\";
 }
 //---------------------- end func
 
@@ -210,13 +212,8 @@ $tpl_p2 = "</body>\n</html>\n";
 
 echo $tpl_p1;
 
-// Создать форму для отредактированных полей, для их передачи в ф-цию сохранения изменений
-echo "<form method=\"post\" name='form_post_values' action=\"".basename($_SERVER['SCRIPT_NAME'])."\">\n";
-echo "<input type='hidden' name='action' value='save changes'>";
-echo "</form>\n";
-
 //$xml_file = "http://rlaptev.co.cc/www/xml/menu.xml";
-$xml_file = "mydb.xml";
+$xml_file = "data/mydb.xml";
 
 //$bookmarks =  $xml->bookmarks; 
 //echo "<pre>";
@@ -236,7 +233,6 @@ else
   {
   //echo "Use SimpleXML for read data from ".$xml_file."<br>\n"; 
 	view_xml ($xml); // Вывести на страницу раздел bookmarks
-	edit_xml ($xml); // Вывести в скрытый div форму редактирования
   }
 
 
@@ -250,12 +246,9 @@ if (isset($_REQUEST['action']))
 //*******************************************************************
 if  ($action == "save changes")
    {
-echo "<pre>";
-//print_r ($_REQUEST);
-print_r ($_POST);
-//print_r ($_SERVER);
-echo "</pre>";
-
+//echo "<pre>";
+//print_r ($_POST);
+//echo "</pre>";
 	$xml = simplexml_load_file($xml_file);
 	if ($xml == FALSE) 
 	  {
@@ -303,18 +296,23 @@ echo "</pre>";
 			  }
 		} //--------------------------- end for
 
-copy ($xml_file, $xml_file.'.bak');  // создать резервную копию
-$xml->asXML($xml_file);
-	//view_xml ($xml); // Вывести на страницу раздел bookmarks
-	//edit_xml ($xml); // Вывести в скрытый div форму редактирования
+	copy ($xml_file, $xml_file.'.bak');  // создать резервную копию
+	$xml->asXML($xml_file);
 
    }
 // -------------------- end action
 
-//if  ($action == "edit")
-//   {
-	//edit_xml ($xml_file); // Вывести на страницу форму редактирования menu2
-//   }
+if  ($action == "edit")
+   {
+	if ( (isset($_REQUEST['section_name']))  AND ($_REQUEST['section_name'] !== ""))
+	  {
+		$section_name=$_REQUEST['section_name']; 
+	  }
+	else
+		exit("<font color='red'>Error. section_name undefined</font>");
+
+	edit_xml ($xml,$section_name); //Вывести форму редактирования
+   }
 // -------------------- end action
 
 echo $tpl_p2;

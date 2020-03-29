@@ -1,4 +1,4 @@
-<?
+<?php
 
 $map_array = array(
     "BOLD"     => "B",
@@ -55,7 +55,7 @@ $xml_parser = xml_parser_create();
 // set up start and end element handlers
 xml_set_element_handler ($xml_parser, "startElement_1", "endElement_1");
 
-$file = "news.xml";
+$file = "data/news.xml";
 if (!($fp = fopen($file, "r"))) 
   {
     die("could not open XML input");

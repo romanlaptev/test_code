@@ -107,8 +107,10 @@ xml_set_character_data_handler($parser,'saxCharacterData');
 // folding включен, то все имена тегов будут переведены
 // в верхний регистр.
 xml_parser_set_option($parser,XML_OPTION_CASE_FOLDING,false);
+
 // Получаем содержимое XML-файла с новостями.
-$xml = join('',file('news2.xml'));
+$xml = join('',file('data/news2.xml'));
+
 // Производим парсинг (разбор) полученного XML-файла.
 // В процессе разбора парсер будет вызывать описанные нами
 // функции и в результате мы получим массив $news,
@@ -141,4 +143,3 @@ foreach($news as $n)
 </table>
 </body>
 </html>
-

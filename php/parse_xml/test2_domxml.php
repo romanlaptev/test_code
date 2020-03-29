@@ -8,7 +8,7 @@
 <table>
 
 <?php
-	$doc = domxml_open_file( "./travel.xml");
+	$doc = domxml_open_file( "data/travel.xml");
 	$context = xpath_new_context($doc);
 	$root = $doc->document_element();
 	$ехрг = "//*";

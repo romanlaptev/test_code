@@ -9,7 +9,7 @@
 // MAIN
 //****************************
 //$filename = "data.xml";
-$filename = "test_video.xml";
+$filename = "data/test_video.xml";
 
 if (file_exists($filename)) 
   {

@@ -3,13 +3,14 @@
 <meta content="charset=utf-8">
 </head>
 <body>
-<?
+<h1>Test SimpleXML</h1>
+<?php
 
 //****************************
 // MAIN
 //****************************
 //$filename = "data.xml";
-$filename = "video.xml";
+$filename = "data/test_video.xml";
 
 if (file_exists($filename)) 
   {

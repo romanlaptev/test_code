@@ -3,11 +3,11 @@
 <meta content="charset=utf-8">
 </head>
 <body>
-<?
+<?php
 //****************************
 // MAIN
 //****************************
-$filename = "test_video.xml";
+$filename = "data/test_video.xml";
 //$filename = "video.xml";
 
 $file = fopen($filename,"r");

@@ -1,8 +1,8 @@
-<?
+<?php
 
 //$simple = "<para><note>simple note</note></para>";
 
-$simple = file_get_contents("news.xml");
+$simple = file_get_contents("data/news.xml");
 //print_r ($simple);
 
 // create an XML parser
