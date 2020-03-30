@@ -1,3 +1,35 @@
+--------------------------------------------- MariaDB root пароль
+https://www.linux.org.ru/forum/admin/13554233
+
+что надо сделать, чтобы ввод пароля работал .
+
+# mysql -u root
+MariaDB [(none)]> use mysql;
+Database changed
+MariaDB [mysql]> update user set password=PASSWORD("my-new-cool-password") where User='root';
+MariaDB [mysql]> flush privileges;
+MariaDB [mysql]> update user set plugin='' where User='root';
+MariaDB [mysql]> quit;
+Bye
+# systemctl restart mariadb
+
+Вернуть обратно так:
+
+# mysql -u root -p
+Enter password: 
+( вводим пароль my-new-cool-password )
+MariaDB [(none)]> use mysql;
+Database changed
+MariaDB [mysql]> update user set plugin='unix_socket' where User='root';
+MariaDB [mysql]> quit;
+Bye
+# systemctl restart mariadb
+Проверяем вход root без пароля:
+# mysql -u root
+MariaDB [(none)]> quit;
+Bye
+
+
 ---------------------------------------------- mysql установка пароля root
 http://www.mysql.ru/docs/man/Default_privileges.html
 способ задать пароль - воспользоваться командой mysqladmin:
