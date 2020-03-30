@@ -1,0 +1,37 @@
+---------------------------------------------- mysql установка пароля root
+http://www.mysql.ru/docs/man/Default_privileges.html
+способ задать пароль - воспользоваться командой mysqladmin:
+
+shell> mysqladmin -u root password new_password
+
+-------------------------------------------- MySQL: меняем datadir для mysql
+
+1.
+  - создать символьную ссылку для datadir (/var/lib/mysql) (ln -s /mnt/disk2/mysql_db /var/lib/mysql)
+
+  - отключить сервис /etc/rcS.d/K37apparmor 
+  - если базы лежат в сети, то подключить сетевой диск с доступом для 
+пользователя mysql (добавить в группу юзер) и без запроса пароля
+/etc/fstab
+//192.168.0.4/public	/mnt/nas	cifs	iocharset=utf8,gid=users,noperm,guest	0	0
+  - если необходимо, перенести старт сервера, после монтирования ресурса с базами в fstab
+mv /etc/rc2.d/S19mysql /etc/rc2.d/S97mysql
+
+----------------------------------
+2.
+в файле /etc/mysql/my.cnf
+[mysqld]
+#datadir		= /var/lib/mysql
+#datadir		= /home/mysql
+datadir		= /mnt/disk2/documents/0_sites/0_db/mysql
+.....
+в файле /etc//etc/apparmor.d/usr.sbin.mysqld исправить /var/lib/mysql на новый путь
+.....
+  /mnt/disk2/documents/0_sites/0_db/mysql/ r,
+  /mnt/disk2/documents/0_sites/0_db/mysql/** rwk,
+...
+=============================
+show databases;
+grant all privileges on *.* to 'phpmyadmin'@'localhost' with grant option;
+flush privileges;
+
