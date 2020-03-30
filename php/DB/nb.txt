@@ -1,5 +1,5 @@
 ======================================= 
-mysql установка пароля root
+MySQL: mysql установка пароля root
 ======================================= 
 http://www.mysql.ru/docs/man/Default_privileges.html
 способ задать пароль - воспользоваться командой mysqladmin:
@@ -7,7 +7,7 @@ http://www.mysql.ru/docs/man/Default_privileges.html
 shell> mysqladmin -u root password new_password
 
 ======================================= 
-MariaDB root пароль
+MySQL: MariaDB root пароль
 ======================================= 
 https://www.linux.org.ru/forum/admin/13554233
 
@@ -124,12 +124,16 @@ mysqldump --user=root --password=master --databases drupal622 > db_drupal622.sql
 zip sql_drupal622.zip db_drupal622.sql
 rm db_drupal622.sql
 
+=================
+mysqladmin -u root create db1
+mysql --user=root --password= traffic < export.sql
 
 
 =================
 SQL: import, export
 =================
 SELECT * INTO OUTFILE '/tmp/traffic.table1.txt' FIELDS TERMINATED BY ',' FROM traffic.table1;
+SELECT * INTO [xxx#TXT] FROM phones
 ---
 LOAD DATA INFILE './traffic.table1.txt' INTO TABLE traffic.table2 fields terminated by ',';
 LOAD DATA INFILE './traffic.table1.txt' fields terminated by ',' INTO TABLE traffic.table1;
@@ -224,6 +228,28 @@ SQL:  summa.sql
 =================
 SELECT (sum(len_packet))/ (1024*1024) FROM traffic.table1;
 
+
+SELECT * FROM calls WHERE Dial_Number like "810%"
+SELECT * FROM calls WHERE (Dial_Number NOT BETWEEN "8901%" AND "8960%") AND (Dial_Number like "8%")
+SELECT * FROM calls WHERE (Dial_Number NOT BETWEEN "8901%" AND "8960%") AND (Dial_Number NOT like "810%") AND 
+(Dial_Number like "8%")
+SELECT * FROM calls where date like "2005-04%" and CO IN ("10","11")  and Dial_Number like "8%"
+
+SELECT distinct(src_ip) FROM lan_packets where lDate="2005-09-21"
+SELECT (sum(sent)+sum(recv))/ (1024*1024)  FROM lan_packets where ldate="2005-09-22" and src_ip="192.168.0.39"
+
+SELECT * FROM calls WHERE Dial_Number BETWEEN "8901%" AND "8960%"
+
+SELECT * FROM calls where date like "2005-04%" and CO="01"  and Dial_Number like "8%"
+SELECT * FROM calls where date like "2005-04%" and Dial_Number IN ("80952322573","80952322583")
+
+SELECT sum(Incoming)+sum(Out) FROM traffic where date like "2005-04%" and PortP ="80"
+
+SELECT sum(Incoming)+sum(Out) FROM traffic where date="2005-05-16"
+SELECT sum(Incoming)+sum(Out) FROM traffic where date="2005-05-01"
+
+-- traffic_days (mb).sql
+SELECT (sum(Incoming)+sum(Out))/ (1024*1024) FROM traffic where date="2005-05-01"
 
 
 ==========================================================
