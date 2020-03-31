@@ -78,13 +78,15 @@ $arguments = array(
 func4( $arguments );
 
 function func4( $params ) {
-	$p = [
+	//$p = [
+	$p = array(
 		"data" => null,
 		"type"  =>  "list",
 		"wrapType" => "menu",
 		"templateID" =>  false,
 		"templateListItemID" => false
-	];
+	);
+//	];
 
 	//extend options object $p
 	foreach( $params as $key=>$item ){
