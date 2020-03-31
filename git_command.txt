@@ -1,5 +1,7 @@
+=======================
+git clone ssh://roman@i5/mnt/d2/www/test_code
 
-#--------------------- reset master branch
+#======================= reset master branch
 rem git reset --hard e3f645d12bd3945cf3b8bc122e3cbd837b49355f
 rem git status
 
@@ -10,7 +12,7 @@ rem git merge dev //add new changes
 rem git status
 rem git push
 
-#-------------------- switch to old commit
+#======================= switch to old commit
 #git checkout 22ec5e35832a146596a59a4bd5cf4795274ee7e3
 git checkout 385d0fd31e252d76e4ec8b1b43029fff76106337
 
@@ -23,7 +25,7 @@ git checkout 385d0fd31e252d76e4ec8b1b43029fff76106337
 #Push local branch 'test' on GitHub
 #git push origin origin:refs/heads/test
 
-#--------------------------- create submodule
+#======================= create submodule
 #git submodule add https://github.com/romanlaptev/bookmarks.git projects/bookmarks/bookmarks-cache
 
 #pull submodule on remote repositories
@@ -33,7 +35,7 @@ git checkout 385d0fd31e252d76e4ec8b1b43029fff76106337
 #git config --global push.default current
 #
 
-#---------------------------------------------------
+#=======================
 git rm -r --cached projects/geolocation #remove directory from git cache (for .gitignore work)
 
 
