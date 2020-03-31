@@ -43,7 +43,8 @@ echo "<pre>\n";
 print_r( $arr1 );
 echo "</pre>\n";
 
-function func2( array &$arr1 ){
+//function func2( array &$arr1 ){
+function func2( &$arr1 ){
 	$arr1[0] = 4;
 	$arr1[1] = 5;
 	$arr1[2] = 6;
