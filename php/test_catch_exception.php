@@ -37,9 +37,9 @@ echo "<pre>\n";
 print_r( $e );
 echo "</pre>\n";
 
-} finally {//=>PHP 5.5 
-	echo "this is the end....";
-	echo "<br/>\n";
+//} finally {//=>PHP 5.5 
+	//echo "this is the end....";
+	//echo "<br/>\n";
 }//end catch
 
 ?>
