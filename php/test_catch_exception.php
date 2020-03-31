@@ -33,6 +33,9 @@ try{
     echo "line: ".$e->getLine();
 	echo "<br/>\n";
 
+    echo "trace: ".$e->getTraceAsString();
+	echo "<br/>\n";
+
 echo "<pre>\n";
 print_r( $e );
 echo "</pre>\n";
