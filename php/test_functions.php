@@ -67,7 +67,8 @@ function func3()
 
 //$arguments = [
 $arguments = array(
-	"data" => [ "a" => 1, "b" => 2, "c" => 3],
+	//"data" => [ "a" => 1, "b" => 2, "c" => 3],
+	"data" => array( "a" => 1, "b" => 2, "c" => 3),
 	"wrapType" => "menu2",
 	"templateID" =>  "tpl-copyright",
 	"templateListItemID" => "tpl-schedule-table--tr"
@@ -103,7 +104,8 @@ function formatSize($bytes)
     $gbytes = $mbytes / 1024;
 
 	//return ["bytes" => $bytes, "kbytes" => $kbytes, "mbytes" => $mbytes, "gbytes" => $gbytes];
-    return [$bytes, $kbytes, $mbytes, $gbytes];
+	//return [$bytes, $kbytes, $mbytes, $gbytes];
+    return array( $bytes, $kbytes, $mbytes, $gbytes );
 }
 //-------- dynamic creation of variables
 list ($bytes, $kbytes, $mbytes, $gbytes) = formatSize(18642678);
@@ -114,7 +116,8 @@ echo "<br/>\n";
 function formatSize2($bytes)
 {
 	list ($bytes, $kbytes, $mbytes, $gbytes) = formatSize($bytes);
-	return ["bytes" => $bytes, "kbytes" => $kbytes, "mbytes" => $mbytes, "gbytes" => $gbytes];
+	//return ["bytes" => $bytes, "kbytes" => $kbytes, "mbytes" => $mbytes, "gbytes" => $gbytes];
+	return array("bytes" => $bytes, "kbytes" => $kbytes, "mbytes" => $mbytes, "gbytes" => $gbytes );
 }
 
 echo "File size:";
