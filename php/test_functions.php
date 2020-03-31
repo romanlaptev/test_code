@@ -65,12 +65,14 @@ function func3()
 
 //======================== send OPTIONS array
 
-$arguments = [
+//$arguments = [
+$arguments = array(
 	"data" => [ "a" => 1, "b" => 2, "c" => 3],
 	"wrapType" => "menu2",
 	"templateID" =>  "tpl-copyright",
 	"templateListItemID" => "tpl-schedule-table--tr"
-];
+);
+//];
 
 func4( $arguments );
 
