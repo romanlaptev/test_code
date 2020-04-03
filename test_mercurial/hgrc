@@ -1,0 +1,10 @@
+[ui]
+username = root <root@vbox5>
+verbose = true
+
+[paths]
+default = /mnt/serv_d1/www/projects/taskPHP/
+
+[web]
+push_ssl=false
+allow_push=*

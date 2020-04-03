@@ -1,0 +1,45 @@
+//https://habr.com/ru/post/108658/
+//https://habr.com/ru/post/108904/
+//Основы Mercurial
+
+//http://xgu.ru/wiki/%D0%9E%D1%81%D0%BD%D0%BE%D0%B2%D1%8B_Mercurial
+
+============================== central repo
+hg init
+hg status
+hg add
+
+touch ./.hg/hgrc
+
+mcedit  
+[ui]
+username = root  <root@vbox5>
+verbose = True
+
+hg commit -m "first commit"
+
+
+rm commands.txt
+hg ststus
+
+#restore last state, restore commands.txt
+hg revert --all
+
+#list changes for file
+hg diff commands.txt
+
+#rev 0 and rev 1
+hg diff -r 0:1 commands.txt
+
+hg update -r 0 //move on revision 0
+hg update -r 1
+
+hg serve //up local webserver on port 8000
+
+
+================================ remote repo
+sudo hg clone http://vbox3:8000 repo
+
+
+--------------------------!!!!!!!!!!!!!!!!!!!!!!!!
+hg update //sync file system with repo (after remote commits)
