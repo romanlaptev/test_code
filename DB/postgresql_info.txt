@@ -1,0 +1,146 @@
+++createuser -U postgres Roman
+++createdb -U postgres Roman
+
+-------------
+D:\www\test_code\DB>psql -U postgres
+Welcome to psql 8.3.0, the PostgreSQL interactive terminal.
+
+Type:  \copyright for distribution terms
+       \h for help with SQL commands
+       \? for help with psql commands
+       \g or terminate with semicolon to execute query
+       \q to quit
+
+Warning: Console code page (866) differs from Windows code page (1251)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+chcp 1251 - change charset
+
+postgres=# SELECT CURRENT_USER;
+ current_user
+--------------
+ postgres
+(1 row)
+
+postgres=#
+
+==========================================================
+postgres-# \l
+        List of databases
+   Name    |  Owner   | Encoding
+-----------+----------+----------
+ Roman     | postgres | UTF8
+ postgres  | postgres | UTF8
+ template0 | postgres | UTF8
+ template1 | postgres | UTF8
+(4 rows)
+
+postgres-#
+
+
+==========================================================
+postgres=# CREATE DATABASE db1 TEMPLATE template0;
+CREATE DATABASE
+postgres=# \l
+        List of databases
+   Name    |  Owner   | Encoding
+-----------+----------+----------
+ Roman     | postgres | UTF8
+ db1       | postgres | UTF8
+ postgres  | postgres | UTF8
+ template0 | postgres | UTF8
+ template1 | postgres | UTF8
+(5 rows)
+
+postgres=# SELECT CURRENT_DATABASE();
+ current_database
+------------------
+ postgres
+(1 row)
+
+postgres=# \c db1
+You are now connected to database "db1".
+db1=# template0 | postgres | UTF8
+ template1 | postgres | UTF8
+(4 rows)
+
+postgres-# CREATE DATABASE db1 TEMPLATE template0;
+ERROR:  syntax error at or near "CREATE"
+LINE 2: CREATE DATABASE db1 TEMPLATE template0;
+        ^
+postgres=# CREATE DATABASE db1 TEMPLATE template0;
+CREATE DATABASE
+postgres=# \l
+        List of databases
+   Name    |  Owner   | Encoding
+-----------+----------+----------
+ Roman     | postgres | UTF8
+ db1       | postgres | UTF8
+ postgres  | postgres | UTF8
+ template0 | postgres | UTF8
+ template1 | postgres | UTF8
+(5 rows)
+
+postgres=# SELECT CURRENT_DATABASE();
+ current_database
+------------------
+ postgres
+(1 row)
+
+postgres=# \c db1
+You are now connected to database "db1".
+db1=#
+
+========================================================== CREATE TABLE
+postgres=# \c db1
+You are now connected to database "db1".
+db1=# CREATE TABLE users (
+db1(# id SERIAL,
+db1(# first_name VARCHAR(40),
+db1(# last_name VARCHAR(40)
+db1(# );
+NOTICE:  CREATE TABLE will create implicit sequence "users_id_seq" for serial
+column "users.id"
+CREATE TABLE
+db1=#
+
+==========================================================
+CREATE TABLE
+db1=# CREATE TABLE articles (
+db1(# id SERIAL,
+db1(# title VARCHAR(40),
+db1(# body TEXT,
+db1(# user_id INTEGER,
+db1(# create_at TIMESTAMP,
+db1(# update_at TIMESTAMP
+db1(# );
+NOTICE:  CREATE TABLE will create implicit sequence "articles_id_seq" for seri
+al column "articles.id"
+CREATE TABLE
+db1=#
+
+==========================================================
+db1=# \dt
+          List of relations
+ Schema |   Name   | Type  |  Owner
+--------+----------+-------+----------
+ public | articles | table | postgres
+ public | users    | table | postgres
+(2 rows)
+
+db1=#
+
+==========================================================
+==========================================================
+==========================================================
+==========================================================
+==========================================================
+==========================================================
+==========================================================
+==========================================================
+==========================================================
+==========================================================
+==========================================================
+==========================================================
+==========================================================
+==========================================================
