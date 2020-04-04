@@ -1,9 +1,10 @@
-================= mySQL: Дамп базы данных
+================= mySQL: экспорт базы данных
 mysqldump --user=root --password=master --databases drupal622 > db_drupal622.sql
 zip sql_drupal622.zip db_drupal622.sql
 rm db_drupal622.sql
 
-
+================= mySQL: импорт
+mysql -u qdecout_test -psdkjfh -Dqdecout_test < qdec.sql
 
 -------------------
 If you get the error mysqldump: Got error: 1146: Table 'table' doesn't
@@ -11,6 +12,7 @@ exist when using LOCK TABLES , while taking the backup of the mysql
 database , then you can use the following command to backup the database .
 
 mysqldump.exe -uusername -ppassword dbname --skip-lock-tables 
+
 
 ================= проверить все базы данных
 mysqlcheck -u root -p --check-upgrade --all-databases --auto-repair
