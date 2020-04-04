@@ -1,3 +1,6 @@
+================= postgreSQL
+psql --dbname=notes --username=postgres --password
+
 ================= mySQL: экспорт базы данных
 mysqldump --user=root --password=master --databases drupal622 > db_drupal622.sql
 zip sql_drupal622.zip db_drupal622.sql
