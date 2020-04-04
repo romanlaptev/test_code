@@ -1,0 +1,272 @@
+================= mySQL: Дамп базы данных
+mysqldump --user=root --password=master --databases drupal622 > db_drupal622.sql
+zip sql_drupal622.zip db_drupal622.sql
+rm db_drupal622.sql
+
+
+
+-------------------
+If you get the error mysqldump: Got error: 1146: Table 'table' doesn't
+exist when using LOCK TABLES , while taking the backup of the mysql
+database , then you can use the following command to backup the database .
+
+mysqldump.exe -uusername -ppassword dbname --skip-lock-tables 
+
+================= проверить все базы данных
+mysqlcheck -u root -p --check-upgrade --all-databases --auto-repair
+
+=============================================
+mysqladmin -u root --password=toor create db1 - создать БД
+/etc/mysqlmanager.passwd
+mysqlmanager --user=root --add-user --username roman --password=super
+mysqlmanager --list-users
+
+mysqlshow --host=localhost --user=root --password=toor
+mysql --user=root --password=toor < export.sql - выполнить SQL-запрос
+
+
+============================================= Создание нового пользователя
+> mysql -u root -pmaster
+
+mysql> GRANT ALL PRIVILEGES ON *.* TO roman@localhost IDENTIFIED BY 'master' WITH GRANT OPTION;
+mysql> \q
+
+=======================================  MySQL: mysql установка пароля root
+http://www.mysql.ru/docs/man/Default_privileges.html
+shell> mysqladmin -u root password new_password
+
+======================================= MySQL: MariaDB root пароль
+https://www.linux.org.ru/forum/admin/13554233
+
+что надо сделать, чтобы ввод пароля работал .
+# mysql -u root
+MariaDB [(none)]> use mysql;
+Database changed
+MariaDB [mysql]> update user set password=PASSWORD("my-new-cool-password") where User='root';
+MariaDB [mysql]> flush privileges;
+MariaDB [mysql]> update user set plugin='' where User='root';
+MariaDB [mysql]> quit;
+Bye
+# systemctl restart mariadb
+
+Вернуть обратно так:
+# mysql -u root -p
+Enter password: 
+( вводим пароль my-new-cool-password )
+MariaDB [(none)]> use mysql;
+Database changed
+MariaDB [mysql]> update user set plugin='unix_socket' where User='root';
+MariaDB [mysql]> quit;
+Bye
+# systemctl restart mariadb
+Проверяем вход root без пароля:
+# mysql -u root
+MariaDB [(none)]> quit;
+Bye
+
+
+=======================================  mySQL: создать пользователя БД
+> mysql -u root -pmaster
+
+mysql> GRANT ALL PRIVILEGES ON *.* TO roman@localhost IDENTIFIED BY 'master' WITH GRANT OPTION;
+mysql> \q
+
+show databases;
+grant all privileges on *.* to 'phpmyadmin'@'localhost' with grant option;
+flush privileges;
+
+--------------------
+CREATE USER 'zelenyidom'@'%' IDENTIFIED BY '***';
+
+GRANT ALL PRIVILEGES ON * . * TO 'zelenyidom'@'%' 
+IDENTIFIED BY '***' 
+WITH GRANT 
+OPTION MAX_QUERIES_PER_HOUR 0 
+MAX_CONNECTIONS_PER_HOUR 0 
+MAX_UPDATES_PER_HOUR 0 
+MAX_USER_CONNECTIONS 0 ;
+</pre>
+
+--------------------
+CREATE USER 'toool'@'%' IDENTIFIED BY  '***';
+
+GRANT ALL PRIVILEGES ON * . * TO  'toool'@'%' IDENTIFIED BY  '***' WITH GRANT OPTION MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;
+
+GRANT ALL PRIVILEGES ON  `toool` . * TO  'toool'@'%';
+
+
+==================
+mySQL: variables
+==================
+SHOW STATUS
+предоставляет информацию по состоянию сервера (как mysqladmin extended-status)
+
+	SHOW VARIABLES
+узнать значения переменных mysql
+
+	SHOW ENGINES
+Получить список поддерживаемых движков вашего сервера
+
+	SHOW CHARSET
+
+	SHOW INDEX FROM table
+	SHOW KEYS FROM table
+список индексов таблицы
+
+	SHOW COLUMNS FROM ".$table;
+	SHOW FIELDS FROM ".$table;
+
+	SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_SCHEMA = 'drupal_magazin' AND TABLE_NAME = 'blocks'
+	узнать следующий Autoindex таблицы?????
+
+SHOW VARIABLES LIKE 'query_cache%'
+reset query cache;
+
+- Что бы указать размер памяти для кеширования, внесите в my.cnf:
+query_cache_size=32M
+
+- для того, что бы увидеть, как используется наш кеш, можно выполнить запрос:
+show global status like 'Qcache%';
+
+- Для включения кеша «на лету» можно залогинившись в базу с правами root пользователя дать комманду
+set @@global.query_cache_size=256*1024*1024;
+для указания 256М кеша.
+
+- при выборке запретить использование кеша, в запрос добавляем флаг SQL_NO_CACHE, пример:
+SELECT SQL_NO_CACHE * FROM table WHERE id = 1;
+
+- Пример с кешированием, когда конфигурационная переменная query_cache_type = 2:
+SELECT SQL_CACHE * FROM table WHERE id = 1;
+
+
+
+=============================================
+INSTALL DB Drupal
+=============================================
+mysqladmin -u username -p create databasename
+mysql -u username -p
+
+  GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER
+  ON databasename.*
+  TO 'username'@'localhost' IDENTIFIED BY 'password';
+-------------------------------------
+
+=============================================
+INSTALL DB Joomla
+=============================================
+First, you must create a new database for your Joomla! site e.g.
+
+$ mysqladmin -u db_user -p create Joomla
+
+MySQL will prompt for the 'db_user' database password and then create
+the initial database files.  Next you must login and set the access
+database rights e.g.
+
+$ mysql -u db_user -p
+
+Again, you will be asked for the 'db_user' database password.  At the
+MySQL prompt, enter following command:
+
+GRANT ALL PRIVILEGES ON Joomla.*
+	TO nobody@localhost IDENTIFIED BY 'password';
+
+=============================================
+roman-laptev.hut1.ru
+=============================================
+1.mysql -u romanla -h database.agava.ru -p romanla
+=======
+
+# Create table
+2.mysql -h database.agava.ru -u romanla -p romanla < create_table.sql
+=======
+
+3.
+mysqlshow -u romanla -h database.agava.ru -p -v
+mysqlshow --host=database.agava.ru --user=romanla --password=master --verbose
+=======
+
+mysqladmin -u root password master
+mysql --host=database.agava.ru --user=romanla --password=master
+mysql> use romanla
+No connection. Trying to reconnect...
+Connection id:    7701875
+Current database: *** NONE ***
+
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++-------------------+
+| Tables_in_romanla |
++-------------------+
+| table1            |
+| table2            |
++-------------------+
+2 rows in set (0.00 sec)
+
+
+
+=============================
+mySQL: chaset
+=============================
+
+SHOW GLOBAL VARIABLES LIKE 'char%';
+192.168.0.11
+Variable_name 	Value
+character_set_client 	latin1
+character_set_connection 	latin1
+character_set_database 	latin1
+character_set_filesystem 	binary
+character_set_results 	latin1
+character_set_server 	latin1
+character_set_system 	utf8
+character_sets_dir 	/usr/share/mysql/charsets/
+--------------------------
+sibhoster.ru
+Variable_name 	Value
+character_set_client 	cp1251
+character_set_connection 	cp1251
+character_set_database 	cp1251
+character_set_filesystem 	binary
+character_set_results 	cp1251
+character_set_server 	cp1251
+character_set_system 	utf8
+character_sets_dir 	/usr/share/mysql/charsets/
+
+mysql_query("SET NAMES 'cp1251'");
+
+[mysql]
+default-character-set=cp1251
+[mysqld]
+init-connect="SET NAMES cp1251"
+default-character-set=cp1251
+
+
+======================================= MySQL: меняем datadir для mysql
+1.
+  - создать символьную ссылку для datadir (/var/lib/mysql) (ln -s /mnt/disk2/mysql_db /var/lib/mysql)
+
+  - отключить сервис /etc/rcS.d/K37apparmor 
+  - если базы лежат в сети, то подключить сетевой диск с доступом для 
+пользователя mysql (добавить в группу юзер) и без запроса пароля
+/etc/fstab
+//192.168.0.4/public	/mnt/nas	cifs	iocharset=utf8,gid=users,noperm,guest	0	0
+  - если необходимо, перенести старт сервера, после монтирования ресурса с базами в fstab
+mv /etc/rc2.d/S19mysql /etc/rc2.d/S97mysql
+
+----------------------------------
+2.
+в файле /etc/mysql/my.cnf
+[mysqld]
+#datadir		= /var/lib/mysql
+#datadir		= /home/mysql
+datadir		= /mnt/disk2/documents/0_sites/0_db/mysql
+.....
+в файле /etc//etc/apparmor.d/usr.sbin.mysqld исправить /var/lib/mysql на новый путь
+.....
+  /mnt/disk2/documents/0_sites/0_db/mysql/ r,
+  /mnt/disk2/documents/0_sites/0_db/mysql/** rwk,
+...
+
