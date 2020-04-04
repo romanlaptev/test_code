@@ -1,3 +1,6 @@
+SET NAMES utf8;
+-- ++++SET CHARACTER SET utf8;
+
 -- CREATE DATABASE IF NOT EXISTS `db1`;
 -- CREATE DATABASE IF NOT EXISTS `db1` DEFAULT CHARACTER SET latin1;
 CREATE DATABASE IF NOT EXISTS `db1` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -23,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `category` (
   `parent_id` int(11) COMMENT 'связь с родительской категорией',
   `name` varchar(255)  NOT NULL COMMENT 'Наименование',
   PRIMARY KEY (`category_id`)
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;
 
 INSERT INTO `category` (`category_id`, `parent_id`, `name`) VALUES
 (1, 0, 'Категория 1'),
