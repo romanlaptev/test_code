@@ -872,3 +872,53 @@ LEFT JOIN file_usage ON file_usage.id=node.nid -- fid прикрепленных
 WHERE file_managed.fid=file_usage.fid;
 -- ==============================================================
 
+
+//====================================== DB db1, kontur test task
+
+CREATE TABLE IF NOT EXISTS `product` (
+  `code` int(11) NOT NULL COMMENT 'Артикул',
+  `name` varchar(255)  NOT NULL COMMENT 'Наименование',
+  `category_id` int(11) COMMENT 'связь с таблицей категорий',
+  `description` text COMMENT 'Описание',
+  `image_url` text COMMENT 'Изображение (ссылка)',
+  PRIMARY KEY (`code`)
+);
+INSERT INTO `product` (`code`, `name`, `category_id`, `description`, `image_url`) VALUES
+(178051, 'Товар #1', 4, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit', NULL),
+(178052, 'Товар #3', 5, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit', NULL),
+(178053, 'Товар #2', 3, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit', 'images/logo1.png');
+
+//===========================================
+CREATE TABLE IF NOT EXISTS `category` (
+  `category_id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) COMMENT 'связь с родительской категорией',
+  `name` varchar(255)  NOT NULL COMMENT 'Наименование',
+  PRIMARY KEY (`category_id`)
+);
+INSERT INTO `category` (`category_id`, `parent_id`, `name`) VALUES
+(1, 0, 'Категория 1'),
+(2, 1, 'Категория 2'),
+(3, 4, 'Категория 4'),
+(4, 2, 'Категория 3'),
+(5, 4, 'Категория 5');
+
+
+//===========================================
+CREATE TABLE IF NOT EXISTS `users` (
+  `user_id` int(11) NOT NULL  AUTO_INCREMENT,
+  `login` varchar(64) NOT NULL,
+  `password` varchar(64) NOT NULL,
+  PRIMARY KEY (`user_id`)
+);
+
+
+INSERT INTO 
+`users` (`user_id`, `login`, `password`) 
+VALUES 
+(1, 'admin', '21232f297a57a5a743894a0e4a801fc3');
+
+//string pwd: admin
+//md5: 21232f297a57a5a743894a0e4a801fc3
+
+//===========================================
+
