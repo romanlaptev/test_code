@@ -1,0 +1,13 @@
+name = "Import nodes test"
+description = "Import library_book nodes from XML."
+package = Core
+version = VERSION
+core = 7.x
+files[] = import_nodes.module
+;hidden = TRUE
+
+; Information added by drupal.org packaging script on 2012-08-01
+version = "7.15"
+project = "drupal"
+datestamp = "1343839327"
+

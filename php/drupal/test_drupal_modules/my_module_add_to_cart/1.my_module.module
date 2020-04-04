@@ -1,0 +1,22 @@
+<?php
+/*
+function my_module_perm()
+{
+    return array('access my_module content');
+}
+*/
+
+function my_module_add_to_cart($nid, $qty, $data) {
+	drupal_set_message("function my_module_add_to_cart !!!");
+
+  if ($qty > 1) {
+    $result[] = array(
+      'success' => FALSE,
+      'message' => t('Sorry, you can only add one of those at a time.'),
+    );
+  }
+  return $result;
+
+}
+
+?>

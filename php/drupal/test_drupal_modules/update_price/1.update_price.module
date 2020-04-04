@@ -1,0 +1,371 @@
+<?php
+/**
+ * Implementation of hook_node_info().
+ */
+/*
+function update_price_node_info() {
+  return array(
+    'update_price' => array(
+      'name' => t('update_price page'),
+      'module' => 'update_price',
+      'description' => t('update_price page node type.'),
+    )
+  );
+}
+*/
+
+function update_price_perm()
+{
+    //return array('Доступ к обновлению прайс-листа');
+    return array('access update_price content');
+
+}
+
+
+/**
+ * Implementation of hook_access().
+ */
+function update_price_access($op, $node) {
+  global $user;
+
+  if ($op == 'create') {
+    return (user_access('create update_price'));
+  }
+
+  // This code has a BUG that we'll find in testing
+  // Correct version
+  // if ($op == 'update' || $op == 'delete') {
+
+  // Incorrect version we'll use to demonstrate test failure. We were always testing
+  // with User 1, so it always allowed access and the bug wasn't noticed!
+  if ($op == 'delete') {
+    return (user_access('edit own update_price') && ($user->uid == $node->uid));
+  }
+}
+
+
+function update_price_init()
+{
+	//drupal_set_message("function update_price_init !!!");
+	//drupal_get_form('update_price_form');
+}
+
+function update_price_form_alter(&$form, $form_state, $form_id)
+{
+}
+
+function update_price_menu ()
+{
+    $items = array();
+
+    $items['admin/settings/update_price'] = array(
+     'title' => 'update price module settings',
+     'description' => 'Description of your update price settings page',
+     'page callback' => 'drupal_get_form',// создание формы
+     'page arguments' => array ('update_price_form_admin_form'),	// вызов функции 
+     'access arguments' => array ('access administration pages'),
+     //'type' => MENU_NORMAL_ITEM,
+    );
+
+    $items['update_price'] = array(
+    'title' => 'Обновление данных о товарах и ценах',	//Заголовок страницы
+    'page callback' => 'drupal_get_form',// создание формы
+    'page arguments' => array('update_price_form'),//Содержимое формы
+    'access arguments' => array('access update_price content')
+    );
+//-------------------------------------------
+    $items['update_price/process'] = array(
+        'title' => 'Обновление данных о товарах и ценах',
+        'page callback' => 'update_price_process',
+        'type' => MENU_CALLBACK,
+        'access arguments' => array('access update_price content')
+    );
+//-------------------------------------------
+    $items['update_price/unpublic_product'] = array(
+        'title' => 'снятие товаров каталога с публикации',
+	'description'     => 'Update price service',
+        'page callback' => 'update_price_unpublic_product',
+	'access callback' => TRUE,
+    );
+//-------------------------------------------
+    $items['update_price/public_product'] = array(
+        'title' => 'опубликовать все товаров каталога',
+	'description'     => 'Update price service',
+        'page callback' => 'update_price_public_product',
+	'access callback' => TRUE,
+    );
+//-------------------------------------------
+  $items['update_price/remove_product'] = array(
+    'title'           => 'Remove all product',
+    'description'     => 'remove all product',
+    'page callback'   => 'update_price_remove_product',
+    'access callback' => TRUE,
+  );
+//-------------------------------------------
+
+    return $items;
+}//================= end function
+
+function update_price_form($form_state)
+{
+
+	global $base_url;
+	$urls= "
+<a href='".$base_url."/scripts/parce_csv_price.php'>parce_csv_price.php</a><br>
+<a href='update_price/remove_product'>remove all product</a><br>
+<a href='update_price/unpublic_product'>unpublic all product</a><br>
+<a href='update_price/public_product'>public all product</a><br>
+<a href='".$base_url."/scripts/update_price.php' target=_blank>update_price.php</a><br>";
+
+    $form['update_price_wrapper']['base'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('сервисные функции по обработке прайс-листа'),
+	'#value' => t($urls),
+        '#collapsible' => true,
+        '#collapsed' => false,
+    );
+//-----------------------------
+/*
+    $form['update_price_wrapper']['base']['update_price_price'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Стоимость автомобиля /руб.'),
+        '#attributes' => array('class' => 'slider'),
+		'#id' => 'credit-avto-price-input',
+        '#default_value' => 0,
+        '#size' => 8,
+    );
+
+    $form['update_price_wrapper']['base']['update_price_creditpart'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Первоначальный взнос /руб.'),
+        '#description' => t('Первоначальный взнос /руб.'),
+        '#attributes' => array('class' => 'slider'),
+        '#id' => 'credit-avto-creditpart-input',
+        '#default_value' => 0,
+        '#size' => 8,
+    );
+
+//По умолчанию подставляется INTrub (автокредиты), пользователь может его изменить на любое положительное число
+    $form['update_price_wrapper']['base']['update_price_rate'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Годовая процентная ставка /%'),
+        '#attributes' => array('class' => 'slider'),
+        '#id' => 'credit-avto-rate-input',
+//        '#default_value' => 17,
+        '#default_value' => variable_get('credit_calc_car_intrub', ''),
+        '#size' => 8,
+    );
+*/
+
+/*
+    $form['update_price_wrapper']['base']['update_price_creditperiod'] = array(
+        '#type' => 'select',
+        '#title' => t('Срок кредита /месяцев'),
+//        '#default_value' => 2,
+        '#options' => array(
+            '12' => t('12'),
+            '24' => t('24'),
+            '36' => t('36'),
+            '48' => t('48'),
+            '60' => t('60')
+        ),
+    );
+
+    $form['update_price_wrapper']['update_price_result'] = array(
+        '#prefix' => '<div id="avto-result">',
+        '#suffix' => '</div>',
+        '#value' => $form_state['values']['update_price_result']
+    );
+    $form['update_price_wrapper']['base']['update_price_submit'] = array(
+        '#type' => 'submit',
+        '#value' => t('Calculate'),
+        '#weight' => 1,
+        '#submit' => array('update_price_form_submit'),//none JS version
+//        '#suffix' => l(t('Requisition'), 'request', array('attributes' => array('class' => 'form-button left'))),
+        '#ahah' => array(
+            'event' => 'click',
+            'path' => 'update_price/process',
+            'wrapper' => 'update-price-wrapper',
+            'method' => 'replace',
+            'effect' => 'fade',
+            'progress' => array(
+                'type' => 'bar',
+                'message' => t('Loading...')
+            )
+        )
+    );
+*/
+//--------------------------------
+
+	$form['#attributes'] = array('enctype' => "multipart/form-data");
+	$form['upload']['upload_fieldset'] = array(
+		'#type' => 'fieldset',
+		'#title' => t('Обновление данных о товарах и ценах'),
+		'#description' => t('<strong>Для начала импорта выберите прайс в формате XLS (Excel).</strong>'),
+		'#collapsible' => TRUE,
+		'#collapsed' => false,
+	);
+	$form['upload']['upload_fieldset']['file_upload'] = array(
+		'#type' => 'file',
+		'#title' => t('File'),
+		'#size' => '60',
+	);
+	$form['upload']['upload_fieldset']['file_upload_button'] = array(
+		'#type' => 'submit',
+		'#value' => t('Upload file'),
+		'#submit' => array('update_price_add_form_submit_upload_file'),
+	);
+
+	return $form;
+}
+//=======================================
+//
+//=======================================
+function update_price_process()
+{
+	drupal_set_message("function update_price_process.");
+/*	
+    $form_state = array('storage' => NULL, 'submitted' => FALSE);
+    $form_build_id = $_POST['form_build_id'];
+
+    $form = form_get_cache($form_build_id, $form_state);
+
+    $args = $form['#parameters'];
+    $form_id = array_shift($args);
+    $form['#post'] = $form_state['post'] = $_POST;
+    $form['#redirect'] = $form['#programmed'] = FALSE;
+
+    drupal_process_form($form_id, $form, $form_state);
+    $form = drupal_rebuild_form($form_id, $form_state, $args, $form_build_id);
+
+    $result  = $form['update_price_wrapper'];
+    unset($result['#prefix'],  $result['#suffix']);
+    $javascript  = drupal_add_js(NULL, NULL, 'header');
+
+    $output  = theme('status_messages') . drupal_render($result);
+
+    return drupal_json(
+        array(
+            'status' => TRUE,
+            'data' => theme('status_messages') . $output,
+            'settings' => call_user_func_array('array_merge_recursive', $javascript['setting'])
+        )
+    );
+*/
+}//================= end function
+
+
+function update_price_add_form_submit_upload_file($form, &$form_state) 
+{
+	//drupal_set_message("function update_price_add_form_submit_upload_file");
+
+	$validators = array(
+		'file_validate_extensions' => array('xls', 'xlsx'),
+	);
+	$dir = file_directory_path() . '/imports';
+	$replace = FILE_EXISTS_REPLACE;
+	if (file_check_directory($dir, 1)) 
+	 {
+		$file = file_save_upload('file_upload', $validators, $dir, $replace);
+		file_set_status($file, FILE_STATUS_PERMANENT);
+		$form_state['values']['fid'] = $file->fid;
+	} 
+	else 
+	{
+		drupal_set_message("error, file_save_upload");
+		drupal_set_message(t('Can\'t acces directory'));		
+	}
+
+	if ($file) 
+	{
+		drupal_set_message(t('New file %name uploaded to %path.', array('%name' => $file->filename, '%path' => $file->filepath)));
+	} 
+	else 
+	{
+		drupal_set_message(t('File was not uploaded'));
+	}
+
+/*
+stdClass Object
+(
+    [filename] => instrukciya.txt
+    [filepath] => sites/default/files/imports/instrukciya.txt
+    [filemime] => text/plain
+    [source] => file_upload
+    [destination] => sites/default/files/imports/instrukciya.txt
+    [filesize] => 1013
+    [uid] => 1
+    [status] => 1
+    [timestamp] => 1342277424
+    [fid] => 132
+)
+*/
+}//================= end function
+
+function update_price_unpublic_product() 
+{
+	drupal_set_message("function update_price_unpublic_product");
+	//$text =  t("Снятие товаров каталога с публикации");
+	$text = "";
+
+	$type ="product";
+	db_query("UPDATE node SET status = '0' WHERE type = '".$type."'");
+
+	return $text;
+}//================= end function
+
+function update_price_public_product() 
+{
+	drupal_set_message("function update_price_public_product");
+	$text = "";
+
+	$type ="product";
+	db_query("UPDATE node SET status = '1' WHERE type = '".$type."'");
+
+	return $text;
+}//================= end function
+
+function update_price_remove_product() 
+{
+	//drupal_set_message("function update_price_remove_product");
+	drupal_set_message("удалить все товары каталога");
+	//$text =  t("удалить все товары каталога");
+
+	$type ="product";
+	$query = db_query("SELECT nid FROM {node} AS n WHERE type = '%s'",$type);
+	while ($row = db_fetch_object($query)) 
+	  {  
+		node_delete($row->nid);
+	  }
+	drupal_set_message("Clear uc_product_stock"); // Очистить таблицу складских остатков
+	$query = db_query("TRUNCATE TABLE {uc_product_stock}");
+
+	return $text;
+}//================= end function
+
+function update_price_form_admin_form($form_state)
+{
+	drupal_set_message("function update_price_form_admin_form");
+/*
+    $form = array();
+
+    $form['base'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('base'),
+        '#collapsible' => true,
+        '#collapsed' => false,
+    );
+
+    $form['mortgage']['credit_calc_mortgage_sh'] = array(
+        '#type' => 'textfield',
+        '#title' => t('sh'),
+        '#default_value' => variable_get('credit_calc_mortgage_sh', ''),
+        '#size' => 2,
+        '#maxlength' => 2,
+    );
+
+    return system_settings_form($form);
+*/
+}
+
+?>

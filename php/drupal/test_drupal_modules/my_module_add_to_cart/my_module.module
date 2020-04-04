@@ -1,0 +1,71 @@
+<?php
+/*
+Для реализации popup-окна после нажатия  на кнопку добавления в корзину
+
+- создать страницу page_add_to_cart
+<?
+//echo "uc_referer_uri = ".uc_referer_uri();
+echo "<a href='".uc_referer_uri()."'>закрыть</a> | ";
+echo "<a href='/kanistra/cart'>перейти в корзину</a>";
+?>
+
+-  в настройках корзины указать редирект на  page_add_to_cart
+- в код страницы дописать модальный вывод и вывод атрибутов добавленного товара
+*/
+
+/*
+function my_module_perm()
+{
+    return array('access my_module content');
+}
+*/
+
+function my_module_init()
+{
+	//drupal_set_message("function my_module_init !!!");
+	//drupal_get_form('my_module_form');
+}
+
+function my_module_add_to_cart($nid, $qty, $data) {
+	drupal_set_message("function my_module_add_to_cart !!!");
+	//drupal_set_message("nid=".$nid);
+	//drupal_set_message("qty=".$qty);
+	//drupal_set_message("data=".$data);
+
+	//$node = node_load(1805);	
+	//drupal_set_message($node->title);
+	//myfunc();
+
+//echo "<pre>";
+//print_r ($data);
+//echo "</pre>";
+/*
+  if ($qty > 1) {
+    $result[] = array(
+      'success' => FALSE,
+      'message' => t('Sorry, you can only add one of those at a time.'),
+    );
+  }
+  return $result;
+*/
+
+}
+
+function myfunc()
+{
+	drupal_set_message("function myfunc");
+}
+
+/*
+function my_module_form($form_state)
+{
+	$form['test2_wrapper'] = array(
+		'#prefix' => '<div style="background:palegreen;">',
+		'#value' => t('test2 value'),
+		'#suffix' => '</div>',
+	);
+	return $form;
+}
+*/
+
+?>

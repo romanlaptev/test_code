@@ -1,0 +1,88 @@
+<?
+/*
+function test2_help ($path, $arg)
+{
+    $output = '';
+    switch ($path)
+     {
+        case "admin/help#test2":
+    	    $output = '<p>'.t("Test2 help").'</p>';
+    	    break;
+     }
+     return $output;
+} //=============== end function
+
+function test2_perm ()
+{
+    return array ('access test2 content','access admins page');
+} //=============== end function
+*/
+
+function test2_menu ()
+{
+    $items = array();
+
+/*
+    $items['admin/settings/test2'] = array(
+     'title' => 'test2 module settingsssssssssss',
+     'description' => 'Description of your test2 settings page',
+     'page callback' => 'drupal_get_form',// создание формы
+     'page arguments' => array ('test2_admin'),	// вызов функции 
+     'access arguments' => array ('access administration pages'),
+     'type' => MENU_NORMAL_ITEM,
+    );
+*/
+
+    $items['test2'] = array(
+    'title' => 'Тест2',	//Заголовок страницы
+    'page callback' => 'drupal_get_form',// создание формы
+    'page arguments' => array('test2_form'),// вызов функции 
+    'access arguments' => array('access test2 content')
+    );
+                                        
+    return $items;
+}//================= end function
+
+//===========================
+//
+//===========================
+function test2_form ($form_state)
+{
+	drupal_set_message("function test2_form");
+	$form = array();
+	$form['test2_wrapper'] = array(
+		'#prefix' => '<div style="background:palegreen;">',
+		'#value' => t('test2 value'),
+		'#suffix' => '</div>',
+	);
+	return $form;
+}//================= end function
+
+//===========================
+//
+//===========================
+function test2_admin ()
+{
+    $form = array();
+    
+    $form['sitename'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Site'),
+        '#default_value' => variable_get('sitename',''),
+        '#size' => 20,
+        '#maxlength' => 20,
+        '#description' => t('withoutt "http://"'),
+    );
+
+    return system_settings_form ($form);
+}//========================= end function
+
+
+//===========================
+//
+//===========================
+function test2_block ()
+{
+        
+}//=============== end function
+?>
