@@ -111,7 +111,7 @@ function _getVersion( $connection ){
 // echo "</pre>";
 // echo "<br/>\n";
 
-	$query = "SELECT version()";
+	$query = "SELECT version() as version";
 	$result  = $connection->query( $query );
 	if( !$result ){
 		echo "-- error, query: ".$query;
@@ -122,8 +122,10 @@ echo "</pre>";
 		return false;
 	}
 	
-	$row = $result->fetch( PDO::FETCH_NUM );
-	return $row[0];
+	//$row = $result->fetch( PDO::FETCH_NUM );
+	//return $row[0];
+	$ver  = $result->fetchAll( PDO::FETCH_ASSOC );
+	return $ver[0]["version"];
 }//end _getVersion()
 
 
