@@ -24,6 +24,14 @@ postgres=# SELECT CURRENT_USER;
 
 postgres=#
 
+------- change login, root -> postgres 
+root@vbox3:~# su postgres
+postgres@vbox3:/root$ psql
+psql (9.1.21)
+Введите "help", чтобы получить справку.
+
+postgres=# 
+
 ==========================================================
 postgres-# \l
         List of databases
@@ -133,8 +141,34 @@ db1=#
 ==========================================================
 ==========================================================
 ==========================================================
-==========================================================
-==========================================================
+========================================================== change password
+ALTER USER postgres WITH PASSWORD 'master';
+
+=================== phpPgAdmin 5.0.4, remote login
+
+/etc/phppgadmin/config.inc.php
+	// If extra login security is true, then logins via phpPgAdmin with no
+	// password or certain usernames (pgsql, postgres, root, administrator)
+	// will be denied. Only set this false once you have read the FAQ and
+	// understand how to change PostgreSQL's pg_hba.conf to enable
+	// passworded local connections.
+
+	//$conf['extra_login_security'] = true;
+	$conf['extra_login_security'] = false;
+-------------
+/*
+https://support.eapps.com/index.php?/Knowledgebase/Article/View/414/53/postgresql-9-and-phppgadmin#configuring-phppgadmin-access
+
+/etc/postgresql/9.1/main/pg_hba.conf
+....
+# IPv4 local connections:
+#host    all             all             127.0.0.1/32            md5
+host    all             all             0.0.0.0/0           md5
+....
+
+*/
+
+
 ==========================================================
 ==========================================================
 ==========================================================
