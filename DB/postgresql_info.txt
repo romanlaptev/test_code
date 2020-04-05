@@ -114,6 +114,11 @@ column "users.id"
 CREATE TABLE
 db1=#
 
+INSERT INTO users VALUES (DEFAULT, 'Roman', 'Laptev');
+INSERT INTO users (first_name, last_name) VALUES ('Laptev', 'Roman');
+
+UPDATE users SET first_name='rOMAN' WHERE first_name='Roman';
+
 ==========================================================
 CREATE TABLE
 db1=# CREATE TABLE articles (
@@ -141,6 +146,8 @@ db1=# \dt
 db1=#
 
 ==========================================================
+
+
 ==========================================================
 ==========================================================
 ========================================================== change password
