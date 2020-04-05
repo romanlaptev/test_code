@@ -2,83 +2,130 @@
 error_reporting(E_ALL|E_STRICT);
 ini_set('display_errors', 1);
 
-//echo "<pre>";
-//print_r ($_REQUEST);
-//echo "</pre>";
-
-echo "test PostgreSQL PDO";
-echo "<br/>\n";
+$_vars=array();
+require_once("./inc/db_auth.php");
 
 echo "PHP version: ".PHP_VERSION;
 echo "<br/>\n";
-
 echo "OS: ". PHP_OS;
 echo "<br/>\n";
 
-$_vars=array();
-//	$_vars["config"]["dbHost"] = "ec2-184-73-189-190.compute-1.amazonaws.com";
-//	$_vars["config"]["dbPort"] = "5432";
-//	$_vars["config"]["dbUser"] = "aejvwysqgsboeb";
-//	$_vars["config"]["dbPassword"] = "55b5c22131c1d612574edb5dea0b63433293d828ab1f77196f52eb0a849a577c";
-//	$_vars["config"]["dbName"] = "d7c534mf7866o2";
+$loadedExt = get_loaded_extensions();
 
-$_vars["config"]["dbHost"] = "localhost";
-$_vars["config"]["dbPort"] = "5432";
-$_vars["config"]["dbUser"] = "postgres";
-$_vars["config"]["dbPassword"] = "master";
-$_vars["config"]["dbName"] = "";
-
-
-//echo "PDO::ATTR_DRIVER_NAME: ".PDO::ATTR_DRIVER_NAME;
-//echo "\n";
-
-	
-$dbHost = $_vars["config"]["dbHost"];
-$dbPort = $_vars["config"]["dbPort"];
-$dbUser = $_vars["config"]["dbUser"];
-$dbPassword = $_vars["config"]["dbPassword"];
-$dbName = $_vars["config"]["dbName"];
-	
-$dsn = "pgsql:dbname='{$dbName}'; host='{$dbHost}'; port='{$dbPort}'";
-//$dsn = "pgsql:host='{$dbHost}'; port='{$dbPort}'";
-	
-try{
-
-    $_vars["link"] = new PDO( $dsn, $dbUser, $dbPassword );
-    echo "-- ok, connected to the server.... DSN: ".$dsn;
-    echo "<br/>\n";
-
-	_test();
-
-	unset ($connection);
-
-} catch( PDOException $exception ) {
-    echo "-- error connection, ".$exception->getMessage();
-    echo "<br/>\n";
+$module_name = "pgsql";
+if ( !in_array( $module_name, $loadedExt ) ) {
+	$msg = "-- error, module <b>".$module_name."</b>  not loaded...";
+	echo $msg;
+	echo "<br/>\n";
+echo "loaded extensions: <pre>";
+print_r( $loadedExt );
+echo "</pre>";
+	exit;
+} else {
+	$msg = "-- ok, module <b>".$module_name."</b> is available...";
+	echo $msg;
+	echo "<br/>\n";
+//https://www.php.net/manual/ru/function.get-extension-funcs.php
+//echo "list of functions in module <b>".$module_name."</b>:<pre>";
+//print_r(get_extension_funcs( $module_name ));
+//echo "</pre>";
 }
 
-
-
-function _test(){
-	global $_vars;
-	
-	$connection = $_vars["link"];
-	
-//	$_vars["PDOdrivers"] = $connection->getAvailableDrivers();
-//echo "PDOdrivers: <pre>";	
-//print_r($connection->getAvailableDrivers());
+//------------------
+$module_name = "PDO";
+if ( !in_array( $module_name, $loadedExt ) ) {
+	$msg = "-- error, module <b>".$module_name."</b> not loaded...";
+	echo $msg;
+	echo "<br/>\n";
+echo "loaded extensions: <pre>";
+print_r( $loadedExt );
+echo "</pre>";
+	exit;
+} else {
+	$msg = "-- ok, module <b>".$module_name."</b> is available...";
+	echo $msg;
+	echo "<br/>\n";
+//https://www.php.net/manual/ru/function.get-extension-funcs.php
+//echo "list of functions in module <b>".$module_name."</b>:<pre>";
+//print_r(get_extension_funcs( $module_name ));
 //echo "</pre>";
-//echo "<br/>\n";
+}
+
+$module_name = "pdo_pgsql";
+if ( !in_array( $module_name, $loadedExt ) ) {
+	$msg = "-- error, <b>".$module_name."</b> module  not loaded...";
+	echo $msg;
+	echo "<br/>\n";
+echo "loaded extensions: <pre>";
+print_r( $loadedExt );
+echo "</pre>";
+	exit;
+} else {
+	$msg = "-- ok, module <b>".$module_name."</b> is available...";
+	echo $msg;
+	echo "<br/>\n";
+}
+
+echo "<h3>";
+echo "test PostgreSQL PDO";
+echo "</h3>\n";
+runTest();
+
+//========================================
+function runTest(){
+	global $_vars;
+
+	$dbHost = $_vars["config"]["dbHost"];
+	$dbPort = $_vars["config"]["dbPort"];
+	$dbUser = $_vars["config"]["dbUser"];
+	$dbPassword = $_vars["config"]["dbPassword"];
+	$dbName = $_vars["config"]["dbName"];
+	
+	$dsn = "pgsql:dbname='{$dbName}'; host='{$dbHost}'; port='{$dbPort}'";
+
+	try{
+		$_vars["link"] = new PDO( $dsn, $dbUser, $dbPassword );
+		echo "-- ok, connected to the server.... DSN: ".$dsn;
+		echo "<br/>\n";
 
 //----------------------------------------------
-	$_vars["dbVersion"] = "";
-	$query = "SELECT version()";
-	$result  = $connection->query( $query ) or die( $connection->errorInfo()[2] );
-	$row = $result->fetch( PDO::FETCH_NUM );
-	$_vars["dbVersion"] .= $row[0];
+		$_vars["dbVersion"] = _getVersion( $_vars["link"] );
+		if( $_vars["dbVersion"] ){
 echo "version DB server: ".$_vars["dbVersion"];
 echo "<br/>\n";
+		}
+//----------------------------------------------
+		unset ($connection);
+
+	} catch( PDOException $exception ) {
+		echo "-- error connection, ".$exception->getMessage();
+		echo "<br/>\n";
+	}//end catch
+
 	
+}//end runTest()
+
+function _getVersion( $connection ){
+// echo "PDOdrivers: <pre>";	
+// print_r($connection->getAvailableDrivers());
+// echo "</pre>";
+// echo "<br/>\n";
+
+	$query = "SELECT version()";
+	$result  = $connection->query( $query );
+	if( !$result ){
+		echo "-- error, query: ".$query;
+		echo "<br/>\n";
+echo "error info: <pre>";	
+print_r($connection->errorInfo() );
+echo "</pre>";
+		return false;
+	}
+	
+	$row = $result->fetch( PDO::FETCH_NUM );
+	return $row[0];
+}//end _getVersion()
+
 
 //----------------------------------------------
 /*
@@ -107,8 +154,6 @@ echo "<br/>\n";
 //print_r($rows);
 //echo "</pre>";	
 */
-	
-}//end _test()
 
 		
 ?>
