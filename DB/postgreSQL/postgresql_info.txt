@@ -185,6 +185,29 @@ host    all             all             0.0.0.0/0           md5
 
 
 ==========================================================
+https://axiomq.com/blog/backup-and-restore-a-postgresql-database/
+Backup and Restore a PostgreSQL Database 
+
+//Export a PostgreSQL database dump
+pg_dump -U db_user -W -F t db_name > /path/to/your/file/dump_name.tar
+
+-F is used to specify the format of the output file, which can be one of the following:
+    p – plain-text SQL script
+    c – custom-format archive
+    d – directory-format archive
+    t – tar-format archive
+
+//Restore a database with psql
+psql -U db_user db_name < dump_name.sql
+
+//Restore a database with pg_restore
+pg_restore -d db_name /path/to/your/file/dump_name.tar -c -U db_user
+
+    -c to drop database objects before recreating them,
+    -C to create a database before restoring into it,
+    -e exit if an error has encountered,
+    -F format to specify the format of the archive.
+
 ==========================================================
 ==========================================================
 ==========================================================
