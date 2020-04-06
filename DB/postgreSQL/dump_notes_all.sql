@@ -1,30 +1,3 @@
---
--- PostgreSQL database dump
---
-
-SET statement_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SET check_function_bodies = false;
-SET client_min_messages = warning;
-
-SET search_path = public, pg_catalog;
-
-
-CREATE TABLE IF NOT EXISTS notes (
-    id integer NOT NULL,
-    author character(20) NOT NULL,
-    title character(255),
-    text_message text,
-    client_date date,
-    server_date date,
-    ip character(20)
-);
-
---
--- Data for Name: notes; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
 INSERT INTO notes VALUES (1, 'anonymous           ', 'linux, mount                                                                                                                                                                                                                                                   ', '
 [code]
 nofail 	
@@ -61,6 +34,7 @@ node --version or node -v
 https://stackoverflow.com/questions/8191459/how-do-i-update-node-js
 [/code]
 		', '2020-02-09', '2020-02-09', '10.79.206.66        ');
+
 INSERT INTO notes VALUES (5, 'anonymous           ', 'lxde, autostart                                                                                                                                                                                                                                                ', '
 test[br]
 /home/roman/.config/lxsession/LXDE/autostart[br]
@@ -71,6 +45,7 @@ test[br]
 [br]
 setxkbmap -layout us,ru -option grp:ctrl_shift_toggle,grp_led:caps,ctrl:nocaps
 		', '2019-12-11', '2019-12-11', '10.186.239.155      ');
+
 INSERT INTO notes VALUES (6, 'anonymous           ', 'links collection                                                                                                                                                                                                                                               ', '
 [url]http://kbyte.ru/ru/Programming/Sources.aspx?id=1044&amp;mode=show   |   Как изменить COLLATE у базы данных?[/url]
 [br]
@@ -78,6 +53,7 @@ INSERT INTO notes VALUES (6, 'anonymous           ', 'links collection          
 [br]
 [url]http://www.cyberforum.ru/ado-net/thread251180.html   |   Развертывание программы с SQLite-ом на других компьютерах - C#[/url]
 		', '2019-05-29', '2019-05-29', '10.63.250.242       ');
+
 INSERT INTO notes VALUES (7, 'anonymous           ', '301 редирект, .htaccess                                                                                                                                                                                                                                        ', '
 [url]http://ru.wikibooks.org/wiki/%D0%94%D0%B8%D1%80%D0%B5%D0%BA%D1%82%D0%B8%D0%B2%D1%8B_.htaccess  |  Директивы_.htaccess[/url]
 [code]
@@ -91,6 +67,7 @@ Redirect /data http://www.example.com/data
 =================================
 [/code]
 		', '2019-05-29', '2019-05-29', '10.30.222.9         ');
+
 INSERT INTO notes VALUES (8, 'anonymous           ', 'Debian 7, wheezy, list repo                                                                                                                                                                                                                                    ', '
 
 #/etc/apt/sources.list[br]
@@ -100,6 +77,7 @@ deb http://security.debian.org/ wheezy/updates main contrib[br]
 deb-src http://security.debian.org/ wheezy/updates main contrib[br]
 		
 		', '2019-05-28', '2019-05-27', '37.193.108.45       ');
+
 INSERT INTO notes VALUES (9, 'anonymous           ', 'PostgreSQL                                                                                                                                                                                                                                                     ', '
 
 #http://hutpu4.net/linux-open-source/postgresql-phppgadmin-for-debian-ubuntu.html
@@ -109,9 +87,11 @@ apt-get install postgresql-contrib[br]
 apt-get install php5-pgsql[br]
 		
 		', '2019-05-28', '2019-05-27', '37.193.108.45       ');
+
 INSERT INTO notes VALUES (10, 'anonymous           ', 'nslookup, узнать IP-адрес интернет-ресурса                                                                                                                                                                                                                     ', '
 узнать IP-адрес интернет-ресурса можно введя в ту же командную строку команду nslookup Book-Science.ru
 		', '2019-05-28', '2019-05-28', '10.69.190.141       ');
+
 INSERT INTO notes VALUES (11, 'anonymous           ', 'eng/rus books                                                                                                                                                                                                                                                  ', '
 
 [url]http://readli.net/chitat-online/?b=102432&amp;pg=1    |    Роберт Энсон Хайнлайн.Гражданин Галактики [/url]
@@ -123,6 +103,7 @@ INSERT INTO notes VALUES (11, 'anonymous           ', 'eng/rus books            
 [url] https://ebooks.adelaide.edu.au/f/fitzgerald/f_scott/short/chapter23.html      |      Short Stories, by F. Scott Fitzgerald. The Last of the Belles [/url]
 		
 		', '2019-05-06', '2019-05-06', '37.193.108.45       ');
+
 INSERT INTO notes VALUES (12, 'anonymous           ', 'GIT                                                                                                                                                                                                                                                            ', '
 
 [url] http://evtuhovich.ru/blog/2009/04/03/git-reset/ | Отмена последнего коммита в git [/url] 
@@ -175,6 +156,7 @@ git remote add origin https://github.com/romanlaptev/lib.gitgit push -u origin m
 [/code]
 		
 		', '2018-12-27', '2018-12-27', '37.193.108.45       ');
+
 INSERT INTO notes VALUES (13, 'anonymous           ', 'windows FAQ, GPT                                                                                                                                                                                                                                               ', '
 
 
@@ -182,6 +164,7 @@ INSERT INTO notes VALUES (13, 'anonymous           ', 'windows FAQ, GPT         
 		
 		
 		', '2018-03-20', '2018-03-20', '37.193.108.45       ');
+
 INSERT INTO notes VALUES (14, 'anonymous           ', 'art,  Francesco Bergamini                                                                                                                                                                                                                                      ', '
 
 
@@ -190,6 +173,7 @@ Francesco Bergamini (Italian, 1815–1883)[br]
 		
 		
 		', '2018-03-20', '2018-03-20', '37.193.108.45       ');
+
 INSERT INTO notes VALUES (15, 'anonymous           ', 'javascript, regExp                                                                                                                                                                                                                                             ', '
 
 
@@ -203,6 +187,7 @@ var value = xmlNodes[n][&quot;html_code&quot;]
 		
 		
 		', '2018-02-14', '2018-02-14', '37.193.108.45       ');
+
 INSERT INTO notes VALUES (16, 'anonymous           ', 'Вызов jsp из Servlet                                                                                                                                                                                                                                           ', '
 
 
@@ -242,6 +227,7 @@ JSP /home.jsp
 		
 		
 		', '2017-10-02', '2017-10-02', '37.193.108.45       ');
+
 INSERT INTO notes VALUES (17, 'anonymous           ', 'cmd, get filename from args                                                                                                                                                                                                                                    ', '
 
 
@@ -277,6 +263,7 @@ java -cp c:\\\\temp %~n1
 		
 		
 		', '2017-09-28', '2017-09-28', '37.193.108.45       ');
+
 INSERT INTO notes VALUES (18, 'anonymous           ', 'opera 12, config                                                                                                                                                                                                                                               ', '
 
 
@@ -374,6 +361,7 @@ soft-tuning.ru © 2013-2017
 		
 		
 		', '2017-09-24', '2017-09-24', '37.192.115.96       ');
+
 INSERT INTO notes VALUES (19, 'anonymous           ', 'config, windows server                                                                                                                                                                                                                                         ', '
 
 
@@ -422,6 +410,7 @@ INSERT INTO notes VALUES (19, 'anonymous           ', 'config, windows server   
 		
 		
 		', '2017-09-22', '2017-09-22', '192.168.56.1        ');
+
 INSERT INTO notes VALUES (20, 'anonymous           ', 'config, linux, xrandr                                                                                                                                                                                                                                          ', '
 
 
@@ -465,6 +454,7 @@ xrandr --output VGA1 --mode 1600x900_60.00
 		
 		
 		', '2017-09-14', '2017-09-14', '37.193.108.45       ');
+
 INSERT INTO notes VALUES (21, 'anonymous           ', 'js code                                                                                                                                                                                                                                                        ', '
 
 
@@ -593,6 +583,7 @@ for n1 in range(0,10):
 		
 		
 		', '2017-08-30', '2017-08-30', '37.193.108.45       ');
+
 INSERT INTO notes VALUES (23, 'anonymous           ', 'windows faq                                                                                                                                                                                                                                                    ', '
 
 
@@ -622,6 +613,7 @@ INSERT INTO notes VALUES (23, 'anonymous           ', 'windows faq              
 		
 		
 		', '2017-08-28', '2017-08-28', '37.193.108.45       ');
+
 INSERT INTO notes VALUES (24, '                    ', 'test filter                                                                                                                                                                                                                                                    ', '
 
 
@@ -643,6 +635,7 @@ INSERT INTO notes VALUES (24, '                    ', 'test filter              
 		
 		
 		', '2017-08-24', '2017-08-24', '                    ');
+
 INSERT INTO notes VALUES (25, 'anonymous           ', 'javascript, test Modernizr                                                                                                                                                                                                                                     ', '
 
 
@@ -679,16 +672,3 @@ src=&#39;http://yastatic.net/modernizr/2.7.1/modernizr.min.js&#39;&gt;&lt;/scrip
 		
 		
 		', '2017-08-24', '2017-08-24', '                    ');
-
-
---
--- Name: notes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('notes_id_seq', 25, true);
-
-
---
--- PostgreSQL database dump complete
---
-

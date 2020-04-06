@@ -1,4 +1,5 @@
-CREATE TABLE IF NOT EXISTS "public"."notes" (
+-- CREATE TABLE IF NOT EXISTS "notes" (
+CREATE TABLE "notes" (
 	"id" SERIAL,
 	"author" character(20) NOT NULL,
 	"title" character(255),
