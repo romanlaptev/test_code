@@ -8,7 +8,10 @@
 //} else {
 	$_vars["config"]["dbHost"] = "localhost";
 	$_vars["config"]["dbPort"] = "5432";
-	$_vars["config"]["dbUser"] = "postgres";
+
+	//$_vars["config"]["dbUser"] = "postgres";
+	$_vars["config"]["dbUser"] = "root";
+
 	$_vars["config"]["dbPassword"] = "master";
 	$_vars["config"]["dbName"] = "";
 //}

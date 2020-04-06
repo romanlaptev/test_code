@@ -5,6 +5,10 @@ ini_set('display_errors', 1);
 $_vars=array();
 require_once("./inc/db_auth.php");
 
+echo "<h3>";
+echo "test PostgreSQL PDO";
+echo "</h3>\n";
+
 echo "PHP version: ".PHP_VERSION;
 echo "<br/>\n";
 echo "OS: ". PHP_OS;
@@ -66,9 +70,6 @@ echo "</pre>";
 	echo "<br/>\n";
 }
 
-echo "<h3>";
-echo "test PostgreSQL PDO";
-echo "</h3>\n";
 runTest();
 
 //========================================
@@ -85,13 +86,19 @@ function runTest(){
 
 	try{
 		$_vars["link"] = new PDO( $dsn, $dbUser, $dbPassword );
-		echo "-- ok, connected to the server.... DSN: ".$dsn;
+		echo "-- ok, connected to the server.";
+		echo "<br/>\n";
+
+		echo "<b>DSN</b>: ".$dsn;
+		echo "<br/>\n";
+
+		echo "<b>dbUser</b>: ".$dbUser;
 		echo "<br/>\n";
 
 //----------------------------------------------
 		$_vars["dbVersion"] = _getVersion( $_vars["link"] );
 		if( $_vars["dbVersion"] ){
-echo "version DB server: ".$_vars["dbVersion"];
+echo "<b>version DB server</b>: ".$_vars["dbVersion"];
 echo "<br/>\n";
 		}
 //----------------------------------------------
