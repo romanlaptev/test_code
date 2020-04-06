@@ -8,3 +8,45 @@ post_max_size = 20M
 ; Maximum allowed size for uploaded files.
 upload_max_filesize = 20M
 
+[PHP Modules]
+bcmath
+bz2
+calendar
+com_dotnet
+ctype
+curl
+date
+dom
+filter
+ftp
+gd
+hash
+iconv
+json
+libxml
+mcrypt
+mysql
+mysqli
+odbc
+pcre
+PDO
+pdo_mysql
+pdo_pgsql
+pdo_sqlite
+pgsql
+Reflection
+session
+SimpleXML
+SPL
+SQLite
+standard
+tokenizer
+wddx
+xml
+xmlreader
+xmlwriter
+zip
+zlib
+
+[Zend Modules]
+
