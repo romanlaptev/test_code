@@ -1,0 +1,1 @@
+pg_dump -U postgres -W -F p db1 > dump_db1.sql
