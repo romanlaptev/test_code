@@ -208,7 +208,22 @@ pg_restore -d db_name /path/to/your/file/dump_name.tar -c -U db_user
     -e exit if an error has encountered,
     -F format to specify the format of the archive.
 
+    
 ==========================================================
+https://postgrespro.ru/docs/postgresql/9.5/sql-createdatabase
+https://www.guru99.com/postgresql-create-database.html
+
+CREATE DATABASE db_name
+OWNER =  role_name
+TEMPLATE = template			
+ENCODING = encoding			
+LC_COLLATE = collate			
+LC_CTYPE = ctype
+TABLESPACE = tablespace_name
+CONNECTION LIMIT = max_concurrent_connection
+
+CREATE DATABASE music ENCODING 'LATIN1' TEMPLATE template0;
+
 ==========================================================
 ==========================================================
 ==========================================================
