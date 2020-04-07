@@ -95,8 +95,23 @@ function runTest(){
 // print_r($connection->getAvailableDrivers());
 // echo "</pre>";
 // echo "<br/>\n";
+
+		$out = "<ul>\n";
+
+		$sql_query = "SELECT VERSION()";
+		$result  = $connection->query( $sql_query );
+		if( !$result ){
+			echo "-- error, query: ".$sql_query;
+			echo "<br/>\n";
+echo "error info: <pre>";	
+print_r( $connection->errorInfo() );
+echo "</pre>";
+		} else {
+			$row = $result->fetch( PDO::FETCH_NUM );
+			$out .= "<li>server version: " .$row[0] ."</li>\n";
+		}
+//----------------------------------------------
 	
-		$db_info = "<ul>\n";
 		//$coll = $connection->query( "SELECT COLLATION('$dbName')" )->fetchColumn();
 		//echo $coll->fetch(PDO::FETCH_NUM)[0];
 		//echo $coll;
@@ -104,27 +119,35 @@ function runTest(){
 	
 		$sql_query = "SELECT CHARSET('')";
 		$charset = $connection->query( $sql_query )->fetchColumn();
-		$db_info .= "<li>Charset : " . $charset ."</li>\n";
+		$out .= "<li>Charset : " . $charset ."</li>\n";
 	
-		$db_info .= "</ul>\n";
-		echo $db_info;
+		$out .= "</ul>\n";
+		echo $out;
 
 //----------------------------------------------
-	$_vars["dbList"] = "";
-	$query = "SHOW DATABASES";
-	
-//	$result  = $connection->query( $query ) or die( $connection->errorInfo()[2] );
-	$result  = $connection->query( $query ) or die( $connection->errorInfo() );
-	
-	//$row = $result->fetch( PDO::FETCH_NUM );
-	//$totRows = $stmt->rowCount();
-	$rows  = $result->fetchAll( PDO::FETCH_NUM );
+		$sql_query = "SHOW DATABASES";
+		$result  = $connection->query( $sql_query );
+		if( !$result ){
+			echo "-- error, query: ".$sql_query;
+			echo "<br/>\n";
+echo "error info: <pre>";	
+print_r( $connection->errorInfo() );
+echo "</pre>";
+		} else {
+			$out = "Database list: <ol>\n";
+			//$row = $result->fetch( PDO::FETCH_NUM );
+			//$totRows = $stmt->rowCount();
+			$rows  = $result->fetchAll( PDO::FETCH_NUM );
 // echo "<pre>";	
 // print_r($rows);
 // echo "</pre>";	
-	for( $n = 0; $n < count($rows); $n++){
-		$_vars["dbList"] .= "<li>" . $rows[$n][0] ."</li>";
-	}//next
+			for( $n = 0; $n < count($rows); $n++){
+				$out .= "<li>" . $rows[$n][0] ."</li>\n";
+			}//next
+			$out .= "</ol>\n";
+			echo $out;
+		}
+	
 //----------------------------------------------	
 
 		unset ($connection);
@@ -194,24 +217,13 @@ $tableName = $stmt[1][0];
 
 */
 
+/*
 function _testPDO(){
 	global $_vars;
 	
 	$connection = $_vars["link"];
 	
-	
 //----------------------------------------------	
-
-	
-	$_vars["dbVersion"] = "";
-	$query = "SELECT VERSION()";
-	
-	//$result  = $connection->query( $query ) or die( $connection->errorInfo()[2] );
-	$result  = $connection->query( $query ) or die( $connection->errorInfo() );
-	
-	$row = $result->fetch( PDO::FETCH_NUM );
-	$_vars["dbVersion"] .= $row[0];
-//----------------------------------------------
 
 	$_vars["dbVars"] = "";
 	$query = "SHOW VARIABLES";
@@ -259,5 +271,5 @@ function _testPDO(){
 // echo "</pre>";	
 	
 }//end _testPDO()
-
+*/
 ?>
