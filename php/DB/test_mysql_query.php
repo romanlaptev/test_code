@@ -17,6 +17,10 @@ echo "<h3>";
 echo "test MySQL connection";
 echo "</h3>\n";
 
+echo "<h4>";
+echo "old API, PHP < 7";
+echo "</h4>\n";
+
 echo "PHP version: ".PHP_VERSION;
 echo "<br/>\n";
 echo "OS: ". PHP_OS;

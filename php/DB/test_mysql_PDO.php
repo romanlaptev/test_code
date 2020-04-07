@@ -11,7 +11,7 @@ $_vars=array();
 require_once("./inc/db_auth.php");
 
 echo "<h3>";
-echo "test MySQL connection: driver PDO";
+echo "test MySQL connection: PDO driver";
 echo "</h3>\n";
 
 echo "PHP version: ".PHP_VERSION;
@@ -110,6 +110,22 @@ function runTest(){
 		echo $db_info;
 
 //----------------------------------------------
+	$_vars["dbList"] = "";
+	$query = "SHOW DATABASES";
+	
+//	$result  = $connection->query( $query ) or die( $connection->errorInfo()[2] );
+	$result  = $connection->query( $query ) or die( $connection->errorInfo() );
+	
+	//$row = $result->fetch( PDO::FETCH_NUM );
+	//$totRows = $stmt->rowCount();
+	$rows  = $result->fetchAll( PDO::FETCH_NUM );
+// echo "<pre>";	
+// print_r($rows);
+// echo "</pre>";	
+	for( $n = 0; $n < count($rows); $n++){
+		$_vars["dbList"] .= "<li>" . $rows[$n][0] ."</li>";
+	}//next
+//----------------------------------------------	
 
 		unset ($connection);
 	} catch( PDOException $exception ) {
@@ -186,22 +202,6 @@ function _testPDO(){
 	
 //----------------------------------------------	
 
-	$_vars["dbList"] = "";
-	$query = "SHOW DATABASES";
-	
-//	$result  = $connection->query( $query ) or die( $connection->errorInfo()[2] );
-	$result  = $connection->query( $query ) or die( $connection->errorInfo() );
-	
-	//$row = $result->fetch( PDO::FETCH_NUM );
-	//$totRows = $stmt->rowCount();
-	$rows  = $result->fetchAll( PDO::FETCH_NUM );
-// echo "<pre>";	
-// print_r($rows);
-// echo "</pre>";	
-	for( $n = 0; $n < count($rows); $n++){
-		$_vars["dbList"] .= "<li>" . $rows[$n][0] ."</li>";
-	}//next
-//----------------------------------------------	
 	
 	$_vars["dbVersion"] = "";
 	$query = "SELECT VERSION()";
