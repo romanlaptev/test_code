@@ -1,172 +1,126 @@
 <?php
-//ajax query with url http://graphic-art-collection.16mb.com/php/test_mysql.php
-//header('Access-Control-Allow-Origin: *');
-
-//error_reporting(E_ALL ^ E_DEPRECATED);
-//error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+//http://php.net/manual/ru/ref.pdo-mysql.php
+//http://php.net/manual/ru/ref.pdo-mysql.php
+//https://nix-tips.ru/php-pdo-rabotaem-s-bazami-dannyx-pravilno.html
+//https://stackoverflow.com/questions/36073703/mysql-to-pdo-comparison-table
 
 error_reporting(E_ALL|E_STRICT);
 ini_set('display_errors', 1);
 
-//https://www.php.net/manual/ru/function.get-loaded-extensions.php
-$loadedExt = get_loaded_extensions();
-//echo "loaded extensions: <pre>";
-//print_r( $loadedExt );
-//echo "</pre>";
+$_vars=array();
+require_once("./inc/db_auth.php");
 
-$module_name = "PDO";
-if ( !in_array( $module_name, $loadedExt ) ) {
-	$msg = "<p>-- error, <b>".$module_name."</b> module  is not in the list of loaded extensions...</p>\n";
-	echo $msg;
-echo "loaded extensions: <pre>\n";
-print_r( $loadedExt );
-echo "</pre>\n";
-	exit;
-}
-echo "Loaded " . $module_name . ": " ,extension_loaded( $module_name );
+echo "<h3>";
+echo "test MySQL connection: driver PDO";
+echo "</h3>\n";
+
+echo "PHP version: ".PHP_VERSION;
+echo "<br/>\n";
+echo "OS: ". PHP_OS;
 echo "<br/>\n";
 
-$_vars=array();
+$loadedExt = get_loaded_extensions();
 
-?>
-<DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8"/>
-	<meta name="viewport" content="width=device-width, inital-scale=1.0">
-	<link rel="stylesheet" href="/css/bootstrap335.min.css">
-</head>
-<body>
-	<div class="container">
-		<div class="page-header">
-			<h1>test MYSQL PDO</h1>
-		</div>
-		
-		<div class="panel">
-			<div class="panel-body">
-				<div>PHP_VERSION:
-<?php
-//echo phpversion();
-echo PHP_VERSION;
-?>
-				</div>
-				<div>PHP_OS:<?php echo PHP_OS;?></div>
-			</div>
-		<div>
-		
-		<pre>
-http://php.net/manual/ru/ref.pdo-mysql.php
-https://nix-tips.ru/php-pdo-rabotaem-s-bazami-dannyx-pravilno.html
-https://stackoverflow.com/questions/36073703/mysql-to-pdo-comparison-table
-		</pre>
+$module_name = "mysql";
+$_vars["support"][$module_name] = check_module( $module_name, $loadedExt);
 
-<?php
-//beta.hut2.ru
-//$server = "database";
-//$username = "beta8";
-//$password = "O4AtmRKe";
+$module_name = "mysqli";
+$_vars["support"][$module_name] = check_module( $module_name, $loadedExt);
 
-//catblack.h19.ru
-//$server = "localhost";
-//$username = "catblac8";
-//$password = "master";
+$module_name = "PDO";
+$_vars["support"][$module_name] = check_module( $module_name, $loadedExt);
+if( !$_vars["support"][$module_name] ){
+echo "loaded extensions: <pre>";
+print_r( $loadedExt );
+echo "</pre>";
+	exit;
+}
 
-//roman-laptev.hut1.ru
-//$server = "database.agava.ru";
-//$username = "romanla";
-//$password = "master";
+$module_name = "pdo_mysql";
+$_vars["support"][$module_name] = check_module( $module_name, $loadedExt);
+if( !$_vars["support"][$module_name] ){
+echo "loaded extensions: <pre>";
+print_r( $loadedExt );
+echo "</pre>";
+	exit;
+}
 
-//catblack.co.cc
-//$server = "localhost";
-//$username = "user_acc2";
-//$password = "master";
+//echo "vars: <pre>";
+//print_r( $_vars );
+//echo "</pre>";
+runTest();
 
-//blackcat.px6.ru
-//$server = "sql-4.ayola.net";
-//$username = "blackcat608";
-//$password = "sck7aklskg";
-//$base =  "blackcat608";
 
-//$server = "mysql.royaltee.mass.hc.ru:3306";
-//$username = "royaltee_rk";
-//$password = "kj3f5surn";
-//$base =  "wwwroyalkidsru_rk";
+//=================================================
+function check_module( $module_name, $loadedExt){
+	if ( !in_array( $module_name, $loadedExt ) ) {
+		$msg = "-- error, module <b>".$module_name."</b>  not loaded...";
+		echo $msg;
+		echo "<br/>\n";
+		return false;
+	} else {
+		$msg = "-- ok, module <b>".$module_name."</b> is available...";
+		echo $msg;
+		echo "<br/>\n";
+	//https://www.php.net/manual/ru/function.get-extension-funcs.php
+	//echo "list of functions in module <b>".$module_name."</b>:<pre>";
+	//print_r(get_extension_funcs( $module_name ));
+	//echo "</pre>";
+		return true;
+	}
+}//end check_module()
 
-//$server = "91.226.93.8:3306";
-//$username = "dostup_user";
-//$password = "dostup";
 
-//gravura.ts6.ru
-//$server = "sql-4.ayola.net";
-//$username = "gravura619";
-//$password = "sijnic3ra6";
+//=================================================
+function runTest(){
+	global $_vars;
 
-//limb.me.pn
-//$server = "fdb2.eu.pn:3306";
-//$username = "1032442_db1";
-//$password = "gfccword";
+	$dbHost = $_vars["config"]["mysql"]["dbHost"];
+	$dbUser = $_vars["config"]["mysql"]["dbUser"];
+	$dbPassword = $_vars["config"]["mysql"]["dbPassword"];
+	//$dbName = $_vars["config"]["mysql"]["dbName"];
+	//	$dbPort = $_vars["config"]["mysql"]["dbPort"];
 
-//limb.500mb.net
-//$server = "sql104.500mb.net";
-//$username = "runet_10193869";
-//$password="w0rdpass";
-//$password = "jocker";
-//$db_url = 'mysqli://runet_10193869:jocker@localhost/runet_10193869_db2 ';
-
-//blackcat.500mb.net
-//$server="sql302.500mb.net";
-//$username="runet_10195192";
-//$password="w0rdpass";
-
-//it-works.16mb.com
-//$server="mysql.hostinger.ru";
-//$username="u131428543_user1";
-//$password="m2ster";
-
-// $host = "localhost";
-// $user = "fr18091_db1";
-// $password = "m@ster";
-// $db_name = "fr18091_db1";
-
-//$_vars["config"]["dbHost"] = "mysql5.gear.host";
-//$_vars["config"]["dbUser"] = "db118";
-//$_vars["config"]["dbPassword"] = "Kb50i?84!a4i";
-//$_vars["config"]["dbName"] = "db118";
-
-$_vars["config"]["dbHost"] = "localhost";
-$_vars["config"]["dbUser"] = "root";
-$_vars["config"]["dbPassword"] = "master";
-$_vars["config"]["dbName"] = "mysql";
-
-//graphic-art-collection.16mb.com
-// $_vars["config"]["dbHost"] = "mysql.hostinger.ru";
-// $_vars["config"]["dbUser"] = "u380901270_usr";
-// $_vars["config"]["dbPassword"] = "E6bAsZYBs4";
-// $_vars["config"]["dbName"] = "u380901270_db1";
-
-//echo PDO::ATTR_DRIVER_NAME;
-if (!defined('PDO::ATTR_DRIVER_NAME')) {
-	$PDOstate = "<h1>PDO unavailable</h1>";
-} else {
-	$PDOstate = "PDO available";
-	
-	$dbHost = $_vars["config"]["dbHost"];
-	$dbUser = $_vars["config"]["dbUser"];
-	$dbPassword = $_vars["config"]["dbPassword"];
-	$dbName = $_vars["config"]["dbName"];
-	
-	$dsn = "mysql:host={$dbHost};dbname={$dbName}";
+	//$dsn = "mysql:host={$dbHost};dbname={$dbName}";
+	$dsn = "mysql:host={$dbHost}";
 	try{
-		$_vars["link"] = new PDO( $dsn, $dbUser, $dbPassword );
-		_testPDO();
+		$connection = new PDO( $dsn, $dbUser, $dbPassword );
+
+		echo "-- ok, connected to the server <b>".$dbHost."</b> as ";
+		echo "<b> ".$dbUser."</b>";
+		echo "<br/>\n";
+
+//----------------------------------------------
+// echo "PDOdrivers: <pre>";	
+// print_r($connection->getAvailableDrivers());
+// echo "</pre>";
+// echo "<br/>\n";
+	
+		$db_info = "<ul>\n";
+		//$coll = $connection->query( "SELECT COLLATION('$dbName')" )->fetchColumn();
+		//echo $coll->fetch(PDO::FETCH_NUM)[0];
+		//echo $coll;
+		//$_vars["dbInfo"] .= "<li>database '$dbName', collation_connection : " . $coll ."</li>";
+	
+		$sql_query = "SELECT CHARSET('')";
+		$charset = $connection->query( $sql_query )->fetchColumn();
+		$db_info .= "<li>Charset : " . $charset ."</li>\n";
+	
+		$db_info .= "</ul>\n";
+		echo $db_info;
+
+//----------------------------------------------
+
 		unset ($connection);
 	} catch( PDOException $exception ) {
-		echo $exception->getMessage();
+		echo "-- error connection, ".$exception->getMessage();
+		echo "<br/>\n";
 	}
-	
-}
-/*
 
+}//end runTest()
+	
+	
+/*
 MySQL_ way:
 $result = mysql_query( $query, [$dbh] ) or die( mysql_error() );
 //$result  = $connection->query( $query ) or die( $connection->errorInfo()[2] );
@@ -229,23 +183,7 @@ function _testPDO(){
 	
 	$connection = $_vars["link"];
 	
-	$_vars["PDOdrivers"] = $connection->getAvailableDrivers();
-// echo "<pre>";	
-// print_r($connection->getAvailableDrivers());
-// echo "</pre>";	
 	
-	$dbName = $_vars["config"]["dbName"];
-	
-	$_vars["dbInfo"] = "<ul>";
-	//$coll = $connection->query( "SELECT COLLATION('$dbName')" )->fetchColumn();
-	//echo $coll->fetch(PDO::FETCH_NUM)[0];
-	//echo $coll;
-	//$_vars["dbInfo"] .= "<li>database '$dbName', collation_connection : " . $coll ."</li>";
-	
-	$charset = $connection->query("SELECT CHARSET('')")->fetchColumn();
-	$_vars["dbInfo"] .= "<li>Charset : " . $charset ."</li>";
-	
-	$_vars["dbInfo"] .= "</ul>";
 //----------------------------------------------	
 
 	$_vars["dbList"] = "";
@@ -323,46 +261,3 @@ function _testPDO(){
 }//end _testPDO()
 
 ?>
-<div class="panel panel-primary">
-
-	<div class="panel-heading">
-		<h2><?php echo $PDOstate; ?></h2>	
-	</div>
-
-	<div class="panel-body">
-		<h3>PDOdrivers</h3>
-		<pre>
-<?php print_r( $_vars["PDOdrivers"] ); ?>		
-		</pre>
-	</div>
-	
-	<div class="panel-body">
-		<h3> Connect to <?php echo $_vars["config"]["dbHost"] ?></h3>
-	</div>
-	
-	<div class="panel-body">
-		db info:<?php echo $_vars["dbInfo"]; ?>
-	</div>  
-	
-	<div class="panel-body">
-		<b>Database list</b>: <?php echo $_vars["dbList"]; ?>
-	</div>  
-	
-	<div class="panel-body">
-		<b>SELECT VERSION():</b> <?php echo $_vars["dbVersion"]; ?>
-	</div>  
-	
-	<div class="panel-body">
-		<b>SHOW VARIABLES:</b><?php echo $_vars["dbVars"]; ?>
-	</div>  
-
-	<div class="panel-body">
-		<b>SHOW TABLES from DB mysql:</b><?php echo $_vars["dbTables"]; ?>
-	</div>  
-	
-</div>
-		
-</div><!-- end container -->
-</body>
-</html>
-
