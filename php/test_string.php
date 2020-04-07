@@ -83,6 +83,20 @@ echo "<br/>\n";
 //$str2 = urlencode ($str1);
 //echo($str2);
 
+//$string = "This is\tan example\nstring";
+//echo $string."<br>\n";
+//$tok = strtok($string, " \n\t");
+//while ($tok) {
+    //echo "Word=$tok<br />\n";
+//    $tok = strtok(" \n\t");
+//}
+
+
+//========================
+   $str1 = "Ö";
+   $str2 = bin2hex($str1);
+   echo($str2);
+
 //========================
    $str = "one; two; three; four; five";
    $arr = explode(";", $str);
@@ -97,6 +111,7 @@ echo "\n";
 $arr = ['Сидоров', 'Иван', 'Петрович'];
 echo implode(' - ', $arr); // Сидоров - Иван - Петрович
 echo "\n";
+
 
 
 //======================== heredoc syntax
