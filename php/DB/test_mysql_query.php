@@ -95,110 +95,19 @@ function runTest(){
 	echo "<b>db user</b>: ".$user;
 	echo "<br/>\n";
 
-	$db_info = "MySQL info:<ul>\n";
 //-----------------------------------------------------------
-	$sql_query = "SELECT VERSION()";
-	$res = mysql_query( $sql_query );
-	if( $res ){
-		$version = mysql_result($res, 0);
-	}
-	$db_info .= "<li>server version: " .$version ."</li>\n";
+	$db_info = "<ul>\n";
+	$db_info .= "<li>MySQL server version: " . mysql_get_server_info() ."</li>\n";
+	$db_info .= "<li>MySQL client info: " . mysql_get_client_info() ."</li>\n";
+	$db_info .= "<li>MySQL host info: " . mysql_get_host_info() ."</li>\n";
+	$db_info .= "<li>MySQL protocol version: " . mysql_get_proto_info() ."</li>\n";
+	$db_info .= "<li>mysql_client_encoding: " . mysql_client_encoding( $_vars["link"] ) ."</li>\n";
 	$db_info .= "</ul>\n";
 	echo $db_info;
-
 //-----------------------------------------------------------
-	$sql = "SHOW DATABASES";
-/*
-	$data = get_db_data( $sql );
-	$output="<ol>";
-	//foreach( $data as $key => $value){
-	for( $n = 0; $n < count($data); $n++ ){
-		$row = $data[$n];
-echo "<pre>";
-print_r($row);
-echo "</pre>";
-		//$list_fields = show_fields( $row[0] );
-		//$output .="<li><b>Table</b> ".$row[0].", <b>fields:</b> ". $list_fields."</li>";
-	}//next
-	$output .= "<ol>";
-	$test_query = $output;
-*/
-
-	$rows="";
-	$data = get_db_data_obj( $sql );
-	if( $data ){
-		foreach( $data as $key => $row){
-	//echo "<pre>";
-	//print_r($row);
-	//echo "</pre>";
-			$rows .= "<li>". $row->Database ."</li>\n";
-		}//next
-		$list_rows = "Database list: <ol>".$rows."<ol>\n";
-		echo $list_rows;
-	}
-//-----------------------------------------------------------
-
 	mysql_close( $_vars["link"] );
 
 }//end runTest()
-
-
-function get_db_data( $sql ){
-	$data = array();
-	$res = mysql_query( $sql );
-	if( !$res ){
-		$msg = "<b>Query error: </b>". mysql_error();
-		echo $msg;
-		echo "<br/>\n";
-		return false;
-	}
-	//while ($row = mysql_fetch_array($res,MYSQL_BOTH)){
-	//while ($row = mysql_fetch_array($res,MYSQL_ASSOC)){
-	//while( $row = mysql_fetch_row($res)){
-	//while ($row = mysql_fetch_assoc($res)){
-//echo "<pre>";
-//print_r($row);
-//echo "</pre>";
-	//}//end while
-
-// $num_rows = mysql_num_rows($res);
-// if ($num_rows > 0){
-// } else {
-	// echo "<p class='text-danger'>Empty result query ".$query."</p>";
-
-// }
-	
-	for( $n = 0; $n < mysql_num_rows ($res); $n++){
-		//$row = mysql_fetch_object($res);
-		$row = mysql_fetch_row($res);
-//echo "<pre>";
-//print_r ($row);
-//echo "</pre>";
-		$data[] = $row;
-	}//next row
-	return $data;
-}//end get_db_data()
-
-
-function get_db_data_obj( $sql ){
-	$data = array();
-	$res = mysql_query( $sql );
-	if( !$res ){
-		$msg = "<b>Query error: </b>". mysql_error();
-		echo $msg;
-		echo "<br/>\n";
-		return false;
-	}
-	for( $n = 0; $n < mysql_num_rows ($res); $n++){
-		$row = mysql_fetch_object($res);
-//echo "<pre>";
-//print_r ($row);
-//echo "</pre>";
-		$data[] = $row;
-	}//next row
-	return $data;
-}//end get_db_data_obj()
-
 
 /*
 //-----------------------------------------------------------
@@ -230,6 +139,11 @@ function get_db_data_obj( $sql ){
 	$list_vars = "<ul>".$vars."</ul>";
 	
 
+//-----------------------------------------------------------
+	$ver = mysql_query("SELECT VERSION()");
+	if($ver){
+		$version = mysql_result($ver, 0);
+	}
 
 //-----------------------------------------------------------
 	$db = mysql_select_db($db_name) or die( "<b class='text-danger'>Query error: </b>".mysql_error() );
@@ -251,6 +165,57 @@ function get_db_data_obj( $sql ){
 	$output .= "<ol>";
 	$test_query = $output;
 
+
+
+
+
+
+function get_db_data( $sql ){
+	$data = array();
+	$res = mysql_query($sql) or die( "<b class='text-danger'>Query error: </b>".mysql_error() );
+
+	//while ($row = mysql_fetch_array($res,MYSQL_BOTH)){
+	//while ($row = mysql_fetch_array($res,MYSQL_ASSOC)){
+	//while( $row = mysql_fetch_row($res)){
+	//while ($row = mysql_fetch_assoc($res)){
+//echo "<pre>";
+//print_r($row);
+//echo "</pre>";
+	//}//end while
+
+// $num_rows = mysql_num_rows($res);
+// if ($num_rows > 0){
+// } else {
+	// echo "<p class='text-danger'>Empty result query ".$query."</p>";
+// }
+	
+	for( $n = 0; $n < mysql_num_rows ($res); $n++){
+		//$row = mysql_fetch_object($res);
+		$row = mysql_fetch_row($res);
+//echo "<pre>";
+//print_r ($row);
+//echo "</pre>";
+		$data[] = $row;
+	}//next row
+	
+	return $data;
+}//end get_db_data()
+
+
+function get_db_data_obj( $sql ){
+	$data = array();
+	$res = mysql_query($sql) or die( "<b class='text-danger'>Query error: </b>".mysql_error() );
+
+	for( $n = 0; $n < mysql_num_rows ($res); $n++){
+		$row = mysql_fetch_object($res);
+//echo "<pre>";
+//print_r ($row);
+//echo "</pre>";
+		$data[] = $row;
+	}//next row
+	
+	return $data;
+}//end get_db_data_obj()
 
 function show_fields( $table_name ){
 	$sql = "SHOW COLUMNS FROM ".$table_name;
