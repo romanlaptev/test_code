@@ -60,12 +60,12 @@ if ( $sapi_type == 'cgi') {
 	$_vars["runType"] = "console";
 }
 $msg = "Run method (php_sapi_name): ". $sapi_type;
-echo _log( $msg, "info" );
+echo _logWrap( $msg, "info" );
 */
 
 
 //============================
-function _log( $msg, $level){
+function _logWrap( $msg, $level){
 
 	// check API type
 	$sapi_type = php_sapi_name();
@@ -151,7 +151,7 @@ function _log( $msg, $level){
 		break;
 	}//end switch
 
-}//end _log()
+}//end _logWrap()
 
 
 ?>
