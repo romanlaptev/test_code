@@ -86,7 +86,9 @@ function _log( $msg, $level){
 	if ( $sapi_type == "cgi" ) { $runType = "console"; }
 
 //-------------
-	if( gettype( $msg) === "array"){
+	if( gettype( $msg) === "array" || 
+		gettype( $msg) === "object"
+	){
 			if ( $runType == "web" ) {
 				$out = "<pre>".print_r($msg,1)."</pre>";
 				return $out;
