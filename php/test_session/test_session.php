@@ -3,7 +3,7 @@ error_reporting(E_ALL|E_STRICT);
 ini_set('display_errors', 1);
 
 //https://www.dmosk.ru/miniinstruktions.php?mini=php-session
-ini_get("session.gc_maxlifetime", 60 );//86400 sec
+ini_set("session.gc_maxlifetime", 60 );//86400 sec
 ini_set("session.cookie_lifetime", 0);
 session_set_cookie_params(0);
 
