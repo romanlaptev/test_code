@@ -1,5 +1,5 @@
 <?php
-
+//https://www.php.net/manual/ru/function.memory-get-usage.php
 require "utils.php";
 
 $a = "abcdefgh";
