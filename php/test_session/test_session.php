@@ -4,9 +4,9 @@ ini_set('display_errors', 1);
 
 //https://www.dmosk.ru/miniinstruktions.php?mini=php-session
 //http://www.php.su/articles/?cat=examples&page=070
-ini_set("session.gc_maxlifetime", 60 );//86400 sec
-ini_set("session.cookie_lifetime", 0);
-session_set_cookie_params(0);
+//ini_set("session.gc_maxlifetime", 60 );//86400 sec
+//ini_set("session.cookie_lifetime", 0);
+//session_set_cookie_params(0);
 
 session_start();
 $_SESSION['test'] = "test1";
