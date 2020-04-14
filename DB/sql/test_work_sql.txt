@@ -1,0 +1,104 @@
+таблица пользователей:
+users
+----------
+`id` int(11)
+`email` varchar(55)
+`login` varchar(55)
+
+и таблица заказов
+orders
+--------
+`id` int(11)
+`user_id` int(11)
+`price` int(11)
+
+Необходимо :
+составить запрос, который выведет список email'лов встречающихся более чем у одного пользователя
+вывести список логинов пользователей, которые не сделали ни одного заказа
+вывести список логинов пользователей которые сделали более двух заказов
+
+
+//===========================================
+CREATE TABLE `users` (
+`id` int(11) NOT NULL  AUTO_INCREMENT,
+`login` varchar(64) NOT NULL,
+`password` varchar(64) NOT NULL,
+`email` varchar(64) NOT NULL,
+`username` varchar(64) NOT NULL,
+PRIMARY KEY (`id`)
+); ";
+
+INSERT INTO `users` ( `login`, `email`) VALUES
+('user1', 'aaa@bbb'),
+('user2', 'bbb@bbb'),
+('user3', 'aaa@bbb')
+
+//----------
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11),
+  `price` int(11),
+  PRIMARY KEY (`id`)
+);
+
+INSERT INTO `orders` ( `user_id`, `price`) VALUES
+(1, 100),
+(3, 300),
+(3, 300)
+
+
+=============
+---------------------------------------------- список email'лов встречающихся более чем у одного пользователя
+SELECT email FROM users GROUP BY email  HAVING count(email) > 1
+email 				count(email)
+aaa@bbb 	2
+
+/*
++SELECT email, count(email) FROM users GROUP BY email
+email 				count(email)
+aaa@bbb 	2
+bbb@bbb 	1
+*/
+
+
+----------------------------- список логинов пользователей, которые не сделали ни одного заказа
+SELECT login FROM users WHERE id NOT IN (
+	SELECT id FROM users WHERE id IN (
+		SELECT user_id FROM orders
+	)
+);
+user2
+
+
+/*
+SELECT login FROM users WHERE id IN (
+	SELECT user_id FROM orders
+);
+user1
+user3
+
+SELECT login FROM users WHERE id NOT IN (1, 3 );
+*/
+
+
+-------------------------- список логинов пользователей которые сделали более двух заказов
+SELECT login FROM users WHERE id IN (
+	SELECT user_id FROM orders GROUP BY user_id  HAVING count(user_id) > 1
+);
+
+user3
+
+/*
++SELECT user_id, count(user_id) FROM `orders` GROUP BY user_id
+
+user_id 	count(user_id)
+1 				1
+3 				2
+ 
+SELECT user_id, count(user_id) FROM orders GROUP BY user_id  HAVING count(user_id) > 1
+
+user_id 	count(user_id)
+3 				2
+*/
+
+
