@@ -75,12 +75,12 @@ function _logWrap( $msg, $level){
 //echo "<br/>\n";
 
 //-------------
-	$runType = "";
-	if ( $sapi_type == 'apache2handler' || 
-			$sapi_type == 'cli-server'
-		) {
+	//$runType = "";
+	//if ( $sapi_type == 'apache2handler' || 
+	//		$sapi_type == 'cli-server'
+		//) {
 		$runType = "web";
-	}
+	//}
 
 	if ( $sapi_type == "cli" ) { $runType = "console"; }
 	if ( $sapi_type == "cgi" ) { $runType = "console"; }
