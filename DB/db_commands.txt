@@ -6,6 +6,21 @@ mysqldump --user=root --password=master --databases drupal622 > db_drupal622.sql
 zip sql_drupal622.zip db_drupal622.sql
 rm db_drupal622.sql
 
+
+================= mySQL: получить структуру таблицы
+mysql> describe db2.users;
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| id       | int(11)     | NO   | PRI | NULL    | auto_increment |
+| login    | varchar(64) | NO   |     | NULL    |                |
+| password | varchar(64) | NO   |     | NULL    |                |
+| email    | varchar(64) | NO   |     | NULL    |                |
+| username | varchar(64) | NO   |     | NULL    |                |
++----------+-------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+
 ================= mySQL: импорт
 mysql -u qdecout_test -psdkjfh -Dqdecout_test < qdec.sql
 

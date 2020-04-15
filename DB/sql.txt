@@ -1,3 +1,15 @@
+
+================= get table data without  USE db2;
+mysql> select * from db2.users;
++----+-------+----------+---------+----------+
+| id | login | password | email   | username |
++----+-------+----------+---------+----------+
+|  1 | user1 |          | aaa@bbb |          |
+|  2 | user2 |          | bbb@bbb |          |
+|  3 | user3 |          | aaa@bbb |          |
++----+-------+----------+---------+----------+
+3 rows in set (0.01 sec)
+
 =================
 SQL: create_table.sql
 =================
