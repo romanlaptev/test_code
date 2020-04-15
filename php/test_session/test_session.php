@@ -11,6 +11,11 @@ ini_set('display_errors', 1);
 session_start();
 $_SESSION['test'] = "test1";
 
+echo "session.save_handler: ". ini_get("session.save_handler");
+echo "<br>";
+echo "session.save_path: ". ini_get("session.save_path");
+echo "<br>";
+
 echo "<pre>";
 print_r($_REQUEST);
 print_r($_SESSION);
