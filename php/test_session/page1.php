@@ -39,6 +39,17 @@ print_r($_COOKIE);
 echo "</pre>";
 
 ?>
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+
+<body>
+
 <ul>
 	<li><a href="page2.php">page2</a></li>
 </ul>
@@ -91,3 +102,6 @@ session.gc_maxlifetime integer
 https://rmcreative.ru/blog/post/blokirovanie-sessiy-v-php
 Блокирование сессий в PHP 
 </pre>
+
+</body>
+</html>
