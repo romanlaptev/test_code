@@ -47,18 +47,16 @@ insert into test_tbl (name,price) values ('product1','101');
 insert into test_tbl (name,price) values ('product2','102');
 insert into test_tbl (name,price) values ('product3','100');
 
+SELECT LAST_INSERT_ID();//3
+
 (
-select 
-id,name,price,'much'as res 
-from test_tbl 
-where price>100
-)
-union all
-(
-select 
-id,name,price,'little'as res 
-from test_tbl 
-where price>100
+	select id,name,price,'much'as res 
+	from test_tbl 
+	where price>100
+) union all (
+	select id,name,price,'little'as res 
+	from test_tbl 
+	where price<100
 )
 
 
@@ -223,6 +221,25 @@ WHERE
 
 
 =================
+ORDER BY, несколько столбцов
+=================
+SELECT field1, field2 FROM table1 WHERE
+field1 BETWEEN 4 AND 8
+ORDER BY field1, field2;
+
+записи сортируются по field1,
+если встречается несколько записей с совпадающим значением в field1, то
+они сортируются по field2
+
+field1	field2
+4			3.9
+4			3.9
+4			4.0
+5			3.6
+5			3.8
+
+
+=================
 UNION, ОБЪЕДИНЕННЫЕ ЗАПРОСЫ
 =================
 
@@ -293,11 +310,31 @@ GRANT ALL PRIVILEGES ON  `toool` . * TO  'toool'@'%';
 =================
 SQL: import, export
 =================
-SELECT * INTO OUTFILE '/tmp/traffic.table1.txt' FIELDS TERMINATED BY ',' FROM traffic.table1;
-SELECT * INTO [xxx#TXT] FROM phones
----
 LOAD DATA INFILE './traffic.table1.txt' INTO TABLE traffic.table2 fields terminated by ',';
 LOAD DATA INFILE './traffic.table1.txt' fields terminated by ',' INTO TABLE traffic.table1;
+
+//double records in import process 
+LOAD DATA INFILE './traffic.table1.txt' IGNORE INTO TABLE traffic.table2;
+or
+LOAD DATA INFILE './traffic.table1.txt' REPLACE INTO TABLE traffic.table2;
+
+//skip fields name line
+LOAD DATA INFILE './traffic.table1.txt' REPLACE INTO TABLE traffic.table2 IGNORE 1 LINES;
+
+LOAD DATA INFILE './traffic.table1.txt' REPLACE INTO TABLE traffic.table2 LINES TERMINATED BY '\r\n';
+LOAD DATA INFILE './traffic.table1.txt' REPLACE INTO TABLE traffic.table2 FIELDS TERMINATED BY ',';
+LOAD DATA INFILE './traffic.table1.txt' REPLACE INTO TABLE traffic.table2 FIELDS TERMINATED BY ',' ENCLOSED BY '"'; //????
+
+analog - mysqlimport utility
+-----------
+SELECT * INTO OUTFILE '/tmp/traffic.table1.txt' FIELDS TERMINATED BY ',' FROM traffic.table1;
+SELECT * INTO [xxx#TXT] FROM phones
+
+//Export result request to the SQL dump
+SELECT * INTO OUTFILE 'text.sql' 
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
+LINES STARTING BY 'INSERT INTO table1 VALUES(' TERMINATED BY ');\r\n' 
+FROM table1;
 
 
 ==================
@@ -449,7 +486,18 @@ select 'qwe' || 'asd'
 http://www.sql.ru/forum/703254/analog-funkcii-concat
 
 =========================
-mySQ: добавить поля в БД
+mySQL: добавить поля в БД
 =========================
 ALTER TABLE content_field_site_content_link ENGINE = MyISAM;
 ALTER TABLE content_type_config ENGINE = MyISAM;
+
+=========================
+mySQL: functions
+=========================
+COUNT()
+MIN()
+MAX()
+TO_DAYS(ordertime)
+SUM()
+
+
