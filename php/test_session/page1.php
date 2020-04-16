@@ -5,8 +5,8 @@ ini_set("session.gc_divisor", 1 );
 
 //ini_set("session.use_cookies", 0 );
 //+ini_set("session.cookie_lifetime", 90);
-$lifetime=90;
-session_set_cookie_params($lifetime);
+//$lifetime=90;
+//session_set_cookie_params($lifetime);
 
 session_start();
 
