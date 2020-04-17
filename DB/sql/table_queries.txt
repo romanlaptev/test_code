@@ -1,0 +1,54 @@
+mysql> SELECT * FROM table2;
++----+--------+
+| id | letter |
++----+--------+
+|  1 | A      |
+|  2 | B      |
+|  3 | C      |
+|  4 | D      |
+|  5 | E      |
+|  6 | F      |
++----+--------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT * FROM table1;
++----+------+
+| id | name |
++----+------+
+|  1 | A    |
+|  2 | B    |
+|  3 | C    |
+|  4 | D    |
+|  5 | E    |
+|  6 | F    |
++----+------+
+6 rows in set (0.00 sec)
+
+======================================= query many tables 
+mysql> SELECT * FROM table1, table2 WHERE table1.id=table2.id;
++----+------+----+--------+
+| id | name | id | letter |
++----+------		+----	+--------	+
+|  1 | A    |  		1 | 	A      |
+|  2 | B    |  		2 | 	B      |
+|  3 | C    |  		3 | 	C      |
+|  4 | D    |  		4 | 	D      |
+|  5 | E    |  		5 | 	E      |
+|  6 | F    |  		6 | 	F      |
++----+------+----+--------+
+6 rows in set (0.00 sec)
+
+======================================= JOIN
+mysql> SELECT * FROM table1 JOIN table2 ON table1.id=table2.id;
++----+------+----+--------+
+| id | name | id | letter |
++----+------+----+--------+
+|  1 | A    |  1 | A      |
+|  2 | B    |  2 | B      |
+|  3 | C    |  3 | C      |
+|  4 | D    |  4 | D      |
+|  5 | E    |  5 | E      |
+|  6 | F    |  6 | F      |
++----+------+----+--------+
+6 rows in set (0.00 sec)
+
