@@ -2,9 +2,10 @@
 //echo "Content-type: text/html\n";
 //echo "\n";
 
-//echo "<pre>";
-//print_r(PDO::getAvailableDrivers());
-//echo "</pre>";
+// check API type
+$sapi_type = php_sapi_name();
+echo "php_sapi_name: ". $sapi_type;
+echo "<br/>\n";
 
 $loadedExt = get_loaded_extensions();
 echo "loaded extensions: <pre>";
