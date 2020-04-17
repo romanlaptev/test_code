@@ -533,7 +533,10 @@ mySQL: functions
 COUNT()
 MIN()
 MAX()
-TO_DAYS(ordertime)
 SUM()
+
+NOW()
+TO_DAYS(ordertime)
+CURRENT_DATE()
 
 
