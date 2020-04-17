@@ -59,6 +59,31 @@ SELECT LAST_INSERT_ID();//3
 	where price<100
 )
 
+------------------------------- RAM table
+- CREATE TABLE table3(id int(11) not null, letter varchar(1) ) ENGINE=MEMORY;
+- INSERT INTO table3(id,letter) VALUES (1,'Z');
+mysql> SELECT * FROM table3;
++----+--------+
+| id | letter |
++----+--------+
+|  1 | Z      |
++----+--------+
+1 row in set (0.00 sec)
+
+mysql> quit
+Bye
+root@vbox1:~# /etc/init.d/mysql restart // CLEAR DATA from table3 !!!!!!!!!!!!!!!!!!!!!!!!!!!
+[ ok ] Stopping MySQL database server: mysqld.
+[ ok ] Starting MySQL database server: mysqld ..
+[info] Checking for tables which need an upgrade, are corrupt or were 
+not closed cleanly..
+root@vbox1:~# 
+
+mysql> SELECT * FROM table3;
+Empty set (0.00 sec)
+
+mysql> 
+
 
 =================
 SQL: Вложенные запросы
