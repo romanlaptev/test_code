@@ -84,6 +84,17 @@ Empty set (0.00 sec)
 
 mysql> 
 
+------------------------------- CSV tables
+CREATE TABLE table4( id INT NOT NULL, letter CHAR(1) NOT NULL ) ENGINE=CSV;
+INSERT INTO table4(id,letter) VALUES (1,'X');
+
+root@vbox1:~# ls /home/db/mysql/db1/table4*
+	/home/db/mysql/db1/table4.CSM  
+	/home/db/mysql/db1/table4.CSV  
+	/home/db/mysql/db1/table4.frm
+root@vbox1:~# cat /home/db/mysql/db1/table4.CSV
+	1,"X"
+
 
 =================
 SQL: Вложенные запросы
