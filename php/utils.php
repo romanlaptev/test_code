@@ -154,4 +154,35 @@ function _logWrap( $msg, $level){
 }//end _logWrap()
 
 
+function runDBquery( $db, $sql_query ){
+
+	$result  = $db->query( $sql_query );
+	if( !$result ){
+		$msg =  "-- error, query: ".$sql_query;
+		echo _logWrap( $msg, "error" );
+		echo "error info: ". _logWrap( $connection->errorInfo() );
+$arr = $connection->errorInfo();
+$desc = $arr[2];
+		return array(
+"type" => "error",
+"description" => $desc
+		);
+	}
+
+	//$msg =  "-- run query: ".$sql_query;
+	//echo _logWrap( $msg, "success" );
+
+	//$rows  = $result->fetchAll( PDO::FETCH_NUM );
+	$rows  = $result->fetchAll( PDO::FETCH_ASSOC );
+//echo count( $rows );
+	if( count( $rows ) > 0 ){
+		return array(
+"type" => "success",
+"data" => $rows
+		);
+	}
+
+	return array("type" => "success");
+}//end runDBquery()
+
 ?>
