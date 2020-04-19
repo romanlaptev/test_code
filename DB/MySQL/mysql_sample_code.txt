@@ -1,6 +1,8 @@
 =========================
 mySQL: functions, operators
 =========================
+
+-------------- math functions
 ABC()
 ACOS()
 COS()
@@ -31,6 +33,7 @@ IS NOT NULL
 BETWEEN min AND max
 NOT BETWEEN min AND max
 
+-------------- date functions
 
 NOW()
 SELECT NOW(), DATE_FORMAT( NOW(), '%d-%m-%Y');
@@ -75,11 +78,51 @@ CONVERT(expr,type)
 CONVERT(expr USING charset)
 SELECT CONVERT('Текст' USING latin1); // ?????
 
+
+-------------- string functions
+ASCII()
+
 CONCAT()
+	SELECT CONCAT('hello', ',', 'MySQL!');	// hello,MySQL!
 
+CHAR(77)	//M
 
+CHAR_LENGTH( str )
+	SELECT CHAR_LENGTH('MySQL');	//5
 
+SELECT CHARSET('Программирование');	//utf8
+SELECT COLLATION('Программирование');	// utf8_general_ci
 
+SELECT FORMAT(1.5555, 2) as price;	// 1.56
+SELECT INSERT('AB  EF', 3,2,'CD');	// ABCDEF
+
+SELECT INSTR('ABCDEF ABCDEF','CD');	// 3
+SELECT INSTR('ABCDEF ABCDEF','cd');// 3
+SELECT LOCATE('ABCDEF ABCDEF','cd');	// 3
+
+SELECT LEFT('ABCDEF',2);	// AB
+
+SELECT LENGTH('ABCDEF');	// 6
+
+SELECT LOAD_FILE('/etc/host.conf') as f1;	// "multi on"
+UPDATE table1 SET blob_column=LOAD_FILE('/tmp/upload/picture1.jpg') WHERE id=1;
+
+SELECT LOWER('ABCDEF');	//	abcdef
+
+SELECT LPAD('5',2,'0');	//	 05
+
+SELECT LTRIM('   ABCDEF');
+SELECT RTRIM('ABCDEF   ');
+SELECT TRIM('   ABCDEF   ');	// ABCDEF
+
+SELECT MID('ABCDEF',3,2);
+SELECT SUBSTRING('ABCDEF',3,2);	// CD
+
+SELECT QUOTE("Don't");	//	'Don\'t'
+
+SELECT REPLACE('abcdefabcdef','a', '-A-');	//	-A-bcdef-A-bcdef
+
+SELECT REVERSE('ABCDEFabcdef');	//	fedcbaFEDCBA
 
 ================= get table data without  USE db2;
 mysql> select * from db2.users;
