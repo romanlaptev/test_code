@@ -124,6 +124,32 @@ SELECT REPLACE('abcdefabcdef','a', '-A-');	//	-A-bcdef-A-bcdef
 
 SELECT REVERSE('ABCDEFabcdef');	//	fedcbaFEDCBA
 
+
+------------------------------- crypt functions
+SELECT AES_ENCRYPT('superPassw0rd','my private key1');	// encrypted string
+SELECT AES_DECRYPT('encrypted string','my private key1');	// superPassw0rd
+
+SELECT ENCODE('superPassw0rd','my private key1');	// encrypted string
+SELECT DECODE('encrypted string','my private key1');	// superPassw0rd
+
+SELECT DES_ENCRYPT('superPassw0rd');	// encrypted string
+SELECT DES_DECRYPT('encrypted string');	// superPassw0rd
+
+//one way UNIX encryption (only UNIX/Linux)
+SELECT ENCRYPT('superPassw0rd');	//	QkKsDMIWFuNjY
+
+
+SELECT MD5('superPassw0rd');	// 72a26794355a23dde9386a4117ace4a9
+SELECT MD5('super');	// 1b3231655cebb7a1f783eddf27d254ca
+
+SELECT SHA1('superPassw0rd');	//	b92e483c5320f22016ef9a65c1c332786ab28de7
+
+
+//one way encryption
+SELECT PASSWORD('superPassw0rd');	//		*59E6FC8C1EBD097C7F8815BB90F63CBEC20F2070
+SELECT OLD_PASSWORD('superPassw0rd'); //	433c8cf9603bce7a
+
+
 ================= get table data without  USE db2;
 mysql> select * from db2.users;
 +----+-------+----------+---------+----------+
