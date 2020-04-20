@@ -19,6 +19,7 @@ POW(2,3)//8
 RAND(100)
 
 COUNT()
+AVG(price)
 MIN()
 MAX()
 SUM()
@@ -32,6 +33,52 @@ IS NOT NULL
 
 BETWEEN min AND max
 NOT BETWEEN min AND max
+
+SELECT GROUP_CONCAT(name) FROM table10;
++--------------------+
+| A,A,B,C,D,E,F,G    |
++--------------------+
+SELECT GROUP_CONCAT(DISTINCT name SEPARATOR ' - ') FROM table10;
+ A - B - C - D - E - F - G
+
+
+
+CASE()
+SELECT id, CASE id 
+	WHEN 3 THEN 'three' 
+	WHEN 4 THEN 'four' 
+	ELSE 'other number' 
+END as text 
+FROM table10;
++----+--------------+
+| id | text         |
++----+--------------+
+|  7 | other number |
+| 10 | other number |
+|  5 | other number |
+|  3 | three        |
+|  4 | four         |
+|  9 | other number |
+|  6 | other number |
+|  8 | other number |
++----+--------------+
+
+mysql> SELECT id, name, IF( description IS NULL, 'without description', description)  as state FROM table10;
++----+------+---------------------+
+| id | name | state               |
++----+------+---------------------+
+|  3 | C    | without description |
+|  4 | D    | without description |
+|  5 | B    | test1               |
+|  6 | F    | without description |
+|  7 | A    | test3               |
+|  8 | G    | test desc           |
+|  9 | E    | without description |
+| 10 | A    | without description |
++----+------+---------------------+
+SELECT id, name, IFNULL(description, 'without description')  as state FROM table10;
+
+
 
 -------------- date functions
 
@@ -148,6 +195,51 @@ SELECT SHA1('superPassw0rd');	//	b92e483c5320f22016ef9a65c1c332786ab28de7
 //one way encryption
 SELECT PASSWORD('superPassw0rd');	//		*59E6FC8C1EBD097C7F8815BB90F63CBEC20F2070
 SELECT OLD_PASSWORD('superPassw0rd'); //	433c8cf9603bce7a
+
+
+-------------------------------------- search, reg exp
+SELECT * FROM calls WHERE Dial_Number like "810%"
+SELECT * FROM table10 WHERE description LIKE('%test%');
+
+SELECT * FROM table10 WHERE description RLIKE 'test';
+| id | name | description |
++----+------+-------------+
+|  5 | B    | test1       |
+|  7 | A    | test3       |
+|  8 | G    | test desc   |
++----+------+-------------+
+
+SELECT * FROM table10 WHERE description RLIKE 'test1|test3';
++----+------+-------------+
+| id | name | description |
++----+------+-------------+
+|  5 | B    | test1       |
+|  7 | A    | test3       |
++----+------+-------------+
+
+SELECT * FROM table10 WHERE description RLIKE '[ted]';// 't' OR 'e' OR 'd'
++----+------+-------------+
+|  5 | B    | test1       |
+|  7 | A    | test3       |
+|  8 | G    | test desc   |
++----+------+-------------+
+[0-9] - numbers 0..9
+[:digit:] - numbers
+[^0-9] - NOT numbers 0..9
+
+[:alnum:]
+[:alpha:]
+[:lower:]
+[:upper:]
+[:digit:]
+[:cntrl:] - control symbols
+[:blank:] - TAB and SPACE
+[:space:]
+[:punct:]
+
+-- search values, starting with 'te'
+SELECT * FROM table10 WHERE description REGEXP '^te';
+
 
 
 ================= get table data without  USE db2;
@@ -631,6 +723,12 @@ SELECT name FROM mysql.proc WHERE type LIKE 'FUNCTION'
 
 
 
+SELECT CONNECTION_ID();
+SELECT CURRENT_USER();
+SELECT DATABASE();
+
+INSERT INTO table10(name) VALUES('Z');
+SELECT LAST_INSERT_ID(); //11
 
 =============================
 mySQL: chaset
