@@ -1,7 +1,7 @@
 <?php
 ini_set("session.gc_maxlifetime", 60 );//86400 sec
-ini_set("session.gc_probability", 2 );
-ini_set("session.gc_divisor", 1 );
+//ini_set("session.gc_probability", 2 );
+//ini_set("session.gc_divisor", 1 );
 
 //ini_set("session.use_cookies", 0 );
 //+ini_set("session.cookie_lifetime", 90);
