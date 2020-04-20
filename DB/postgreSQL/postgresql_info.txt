@@ -1,3 +1,13 @@
+/etc/postgresql/9.1/main/postgresql.conf
+
+/var/lib/pgsql/data/pg_hba.conf
+/etc/postgresql/9.1/main/pg_hba.conf 
+
+find / -name pg_hba.conf
+
+/etc/init.d/postgresql restart
+---------------------------------------------------------
+
 ++createuser -U postgres Roman
 ++createdb -U postgres Roman
 
@@ -237,6 +247,18 @@ CONNECTION LIMIT = max_concurrent_connection
 CREATE DATABASE music ENCODING 'LATIN1' TEMPLATE template0;
 
 ==========================================================
+//https://www.dmosk.ru/miniinstruktions.php?mini=pgsql-remote
+
+/etc/postgresql/9.1/main/postgresql.conf
+#------------------------------------------------------------------------------
+# CONNECTIONS AND AUTHENTICATION
+#------------------------------------------------------------------------------
+listen_addresses = '*'
+
+
+/etc/postgresql/9.1/main/pg_hba.conf 
+host    all             all             192.168.56.101/32           md5
+
 ==========================================================
 ==========================================================
 ==========================================================
