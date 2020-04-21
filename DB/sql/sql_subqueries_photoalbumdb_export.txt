@@ -1,0 +1,35 @@
+photoalbum_node
+node.nid = 167
+node.title = Диксон, остров
+--------------
+photoalbum_content_field_image_photo
+
+photoalbum_content_field_image_photo.nid 167
+photoalbum_content_field_image_photo.delta 0
+photoalbum_content_field_image_photo.field_image_photo_fid 535
+
+photoalbum_content_field_image_photo.nid 167
+photoalbum_content_field_image_photo.delta 1
+photoalbum_content_field_image_photo.field_image_photo_fid 536
+
+photoalbum_content_field_image_photo.nid 167
+photoalbum_content_field_image_photo.delta 2
+photoalbum_content_field_image_photo.field_image_photo_fid 537
+---------------
+photoalbum_files
+
+photoalbum_files.fid 535
+photoalbum_files.filename dikson_ostrov.jpg
+photoalbum_files.filepath sites/default/files/photo_images/dikson_ostrov.jpg
+--------------
+-- получить изображения ноды
+SELECT
+photoalbum_files.fid,
+photoalbum_files.filename
+FROM photoalbum_files
+-- LEFT JOIN photoalbum_node ON photoalbum_node.nid=167
+LEFT JOIN photoalbum_node ON photoalbum_node.title LIKE 'Диксон, остров'
+LEFT JOIN photoalbum_content_field_image_photo ON photoalbum_content_field_image_photo.nid=photoalbum_node.nid
+WHERE
+photoalbum_files.fid=photoalbum_content_field_image_photo.field_image_photo_fid
+

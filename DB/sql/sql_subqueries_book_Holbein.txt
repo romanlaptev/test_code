@@ -1,0 +1,113 @@
+SELECT menu_links.mlid FROM menu_links WHERE link_title LIKE '%Графика Ганса Гольбейна Младшего%'
+menu_links.mlid	481
+
+-- получить menu_links.mlid страниц 1-го уровня
+SELECT menu_links.mlid FROM menu_links WHERE menu_links.plid IN -- ВЛОЖЕННЫЙ ЗАПРОС
+	(SELECT menu_links.mlid FROM menu_links WHERE link_title LIKE '%Графика Ганса Гольбейна Младшего%')
+ORDER BY weight ASC;
+
+-------------------------------------------------------------------------
+1.
+		$sql="
+-- получить страницы 1-го уровня
+SELECT 
+book.mlid, 
+book.nid, 
+-- menu_links.mlid, 
+menu_links.plid, 
+node.nid, 
+node.title, 
+field_data_body.body_value, 
+field_data_field_description.field_description_value, -- метатег description
+field_data_field_keywords.field_keywords_value -- метатег keywords
+FROM book 
+LEFT JOIN menu_links ON menu_links.mlid=book.mlid 
+LEFT JOIN node ON node.nid=book.nid
+LEFT JOIN field_data_body ON field_data_body.entity_id=node.nid -- основная часть
+LEFT JOIN field_data_field_description ON field_data_field_description.entity_id=node.nid -- метатег description
+LEFT JOIN field_data_field_keywords ON field_data_field_keywords.entity_id=node.nid -- метатег keywords
+WHERE 
+book.mlid IN
+(
+SELECT menu_links.mlid FROM menu_links WHERE menu_links.plid IN -- ВЛОЖЕННЫЙ ЗАПРОС
+	(SELECT menu_links.mlid FROM menu_links WHERE link_title LIKE '%Графика Ганса Гольбейна Младшего%')
+) 
+ORDER BY menu_links.weight ASC
+";
+-------------------------------------------------------------------------
+2.
+		$sql="
+-- получить страницу
+SELECT 
+book.mlid, 
+book.nid, 
+-- menu_links.mlid, 
+menu_links.plid, 
+node.nid, 
+node.title, 
+field_data_body.body_value, 
+field_data_field_description.field_description_value, -- метатег description
+field_data_field_keywords.field_keywords_value -- метатег keywords
+FROM book 
+LEFT JOIN menu_links ON menu_links.mlid=book.mlid 
+LEFT JOIN node ON node.nid=book.nid
+LEFT JOIN field_data_body ON field_data_body.entity_id=node.nid -- основная часть
+LEFT JOIN field_data_field_description ON field_data_field_description.entity_id=node.nid -- метатег description
+LEFT JOIN field_data_field_keywords ON field_data_field_keywords.entity_id=node.nid -- метатег keywords
+WHERE 
+book.mlid=".$mlid;
+
+-------------------------------------------------------------------------
+3.
+		$sql="
+-- получить расположение прикрепленных файлов (локальные копии)
+SELECT 
+-- entity_id, 
+delta, 
+field_content_location_value
+FROM field_data_field_content_location 
+WHERE 
+entity_id=$nid
+ORDER BY delta ASC
+";
+
+		$sql="
+-- получить параметры прикрепленных файлов (локальные копии)
+SELECT 
+-- field_data_field_content_files.entity_id, 
+field_data_field_content_files.delta as content_files_delta, 
+field_data_field_content_files.field_content_files_value
+FROM field_data_field_content_files 
+WHERE 
+field_data_field_content_files.entity_id=$nid
+ORDER BY field_data_field_content_files.delta ASC
+";
+-------------------------------------------------------------------------
+4.
+		$sql="
+-- получить дочернии страницы
+SELECT 
+book.mlid, 
+book.nid, 
+-- menu_links.mlid, 
+menu_links.plid, 
+node.nid, 
+node.title, 
+field_data_body.body_value, 
+field_data_field_description.field_description_value, -- метатег description
+field_data_field_keywords.field_keywords_value -- метатег keywords
+FROM book 
+LEFT JOIN menu_links ON menu_links.mlid=book.mlid 
+LEFT JOIN node ON node.nid=book.nid
+LEFT JOIN field_data_body ON field_data_body.entity_id=node.nid -- основная часть
+LEFT JOIN field_data_field_description ON field_data_field_description.entity_id=node.nid -- метатег description
+LEFT JOIN field_data_field_keywords ON field_data_field_keywords.entity_id=node.nid -- метатег keywords
+WHERE 
+book.mlid IN
+	(SELECT menu_links.mlid FROM menu_links WHERE menu_links.plid=".$mlid.") 
+ORDER BY menu_links.weight ASC
+";
+-------------------------------------------------------------------------
+
+
+

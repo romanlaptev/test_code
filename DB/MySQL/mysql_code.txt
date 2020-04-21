@@ -811,3 +811,327 @@ ALTER TABLE table10 CHARACTER SET cp1251;
 ALTER TABLE table10 CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
+
+================================= VARIABLES
+mysql> SELECT @total := COUNT(*) FROM table10;
+mysql> SELECT @total;
++--------------------+
+| @total := COUNT(*) |
++--------------------+
+|                 10 |
++--------------------+
+
+@total lifetime - until the user is disconnected from the server...
+
+----
+SELECT @id := 3;
+SELECT * FROM table1 WHERE id = @id;
+
+SET @id2 = 4;
+SELECT * FROM table1 WHERE id = @id2;
+
+================================= TEMPORARY TABLES
+CREATE TEMPORARY TABLE temp (id INT, name VARCHAR);
+
+-- create temp table from results select query
+-- copy list ids from table1
+CREATE TEMPORARY TABLE table_temp1 SELECT id FROM table1;
+SELECT * FROM table_temp1;
+
+-- get location temporary tables, system variable BIG_TABLES
+SELECT @@BIG_TABLES;
+0 // location - RAM
+
+SET BIG_TABLES = 1; //location - disk
+
+
+=================================== SUBQUERIES ( MySQL => 4.1 )
+mysql> SELECT * FROM table1;
++----+------+-------------+
+| id | name | description |
++----+------+-------------+
+|  1 | Z    | NULL        |
+|  3 | C    | NULL        |
+|  4 | D    | NULL        |
+|  5 | B    | test1       |
+|  6 | F    | NULL        |
+|  7 | A    | test3       |
+|  8 | G    | test desc   |
+|  9 | E    | NULL        |
+| 10 | A    | NULL        |
+| 11 | X    | NULL        |
++----+------+-------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT * FROM table2;
++----+--------+
+| id | letter |
++----+--------+
+|  1 | A      |
+|  2 | B      |
+|  3 | C      |
+|  4 | D      |
+|  5 | E      |
+|  6 | F      |
++----+--------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT * FROM table1 WHERE id IN(
+	SELECT id FROM table2 WHERE id > 3
+);
++----+------+-------------+
+| id | name | description |
++----+------+-------------+
+|  4 | D    | NULL        |
+|  5 | B    | test1       |
+|  6 | F    | NULL        |
++----+------+-------------+
+3 rows in set (0.00 sec)
+
+-- alternative - many tables query
+mysql> SELECT table1.id, table1.name FROM table1, table2 WHERE table1.id=table2.id AND table2.id > 3;
++----+------+
+| id | name |
++----+------+
+|  4 | D    |
+|  5 | B    |
+|  6 | F    |
++----+------+
+
+=========================== EXISTS
+mysql> SELECT * FROM table1;
++----+------+-------------+
+| id | name | description |
++----+------+-------------+
+|  1 | Z    | NULL        |
+|  3 | C    | NULL        |
+|  4 | D    | NULL        |
+|  5 | B    | test1       |
+|  6 | F    | NULL        |
+|  7 | A    | test3       |
+|  8 | G    | test desc   |
+|  9 | E    | NULL        |
+| 10 | A    | NULL        |
+| 11 | X    | NULL        |
++----+------+-------------+
+
+mysql> SELECT EXISTS (SELECT id FROM table1 WHERE id > 11);
++----------------------------------------------+
+| EXISTS (SELECT id FROM table1 WHERE id > 11) |
++----------------------------------------------+
+|                                            0 |
++----------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT EXISTS (SELECT id FROM table1 WHERE id < 11);
++----------------------------------------------+
+| EXISTS (SELECT id FROM table1 WHERE id < 11) |
++----------------------------------------------+
+|                                            1 |
++----------------------------------------------+
+
+============================= WHERE ROW
++SELECT * FROM table1 WHERE ROW( 4, 'D' ) = (SELECT id, letter FROM table2);
+
+==============================================
+                           FAST                        MONTHNAME                   STRIPED
+ABS                         FETCH                       MPOINTFROMTEXT              STR_TO_DATE
+ACOS                        FIELD                       MPOINTFROMWKB               SUBDATE
+ACTION                      FIELDS                      MPOLYFROMTEXT               SUBJECT
+ADD                         FILE                        MPOLYFROMWKB                SUBSTR
+ADDDATE                     FIND_IN_SET                 MULTILINESTRING             SUBSTRING
+ADDTIME                     FIRST                       MULTILINESTRINGFROMTEXT     SUBSTRING_INDEX
+AES_DECRYPT                 FIXED                       MULTILINESTRINGFROMWKB      SUBTIME
+AES_ENCRYPT                 FLOAT                       MULTIPOINT                  SUM
+AFTER                       FLOAT4                      MULTIPOINTFROMTEXT          SUPER
+AGAINST                     FLOAT8                      MULTIPOINTFROMWKB           SUSPEND
+AGGREGATE                   FLOOR                       MULTIPOLYGON                SYSDATE
+ALGORITHM                   FLUSH                       MULTIPOLYGONFROMTEXT        SYSTEM_USER
+ALL                         FOR                         MULTIPOLYGONFROMWKB         TABLE
+ALTER                       FORCE                       MUTEX                       TABLES
+ANALYZE                     FOREIGN                     NAME                        TABLESPACE
+AND                         FORMAT                      NAMES                       TAN
+ANY                         FOUND                       NAME_CONST                  TEMPORARY
+AREA                        FOUND_ROWS                  NATIONAL                    TEMPTABLE
+AS                          FROM                        NATURAL                     TERMINATED
+ASBINARY                    FROM_DAYS                   NCHAR                       TEXT
+ASC                         FROM_UNIXTIME               NDB                         THEN
+ASCII                       FULL                        NDBCLUSTER                  TIME
+ASENSITIVE                  FULLTEXT                    NEW                         TIMEDIFF
+ASIN                        FUNCTION                    NEXT                        TIMESTAMP
+ASTEXT                      GEOMCOLLFROMTEXT            NO                          TIMESTAMPADD
+ASWKB                       GEOMCOLLFROMWKB             NONE                        TIMESTAMPDIFF
+ASWKT                       GEOMETRY                    NOT                         TIME_FORMAT
+ATAN                        GEOMETRYCOLLECTION          NOW                         TIME_TO_SEC
+ATAN2                       GEOMETRYCOLLECTIONFROMTEXT  NO_WRITE_TO_BINLOG          TINYBLOB
+AUTO_INCREMENT              GEOMETRYCOLLECTIONFROMWKB   NULL                        TINYINT
+AVG                         GEOMETRYFROMTEXT            NULLIF                      TINYTEXT
+AVG_ROW_LENGTH              GEOMETRYFROMWKB             NUMERIC                     TO
+BACKUP                      GEOMETRYN                   NUMGEOMETRIES               TOUCHES
+BDB                         GEOMETRYTYPE                NUMINTERIORRINGS            TO_DAYS
+BEFORE                      GEOMFROMTEXT                NUMPOINTS                   TRAILING
+BEGIN                       GEOMFROMWKB                 NVARCHAR                    TRANSACTION
+BENCHMARK                   GET_FORMAT                  OCT                         TRIGGER
+BERKELEYDB                  GET_LOCK                    OCTET_LENGTH                TRIGGERS
+BETWEEN                     GLENGTH                     OFFSET                      TRIM
+BIGINT                      GLOBAL                      OLD_PASSWORD                TRUE
+BIN                         GRANT                       ON                          TRUNCATE
+BINARY                      GRANTS                      ONE                         TYPE
+BINLOG                      GREATEST                    ONE_SHOT                    TYPES
+BIT                         GROUP                       OPEN                        UCASE
+BIT_AND                     GROUP_CONCAT                OPTIMIZE                    UNCOMMITTED
+BIT_COUNT                   GROUP_UNIQUE_USERS          OPTION                      UNCOMPRESS
+BIT_LENGTH                  HANDLER                     OPTIONALLY                  UNCOMPRESSED_LENGTH
+BIT_OR                      HASH                        OR                          UNDEFINED
+BIT_XOR                     HAVING                      ORD                         UNDO
+BLOB                        HELP                        ORDER                       UNHEX
+BOOL                        HEX                         OUT                         UNICODE
+BOOLEAN                     HIGH_PRIORITY               OUTER                       UNION
+BOTH                        HOSTS                       OUTFILE                     UNIQUE
+BTREE                       HOUR                        OVERLAPS                    UNIQUE_USERS
+BY                          HOUR_MICROSECOND            PACK_KEYS                   UNIX_TIMESTAMP
+BYTE                        HOUR_MINUTE                 PARTIAL                     UNKNOWN
+CACHE                       HOUR_SECOND                 PASSWORD                    UNLOCK
+CALL                        IDENTIFIED                  PERIOD_ADD                  UNSIGNED
+CASCADE                     IF                          PERIOD_DIFF                 UNTIL
+CASCADED                    IFNULL                      PHASE                       UPDATE
+CASE                        IGNORE                      PI                          UPGRADE
+CAST                        IMPORT                      POINT                       UPPER
+CEIL                        IN                          POINTFROMTEXT               USAGE
+CEILING                     INDEX                       POINTFROMWKB                USE
+CENTROID                    INDEXES                     POINTN                      USER
+CHAIN                       INET_ATON                   POLYFROMTEXT                USER_RESOURCES
+CHANGE                      INET_NTOA                   POLYFROMWKB                 USE_FRM
+CHANGED                     INFILE                      POLYGON                     USING
+CHAR                        INNER                       POLYGONFROMTEXT             UTC_DATE
+CHARACTER                   INNOBASE                    POLYGONFROMWKB              UTC_TIME
+CHARACTER_LENGTH            INNODB                      POSITION                    UTC_TIMESTAMP
+CHARSET                     INOUT                       POW                         UUID
+CHAR_LENGTH                 INSENSITIVE                 POWER                       VALUE
+CHECK                       INSERT                      PRECISION                   VALUES
+CHECKSUM                    INSERT_METHOD               PREPARE                     VARBINARY
+CIPHER                      INSTR                       PREV                        VARCHAR
+CLIENT                      INT                         PRIMARY                     VARCHARACTER
+CLOSE                       INT1                        PRIVILEGES                  VARIABLES
+COALESCE                    INT2                        PROCEDURE                   VARIANCE
+CODE                        INT3                        PROCESS                     VARYING
+COERCIBILITY                INT4                        PROCESSLIST                 VAR_POP
+COLLATE                     INT8                        PURGE                       VAR_SAMP
+COLLATION                   INTEGER                     QUARTER                     VERSION
+COLUMN                      INTERIORRINGN               QUERY                       VIEW
+COLUMNS                     INTERSECTS                  QUICK                       WARNINGS
+COMMENT                     INTERVAL                    QUOTE                       WEEK
+COMMIT                      INTO                        RADIANS                     WEEKDAY
+COMMITTED                   INVOKER                     RAND                        WEEKOFYEAR
+COMPACT                     IO_THREAD                   READ                        WHEN
+COMPRESS                    IS                          READS                       WHERE
+COMPRESSED                  ISCLOSED                    REAL                        WHILE
+CONCAT                      ISEMPTY                     RECOVER                     WITH
+CONCAT_WS                   ISNULL                      REDUNDANT                   WITHIN
+CONCURRENT                  ISOLATION                   REFERENCES                  WORK
+CONDITION                   ISSIMPLE                    REGEXP                      WRITE
+CONNECTION                  ISSUER                      RELAY_LOG_FILE              X
+CONNECTION_ID               IS_FREE_LOCK                RELAY_LOG_POS               X509
+CONSISTENT                  IS_USED_LOCK                RELAY_THREAD                XA
+CONSTRAINT                  ITERATE                     RELEASE                     XOR
+CONTAINS                    JOIN                        RELEASE_LOCK                Y
+CONTINUE                    KEY                         RELOAD                      YEAR
+CONV                        KEYS                        RENAME                      YEARWEEK
+CONVERT                     KILL                        REPAIR                      YEAR_MONTH
+CONVERT_TZ                  LANGUAGE                    REPEAT                      ZEROFILL
+COS                         LAST                        REPEATABLE                  alter table
+COT                         LAST_DAY                    REPLACE                     art
+COUNT                       LAST_INSERT_ID              REPLICATION                 bitrix
+CRC32                       LCASE                       REQUIRE                     category
+CREATE                      LEADING                     RESET                       category.category_id
+CROSS                       LEAST                       RESTORE                     category.name
+CROSSES                     LEAVE                       RESTRICT                    category.parent_id
+CUBE                        LEAVES                      RESUME                      category_id
+CURDATE                     LEFT                        RETURN                      charset
+CURRENT_DATE                LENGTH                      RETURNS                     clear
+CURRENT_TIME                LEVEL                       REVERSE                     code
+CURRENT_TIMESTAMP           LIKE                        REVOKE                      connect
+CURRENT_USER                LIMIT                       RIGHT                       create database
+CURSOR                      LINEFROMTEXT                RLIKE                       create table
+CURTIME                     LINEFROMWKB                 ROLLBACK                    db1
+DATA                        LINES                       ROLLUP                      db2
+DATABASE                    LINESTRING                  ROUND                       delimiter
+DATABASES                   LINESTRINGFROMTEXT          ROUTINE                     description
+DATE                        LINESTRINGFROMWKB           ROW                         drupal
+DATEDIFF                    LN                          ROWS                        drupal_magazin
+DATETIME                    LOAD                        ROW_COUNT                   edit
+DATE_ADD                    LOAD_FILE                   ROW_FORMAT                  ego
+DATE_FORMAT                 LOCAL                       RPAD                        exit
+DATE_SUB                    LOCALTIME                   RTREE                       go
+DAY                         LOCALTIMESTAMP              RTRIM                       help
+DAYNAME                     LOCATE                      SAVEPOINT                   id
+DAYOFMONTH                  LOCK                        SCHEMA                      image_url
+DAYOFWEEK                   LOCKS                       SCHEMAS                     information_schema
+DAYOFYEAR                   LOG                         SECOND                      joomla
+DAY_HOUR                    LOG10                       SECOND_MICROSECOND          kanistra
+DAY_MICROSECOND             LOG2                        SECURITY                    letter
+DAY_MINUTE                  LOGS                        SEC_TO_TIME                 load data from
+DAY_SECOND                  LONG                        SELECT                      lock tables
+DEALLOCATE                  LONGBLOB                    SENSITIVE                   login
+DEC                         LONGTEXT                    SEPARATOR                   modx
+DECIMAL                     LOOP                        SERIAL                      mysql
+DECLARE                     LOWER                       SERIALIZABLE                name
+DECODE                      LOW_PRIORITY                SESSION                     nopager
+DEFAULT                     LPAD                        SESSION_USER                notee
+DEFINER                     LTRIM                       SET                         nowarning
+DEGREES                     MAKEDATE                    SHA                         pager
+DELAYED                     MAKETIME                    SHA1                        parent_id
+DELAY_KEY_WRITE             MAKE_SET                    SHARE                       password
+DELETE                      MASTER                      SHOW                        performance_schema
+DESC                        MASTER_CONNECT_RETRY        SHUTDOWN                    photoalbum
+DESCRIBE                    MASTER_HOST                 SIGN                        phpmyadmin
+DES_DECRYPT                 MASTER_LOG_FILE             SIGNED                      print
+DES_ENCRYPT                 MASTER_LOG_POS              SIMPLE                      product
+DES_KEY_FILE                MASTER_PASSWORD             SIN                         product.category_id
+DETERMINISTIC               MASTER_PORT                 SLAVE                       product.code
+DIMENSION                   MASTER_POS_WAIT             SLEEP                       product.description
+DIRECTORY                   MASTER_SERVER_ID            SMALLINT                    product.image_url
+DISABLE                     MASTER_SSL                  SNAPSHOT                    product.name
+DISCARD                     MASTER_SSL_CA               SOME                        prompt
+DISJOINT                    MASTER_SSL_CAPATH           SONAME                      quit
+DISTINCT                    MASTER_SSL_CERT             SOUNDEX                     rehash
+DISTINCTROW                 MASTER_SSL_CIPHER           SOUNDS                      set option
+DIV                         MASTER_SSL_KEY              SPACE                       show databases
+DO                          MASTER_USER                 SPATIAL                     show fields from
+DOUBLE                      MATCH                       SPECIFIC                    show keys from
+DROP                        MAX                         SQL                         show tables
+DUAL                        MAX_CONNECTIONS_PER_HOUR    SQLEXCEPTION                source
+DUMPFILE                    MAX_QUERIES_PER_HOUR        SQLSTATE                    status
+DUPLICATE                   MAX_ROWS                    SQLWARNING                  system
+DYNAMIC                     MAX_UPDATES_PER_HOUR        SQL_BIG_RESULT              table1
+EACH                        MAX_USER_CONNECTIONS        SQL_BUFFER_RESULT           table1.description
+ELSE                        MBRCONTAINS                 SQL_CACHE                   table1.id
+ELSEIF                      MBRDISJOINT                 SQL_CALC_FOUND_ROWS         table1.name
+ELT                         MBREQUAL                    SQL_NO_CACHE                table2
+ENABLE                      MBRINTERSECTS               SQL_SMALL_RESULT            table2.id
+ENCLOSED                    MBROVERLAPS                 SQL_THREAD                  table2.letter
+ENCODE                      MBRTOUCHES                  SQL_TSI_DAY                 table3
+ENCRYPT                     MBRWITHIN                   SQL_TSI_HOUR                table3.id
+END                         MD5                         SQL_TSI_MINUTE              table3.letter
+ENDPOINT                    MEDIUM                      SQL_TSI_MONTH               table4
+ENGINE                      MEDIUMBLOB                  SQL_TSI_QUARTER             table4.id
+ENGINES                     MEDIUMINT                   SQL_TSI_SECOND              table4.letter
+ENUM                        MEDIUMTEXT                  SQL_TSI_WEEK                tee
+ENVELOPE                    MERGE                       SQL_TSI_YEAR                test_zend
+EQUALS                      MICROSECOND                 SQRT                        unlock tables
+ERRORS                      MID                         SRID                        use
+ESCAPE                      MIDDLEINT                   SSL                         user_id
+ESCAPED                     MIGRATE                     START                       users
+EVENTS                      MIN                         STARTING                    users.login
+EXECUTE                     MINUTE                      STARTPOINT                  users.password
+EXISTS                      MINUTE_MICROSECOND          STATUS                      users.user_id
+EXIT                        MINUTE_SECOND               STD                         vero619
+EXP                         MIN_ROWS                    STDDEV                      warnings
+EXPANSION                   MLINEFROMTEXT               STDDEV_POP                  webpad
+EXPLAIN                     MLINEFROMWKB                STDDEV_SAMP                 wp
+EXPORT_SET                  MOD                         STOP                        wp2
+EXTENDED                    MODE                        STORAGE                     zelenyidom
+EXTERIORRING                MODIFIES                    STRAIGHT_JOIN               
+EXTRACT                     MODIFY                      STRCMP                      
+FALSE                       MONTH                       STRING  
+

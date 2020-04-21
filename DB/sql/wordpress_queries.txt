@@ -1,0 +1,12 @@
+TRUNCATE TABLE wp_posts;
+-- DELETE FROM wp_posts WHERE post_type = 'post';
+
+truncate table wp_term_relationships;
+truncate table wp_terms;
+truncate table wp_term_taxonomy;
+
+DELETE FROM wp_postmeta WHERE meta_key = 'field_preview_img_value';
+DELETE FROM wp_postmeta WHERE meta_key = 'field_big_img_value';
+DELETE FROM wp_postmeta WHERE meta_key = 'field_original_img_value';
+DELETE FROM wp_postmeta WHERE meta_key = 'field_zoom_img_value';
+

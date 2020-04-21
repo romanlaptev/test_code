@@ -1,0 +1,161 @@
+1.
+SELECT
+menu_name,
+mlid,
+plid,
+link_path,
+link_title
+FROM menu_links WHERE link_title LIKE 'записки' AND module='book';
+
+2.
+-- получить все ссылки на страницы книги 1-го уровня
+SELECT * FROM menu_links WHERE menu_links.plid IN -- ВЛОЖЕННЫЙ ЗАПРОС
+(SELECT menu_links.mlid FROM menu_links WHERE link_title LIKE 'записки' AND module='book')
+ORDER BY weight ASC;
+
+3.
+SELECT * FROM menu_links WHERE
+-- главная страница
+(link_title LIKE 'записки' AND module='book' AND menu_links.plid=0) OR
+-- страницы книги 1-го уровня
+menu_links.plid IN -- ВЛОЖЕННЫЙ ЗАПРОС
+(SELECT menu_links.mlid FROM menu_links WHERE link_title LIKE 'записки' AND module='book')
+ORDER BY menu_links.weight DESC;
+
+4.
+-- получить все страницы (1 и 2 уровни) главы program
+SELECT
+book.mlid,
+book.nid,
+-- menu_links.mlid,
+menu_links.plid,
+menu_links.weight,
+node.nid,
+node.title
+FROM book
+LEFT JOIN menu_links ON menu_links.mlid=book.mlid
+LEFT JOIN node ON node.nid=book.nid
+WHERE
+book.mlid=1588 OR
+book.mlid IN (SELECT menu_links.mlid FROM menu_links WHERE menu_links.plid=1588)
+ORDER BY menu_links.weight ASC
+
+5.
+-- получить страницы (3) главы program
+SELECT
+book.mlid,
+book.nid,
+-- menu_links.mlid,
+menu_links.plid,
+menu_links.weight,
+node.nid,
+node.title
+FROM book
+LEFT JOIN menu_links ON menu_links.mlid=book.mlid
+LEFT JOIN node ON node.nid=book.nid
+WHERE
+book.mlid IN
+(SELECT menu_links.mlid FROM menu_links WHERE menu_links.plid IN
+(SELECT menu_links.mlid FROM menu_links WHERE menu_links.plid=1588)
+)
+ORDER BY menu_links.weight ASC
+
+6.
+-- получить все страницы (1 и 2 уровни) книги
+SELECT
+book.mlid,
+book.nid,
+-- menu_links.mlid,
+menu_links.plid,
+menu_links.weight,
+node.nid,
+node.title
+FROM book
+LEFT JOIN menu_links ON menu_links.mlid=book.mlid
+LEFT JOIN node ON node.nid=book.nid
+WHERE
+book.mlid IN (SELECT menu_links.mlid FROM menu_links WHERE menu_links.plid IN
+(SELECT menu_links.mlid FROM menu_links WHERE link_title LIKE 'записки' AND module='book'))
+OR
+book.mlid IN
+(SELECT menu_links.mlid FROM menu_links WHERE menu_links.plid IN
+(SELECT menu_links.mlid FROM menu_links WHERE menu_links.plid IN
+(SELECT menu_links.mlid FROM menu_links WHERE link_title LIKE 'записки' AND module='book'))
+)
+ORDER BY menu_links.weight ASC
+
+7.
+-- получить отсортированные страницы (2) книги
+SELECT
+book.mlid,
+book.nid,
+-- menu_links.mlid,
+menu_links.plid,
+menu_links.weight,
+node.nid,
+node.title
+FROM book
+LEFT JOIN menu_links ON menu_links.mlid=book.mlid
+LEFT JOIN node ON node.nid=book.nid
+WHERE
+book.mlid IN
+(SELECT menu_links.mlid FROM menu_links WHERE menu_links.plid IN
+(SELECT menu_links.mlid FROM menu_links WHERE menu_links.plid IN
+(SELECT menu_links.mlid FROM menu_links WHERE link_title LIKE 'записки' AND module='book'))
+)
+ORDER BY menu_links.plid ASC, menu_links.weight ASC, node.title ASC
+
+8.
+-- получить отсортированные страницы (1) книги
+SELECT
+book.mlid,
+book.nid,
+-- menu_links.mlid,
+menu_links.plid,
+menu_links.weight,
+node.nid,
+node.title
+FROM book
+LEFT JOIN menu_links ON menu_links.mlid=book.mlid
+LEFT JOIN node ON node.nid=book.nid
+WHERE
+book.mlid IN
+(SELECT menu_links.mlid FROM menu_links WHERE menu_links.plid IN
+(SELECT menu_links.mlid FROM menu_links WHERE link_title LIKE 'записки' AND module='book')
+)
+ORDER BY menu_links.plid ASC, menu_links.weight ASC, node.title ASC
+
+9.
+-- получить все страницы (2) главы program (1)
+SELECT
+book.mlid,
+book.nid,
+-- menu_links.mlid,
+menu_links.plid,
+menu_links.weight,
+node.nid,
+node.title
+FROM book
+LEFT JOIN menu_links ON menu_links.mlid=book.mlid
+LEFT JOIN node ON node.nid=book.nid
+WHERE
+book.mlid IN (SELECT menu_links.mlid FROM menu_links WHERE menu_links.plid=1588)
+ORDER BY menu_links.plid ASC, menu_links.weight ASC, node.title ASC
+
+10.
+-- получить все страницы (3) страницы drupal (2)
+SELECT
+book.mlid,
+book.nid,
+-- menu_links.mlid,
+menu_links.plid,
+menu_links.weight,
+node.nid,
+node.title
+FROM book
+LEFT JOIN menu_links ON menu_links.mlid=book.mlid
+LEFT JOIN node ON node.nid=book.nid
+WHERE
+book.mlid IN (SELECT menu_links.mlid FROM menu_links WHERE menu_links.plid=1590)
+ORDER BY menu_links.plid ASC, menu_links.weight ASC, node.title ASC
+

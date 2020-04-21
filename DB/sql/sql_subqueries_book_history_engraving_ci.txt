@@ -1,0 +1,334 @@
+================================================ book_history_engraving_ci queries
+$sql = "
+-- получить страницы 1-го уровня
+SELECT
+book.mlid,
+book.nid,
+-- menu_links.mlid,
+menu_links.plid,
+node.nid,
+node.title,
+field_data_body.body_value,
+field_data_field_description.field_description_value, -- метатег description
+field_data_field_keywords.field_keywords_value -- метатег keywords
+FROM book
+LEFT JOIN menu_links ON menu_links.mlid=book.mlid
+LEFT JOIN node ON node.nid=book.nid
+LEFT JOIN field_data_body ON field_data_body.entity_id=node.nid -- основная часть
+LEFT JOIN field_data_field_description ON field_data_field_description.entity_id=node.nid -- метатег description
+LEFT JOIN field_data_field_keywords ON field_data_field_keywords.entity_id=node.nid -- метатег keywords
+WHERE
+book.mlid IN
+(
+SELECT menu_links.mlid FROM menu_links WHERE menu_links.plid IN -- ВЛОЖЕННЫЙ ЗАПРОС
+(SELECT menu_links.mlid FROM menu_links WHERE link_title LIKE '%".$field_book_title."%')
+)
+AND node.title != 'all_text'
+ORDER BY menu_links.weight ASC
+";
+//echo $sql;
+//echo "<br>";
+======================================================
+$sql="
+-- получить страницу
+SELECT
+book.mlid,
+book.nid,
+-- menu_links.mlid,
+menu_links.plid,
+menu_links.depth,
+node.nid,
+node.title,
+field_data_body.body_value,
+field_data_field_description.field_description_value, -- метатег description
+field_data_field_keywords.field_keywords_value -- метатег keywords
+FROM book
+LEFT JOIN menu_links ON menu_links.mlid=book.mlid
+LEFT JOIN node ON node.nid=book.nid
+LEFT JOIN field_data_body ON field_data_body.entity_id=node.nid -- основная часть
+LEFT JOIN field_data_field_description ON field_data_field_description.entity_id=node.nid -- метатег description
+LEFT JOIN field_data_field_keywords ON field_data_field_keywords.entity_id=node.nid -- метатег keywords
+WHERE
+book.mlid=".$mlid;
+//echo "sql = ".$sql;
+//echo "<br>";
+=====================================
+$sql="
+-- получить дочернии страницы
+SELECT
+book.mlid,
+book.nid,
+-- menu_links.mlid,
+menu_links.plid,
+node.nid,
+node.title
+FROM book
+LEFT JOIN menu_links ON menu_links.mlid=book.mlid
+LEFT JOIN node ON node.nid=book.nid
+WHERE
+book.mlid IN
+(SELECT menu_links.mlid FROM menu_links WHERE menu_links.plid=".$mlid.")
+AND node.title != 'all_text'
+ORDER BY menu_links.weight ASC, node.title ASC";
+//echo "sql = ".$sql;
+//echo "<br>";
+===================================
+$sql="
+-- получить параметры прикрепленных файлов
+SELECT
+
+-- field_data_field_book_img.field_book_img_fid,
+field_data_field_book_img.delta as book_img_delta,
+
+file_managed.filename,
+-- -----------------------------------------------
+-- в сериализованном значении убрать кавычки
+-- -----------------------------------------------
+-- SUBSTRING(variable.value,7) as path,
+@path:= CONCAT ('".$this->drupal_site_path."/',
+REPLACE(
+REPLACE(variable.value, 's:19:\"', ''),
+'\";','')
+) as path,
+-- -----------------------------------------------
+CONCAT(@path,'/book_img/',file_managed.filename) as img_original,
+CONCAT(@path,'/styles/thumbnail/public/book_img/',file_managed.filename) as img_thumbnail,
+CONCAT(@path,'/styles/small/public/book_img/',file_managed.filename) as img_small,
+CONCAT(@path,'/styles/medium/public/book_img/',file_managed.filename) as img_medium,
+CONCAT(@path,'/styles/large/public/book_img/',file_managed.filename) as img_large,
+
+-- file_managed.uri,
+-- file_managed.filemime,
+-- file_managed.filesize,
+-- file_managed.timestamp,
+field_data_field_book_img.entity_id,
+field_data_field_book_img.field_book_img_alt as alt,
+field_data_field_book_img.field_book_img_title as title,
+field_data_field_book_img.field_book_img_width as width,
+field_data_field_book_img.field_book_img_height as height
+FROM
+field_data_field_book_img
+LEFT JOIN
+file_managed ON file_managed.fid=field_data_field_book_img.field_book_img_fid
+LEFT JOIN
+variable ON variable.name='file_public_path'
+WHERE
+field_data_field_book_img.entity_id=".$nid."
+ORDER BY
+field_data_field_book_img.delta ASC
+";
+//echo "sql = ".$sql;
+//echo "<br>";
+================================================================
+$sql="
+-- получить параметры прикрепленных файлов (локальные копии)
+SELECT
+-- field_data_field_content_files.entity_id,
+field_data_field_content_files.delta as content_files_delta,
+field_data_field_content_files.field_content_files_value
+FROM field_data_field_content_files
+WHERE
+field_data_field_content_files.entity_id=$nid
+ORDER BY field_data_field_content_files.delta ASC
+";
+//echo "sql = ".$sql;
+//echo "<br>";
+
+-- получить расположение прикрепленных файлов (локальные копии)
+SELECT
+entity_id,
+delta,
+field_content_location_value
+FROM field_data_field_content_location
+WHERE
+entity_id=$nid
+ORDER BY delta ASC
+";
+//echo "sql = ".$sql;
+//echo "<br>";
+======================================
+$sql="
+-- получить заголовок текущего раздела и параметры родителей для строки навигации
+(
+SELECT
+menu_links.link_title,
+menu_links.mlid,
+@p1:=menu_links.plid as plid
+FROM
+menu_links
+WHERE
+menu_links.mlid =".$mlid." AND menu_links.depth >4
+)
+UNION ALL
+(
+SELECT
+menu_links.link_title,
+menu_links.mlid,
+@p2:=menu_links.plid as plid
+FROM
+menu_links
+WHERE
+menu_links.mlid =@p1 AND menu_links.depth >4
+)
+UNION ALL
+(
+SELECT
+menu_links.link_title,
+menu_links.mlid,
+menu_links.plid
+FROM
+menu_links
+WHERE
+menu_links.mlid =@p2 AND menu_links.depth >4
+)
+";
+//echo "sql = ".$sql;
+//echo "<br>";
+
+$sql="
+--
+-- получить mlid родительской страницы для строки ссылок в нижн. части страницы
+-- получить mlid соседних страниц для строки ссылок в нижн. части страницы
+--
+SELECT
+menu_links.link_title,
+menu_links.mlid,
+menu_links.plid
+FROM
+menu_links
+WHERE
+menu_links.plid=505
+AND menu_links.link_title !='all_text'
+AND menu_links.depth >4
+ORDER BY menu_links.weight, menu_links.link_title ASC
+";
+//echo "sql = ".$sql;
+//echo "<br>";
+====================================================
+
+(
+SELECT 
+	menu_links.link_title, 
+	@p1:=menu_links.plid
+FROM 
+	menu_links
+WHERE 
+	menu_links.mlid =505
+)
+UNION ALL
+(
+SELECT 
+	menu_links.link_title, 
+	menu_links.plid
+FROM 
+	menu_links
+WHERE 
+	menu_links.mlid =@p1
+)
+--------------------------------------------------
+-- получить заголовок текущего раздела и параметры родителей для строки навигации 
+( 
+SELECT 
+	menu_links.link_title, 
+	@p1:=menu_links.plid as plid 
+FROM 
+	menu_links 
+WHERE 
+	menu_links.mlid =1339 AND menu_links.depth >4
+) 
+UNION ALL 
+( 
+SELECT 
+	menu_links.link_title, 
+	@p2:=menu_links.plid as plid
+FROM 
+	menu_links 
+WHERE 
+	menu_links.mlid =@p1  AND menu_links.depth >4
+) 
+UNION ALL 
+( 
+SELECT 
+	menu_links.link_title, 
+	menu_links.plid 
+FROM 
+	menu_links 
+WHERE 
+	menu_links.mlid =@p2  AND menu_links.depth >4
+) 
+
+--------------------------------------------------------------------------------
+--
+-- получить mlid родительской страницы для строки ссылок в нижн. части страницы
+--
+SELECT 
+	menu_links.link_title, 
+	menu_links.mlid, 
+	menu_links.plid
+FROM 
+	menu_links 
+WHERE 
+	menu_links.mlid =
+	(
+	SELECT menu_links.plid as plid FROM menu_links WHERE menu_links.mlid =505 AND menu_links.depth >4
+	) 
+AND menu_links.depth >4
+
+
+--
+-- получить mlid родительской страницы для строки ссылок в нижн. части страницы
+-- получить mlid соседних страниц для строки ссылок в нижн. части страницы
+--
+SELECT 
+	menu_links.link_title, 
+	menu_links.mlid, 
+	menu_links.plid 
+FROM 
+	menu_links 
+WHERE 
+	menu_links.plid=505 
+AND menu_links.link_title !='all_text'
+AND menu_links.depth >4
+ORDER BY menu_links.weight, menu_links.link_title ASC
+
+------------------------------------------------------------
+-- получить параметры прикрепленных файлов
+SELECT 
+	file_managed.filename, 
+	-- file_managed.uri, 
+	-- file_managed.filemime, 
+	-- file_managed.filesize, 
+	-- file_managed.timestamp, 
+	field_data_field_book_img.field_book_img_alt,
+	field_data_field_book_img.field_book_img_title 
+FROM file_usage
+LEFT JOIN file_managed ON file_managed.fid=file_usage.fid -- получить параметры прикрепленных файлов
+LEFT JOIN field_data_field_book_img ON field_book_img_fid=file_usage.fid 
+WHERE 
+	file_usage.id=78 -- fid прикрепленных файлы  
+
+
+-- получить параметры прикрепленных файлов
+SELECT 
+	-- field_data_field_book_img.field_book_img_fid,
+	field_data_field_book_img.delta as book_img_delta, 
+	file_managed.filename, 
+	-- file_managed.uri, 
+	-- file_managed.filemime, 
+	-- file_managed.filesize, 
+	-- file_managed.timestamp, 
+	field_data_field_book_img.entity_id, 
+	field_data_field_book_img.field_book_img_alt,
+	field_data_field_book_img.field_book_img_title,
+	field_data_field_book_img.field_book_img_width,
+	field_data_field_book_img.field_book_img_height
+FROM 
+	field_data_field_book_img
+LEFT JOIN 
+	file_managed ON file_managed.fid=field_data_field_book_img.field_book_img_fid
+WHERE 
+	field_data_field_book_img.entity_id=78
+ORDER BY 
+	field_data_field_book_img.delta ASC
+
+
