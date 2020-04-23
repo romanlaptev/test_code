@@ -1,14 +1,23 @@
 ================= postgreSQL
 psql --dbname=notes --username=postgres --password
 
-================= mySQL: экспорт базы данных
-mysqldump --user=root --password=master --databases drupal622 > db_drupal622.sql
+================= MySQL: экспорт базы данных
+MySQLdump --user=root --password=master --databases drupal622 > db_drupal622.sql
 zip sql_drupal622.zip db_drupal622.sql
 rm db_drupal622.sql
 
 
-================= mySQL: получить структуру таблицы
-mysql> describe db2.users;
+================= MySQL: список процессов
+SHOW PROCESSLIST;
++-----+------+-----------+------+---------+------+-------+------------------+
+| Id  | User | Host      | db   | Command | Time | State | Info             |
++-----+------+-----------+------+---------+------+-------+------------------+
+| 679 | root | localhost | NULL | Query   |    0 | NULL  | show processlist |
++-----+------+-----------+------+---------+------+-------+------------------+
+
+
+================= MySQL: получить структуру таблицы
+MySQL> describe db2.users;
 +----------+-------------+------+-----+---------+----------------+
 | Field    | Type        | Null | Key | Default | Extra          |
 +----------+-------------+------+-----+---------+----------------+
@@ -21,82 +30,81 @@ mysql> describe db2.users;
 5 rows in set (0.00 sec)
 
 
-================= mySQL: импорт
-mysql -u qdecout_test -psdkjfh -Dqdecout_test < qdec.sql
+================= MySQL: импорт
+MySQL -u qdecout_test -psdkjfh -Dqdecout_test < qdec.sql
 
 -------------------
-If you get the error mysqldump: Got error: 1146: Table 'table' doesn't
-exist when using LOCK TABLES , while taking the backup of the mysql
+If you get the error MySQLdump: Got error: 1146: Table 'table' doesn't
+exist when using LOCK TABLES , while taking the backup of the MySQL
 database , then you can use the following command to backup the database .
 
-mysqldump.exe -uusername -ppassword dbname --skip-lock-tables 
+MySQLdump.exe -uusername -ppassword dbname --skip-lock-tables 
 
 
 ================= проверить все базы данных
-mysqlcheck -u root -p --check-upgrade --all-databases --auto-repair
+MySQLcheck -u root -p --check-upgrade --all-databases --auto-repair
 
 =============================================
-mysqladmin -u root --password=toor create db1 - создать БД
-/etc/mysqlmanager.passwd
-mysqlmanager --user=root --add-user --username roman --password=super
-mysqlmanager --list-users
+MySQLadmin -u root --password=toor create db1 - создать БД
+/etc/MySQLmanager.passwd
+MySQLmanager --user=root --add-user --username roman --password=super
+MySQLmanager --list-users
 
-mysqlshow --host=localhost --user=root --password=toor
-mysql --user=root --password=toor < export.sql - выполнить SQL-запрос
+MySQLshow --host=localhost --user=root --password=toor
+MySQL --user=root --password=toor < export.sql - выполнить SQL-запрос
 
 
 ============================================= Создание нового пользователя
-> mysql -u root -pmaster
+> MySQL -u root -pmaster
 
-mysql> GRANT ALL PRIVILEGES ON *.* TO roman@localhost IDENTIFIED BY 'master' WITH GRANT OPTION;
-mysql> \q
+MySQL> GRANT ALL PRIVILEGES ON *.* TO roman@localhost IDENTIFIED BY 'master' WITH GRANT OPTION;
+MySQL> \q
 
-=======================================  MySQL: mysql установка пароля root
-http://www.mysql.ru/docs/man/Default_privileges.html
-shell> mysqladmin -u root password new_password
+=======================================  MySQL: MySQL установка пароля root
+http://www.MySQL.ru/docs/man/Default_privileges.html
+shell> MySQLadmin -u root password new_password
 
 ======================================= MySQL: MariaDB root пароль
 https://www.linux.org.ru/forum/admin/13554233
 
 что надо сделать, чтобы ввод пароля работал .
-# mysql -u root
-MariaDB [(none)]> use mysql;
+# MySQL -u root
+MariaDB [(none)]> use MySQL;
 Database changed
-MariaDB [mysql]> update user set password=PASSWORD("my-new-cool-password") where User='root';
-MariaDB [mysql]> flush privileges;
-MariaDB [mysql]> update user set plugin='' where User='root';
-MariaDB [mysql]> quit;
+MariaDB [MySQL]> update user set password=PASSWORD("my-new-cool-password") where User='root';
+MariaDB [MySQL]> flush privileges;
+MariaDB [MySQL]> update user set plugin='' where User='root';
+MariaDB [MySQL]> quit;
 Bye
 # systemctl restart mariadb
 
 Вернуть обратно так:
-# mysql -u root -p
+# MySQL -u root -p
 Enter password: 
 ( вводим пароль my-new-cool-password )
-MariaDB [(none)]> use mysql;
+MariaDB [(none)]> use MySQL;
 Database changed
-MariaDB [mysql]> update user set plugin='unix_socket' where User='root';
-MariaDB [mysql]> quit;
+MariaDB [MySQL]> update user set plugin='unix_socket' where User='root';
+MariaDB [MySQL]> quit;
 Bye
 # systemctl restart mariadb
 Проверяем вход root без пароля:
-# mysql -u root
+# MySQL -u root
 MariaDB [(none)]> quit;
 Bye
 
 
-=======================================  mySQL: создать пользователя БД
-> mysql -u root -pmaster
+=======================================  MySQL: создать пользователя БД
+> MySQL -u root -pmaster
 
-mysql> GRANT ALL PRIVILEGES ON *.* TO roman@localhost IDENTIFIED BY 'master' WITH GRANT OPTION;
-mysql> \q
-
-show databases;
-grant all privileges on *.* to 'phpmyadmin'@'localhost' with grant option;
-flush privileges;
-
---------------------
+-- MySQL => 5.0.2
 CREATE USER 'zelenyidom'@'%' IDENTIFIED BY '***';
+
+CREATE USER 'zelenyidom'@'%' IDENTIFIED BY PASSWORD '123456';
+CREATE USER 'zelenyidom' IDENTIFIED BY PASSWORD '123456';
+
+CREATE USER 'zelenyidom'@'localhost' IDENTIFIED BY PASSWORD '123456';
+
 
 GRANT ALL PRIVILEGES ON * . * TO 'zelenyidom'@'%' 
 IDENTIFIED BY '***' 
@@ -114,15 +122,32 @@ GRANT ALL PRIVILEGES ON * . * TO  'toool'@'%' IDENTIFIED BY  '***' WITH GRANT OP
 
 GRANT ALL PRIVILEGES ON  `toool` . * TO  'toool'@'%';
 
+------------------
+SET PASSWORD = PASSWORD('pass');
+SET PASSWORD FOR 'toool'@'%' = PASSWORD('pass');
+
+or
+UPDATE MySQL.user SET Password = PASSWORD('pass') WHERE User = 'toool' AND Host = '%;
+FLUSH PRIVILEGES;'
+------------------
+
+MySQL> GRANT ALL PRIVILEGES ON *.* TO roman@localhost IDENTIFIED BY 'master' WITH GRANT OPTION;
+MySQL> \q
+
+show databases;
+grant all privileges on *.* to 'phpmyadmin'@'localhost' with grant option;
+flush privileges;
+
+
 
 ==================
-mySQL: variables
+MySQL: variables
 ==================
 SHOW STATUS
-предоставляет информацию по состоянию сервера (как mysqladmin extended-status)
+предоставляет информацию по состоянию сервера (как MySQLadmin extended-status)
 
 	SHOW VARIABLES
-узнать значения переменных mysql
+узнать значения переменных MySQL
 
 	SHOW ENGINES
 Получить список поддерживаемых движков вашего сервера
@@ -164,8 +189,8 @@ SELECT SQL_CACHE * FROM table WHERE id = 1;
 =============================================
 INSTALL DB Drupal
 =============================================
-mysqladmin -u username -p create databasename
-mysql -u username -p
+MySQLadmin -u username -p create databasename
+MySQL -u username -p
 
   GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER
   ON databasename.*
@@ -177,13 +202,13 @@ INSTALL DB Joomla
 =============================================
 First, you must create a new database for your Joomla! site e.g.
 
-$ mysqladmin -u db_user -p create Joomla
+$ MySQLadmin -u db_user -p create Joomla
 
 MySQL will prompt for the 'db_user' database password and then create
 the initial database files.  Next you must login and set the access
 database rights e.g.
 
-$ mysql -u db_user -p
+$ MySQL -u db_user -p
 
 Again, you will be asked for the 'db_user' database password.  At the
 MySQL prompt, enter following command:
@@ -194,21 +219,21 @@ GRANT ALL PRIVILEGES ON Joomla.*
 =============================================
 roman-laptev.hut1.ru
 =============================================
-1.mysql -u romanla -h database.agava.ru -p romanla
+1.MySQL -u romanla -h database.agava.ru -p romanla
 =======
 
 # Create table
-2.mysql -h database.agava.ru -u romanla -p romanla < create_table.sql
+2.MySQL -h database.agava.ru -u romanla -p romanla < create_table.sql
 =======
 
 3.
-mysqlshow -u romanla -h database.agava.ru -p -v
-mysqlshow --host=database.agava.ru --user=romanla --password=master --verbose
+MySQLshow -u romanla -h database.agava.ru -p -v
+MySQLshow --host=database.agava.ru --user=romanla --password=master --verbose
 =======
 
-mysqladmin -u root password master
-mysql --host=database.agava.ru --user=romanla --password=master
-mysql> use romanla
+MySQLadmin -u root password master
+MySQL --host=database.agava.ru --user=romanla --password=master
+MySQL> use romanla
 No connection. Trying to reconnect...
 Connection id:    7701875
 Current database: *** NONE ***
@@ -217,7 +242,7 @@ Reading table information for completion of table and column names
 You can turn off this feature to get a quicker startup with -A
 
 Database changed
-mysql> show tables;
+MySQL> show tables;
 +-------------------+
 | Tables_in_romanla |
 +-------------------+
@@ -229,7 +254,7 @@ mysql> show tables;
 
 
 =============================
-mySQL: chaset
+MySQL: chaset
 =============================
 
 SHOW GLOBAL VARIABLES LIKE 'char%';
@@ -242,7 +267,7 @@ character_set_filesystem 	binary
 character_set_results 	latin1
 character_set_server 	latin1
 character_set_system 	utf8
-character_sets_dir 	/usr/share/mysql/charsets/
+character_sets_dir 	/usr/share/MySQL/charsets/
 --------------------------
 sibhoster.ru
 Variable_name 	Value
@@ -253,40 +278,40 @@ character_set_filesystem 	binary
 character_set_results 	cp1251
 character_set_server 	cp1251
 character_set_system 	utf8
-character_sets_dir 	/usr/share/mysql/charsets/
+character_sets_dir 	/usr/share/MySQL/charsets/
 
-mysql_query("SET NAMES 'cp1251'");
+MySQL_query("SET NAMES 'cp1251'");
 
-[mysql]
+[MySQL]
 default-character-set=cp1251
-[mysqld]
+[MySQLd]
 init-connect="SET NAMES cp1251"
 default-character-set=cp1251
 
 
-======================================= MySQL: меняем datadir для mysql
+======================================= MySQL: меняем datadir для MySQL
 1.
-  - создать символьную ссылку для datadir (/var/lib/mysql) (ln -s /mnt/disk2/mysql_db /var/lib/mysql)
+  - создать символьную ссылку для datadir (/var/lib/MySQL) (ln -s /mnt/disk2/MySQL_db /var/lib/MySQL)
 
   - отключить сервис /etc/rcS.d/K37apparmor 
   - если базы лежат в сети, то подключить сетевой диск с доступом для 
-пользователя mysql (добавить в группу юзер) и без запроса пароля
+пользователя MySQL (добавить в группу юзер) и без запроса пароля
 /etc/fstab
 //192.168.0.4/public	/mnt/nas	cifs	iocharset=utf8,gid=users,noperm,guest	0	0
   - если необходимо, перенести старт сервера, после монтирования ресурса с базами в fstab
-mv /etc/rc2.d/S19mysql /etc/rc2.d/S97mysql
+mv /etc/rc2.d/S19MySQL /etc/rc2.d/S97MySQL
 
 ----------------------------------
 2.
-в файле /etc/mysql/my.cnf
-[mysqld]
-#datadir		= /var/lib/mysql
-#datadir		= /home/mysql
-datadir		= /mnt/disk2/documents/0_sites/0_db/mysql
+в файле /etc/MySQL/my.cnf
+[MySQLd]
+#datadir		= /var/lib/MySQL
+#datadir		= /home/MySQL
+datadir		= /mnt/disk2/documents/0_sites/0_db/MySQL
 .....
-в файле /etc//etc/apparmor.d/usr.sbin.mysqld исправить /var/lib/mysql на новый путь
+в файле /etc//etc/apparmor.d/usr.sbin.MySQLd исправить /var/lib/MySQL на новый путь
 .....
-  /mnt/disk2/documents/0_sites/0_db/mysql/ r,
-  /mnt/disk2/documents/0_sites/0_db/mysql/** rwk,
+  /mnt/disk2/documents/0_sites/0_db/MySQL/ r,
+  /mnt/disk2/documents/0_sites/0_db/MySQL/** rwk,
 ...
 

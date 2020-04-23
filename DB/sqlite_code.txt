@@ -1,0 +1,6 @@
+=========================
+SQLite: аналог функции concat (как в MySQL) для склейки строк
+=========================
+select 'qwe' || 'asd'
+http://www.sql.ru/forum/703254/analog-funkcii-concat
+
