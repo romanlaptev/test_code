@@ -638,7 +638,7 @@ FROM table1;
 
 
 ==================
-mySQL: variables
+mySQL: SHOW variables
 ==================
 SHOW STATUS
 предоставляет информацию по состоянию сервера (как mysqladmin extended-status)
@@ -708,7 +708,8 @@ AND MONTH( marks.date ) IN (4, 5, 6, 7)
 SQL: хранимые процедуры и функции
 =================
 http://ruseller.com/lessons.php?rub=28&id=1189
--------------
+
+1-------------
 DELIMITER // 
 CREATE PROCEDURE my_version()
 BEGIN
@@ -716,18 +717,29 @@ BEGIN
 END
 
 -------------
-вызов процедуры
+-- вызов процедуры
 CALL my_version();
 
---------------------
-список всех процедур сервера
+-- список всех процедур сервера
 SELECT name FROM mysql.proc
+SHOW PROCEDURE STATUS//
 
---------------------
 DROP PROCEDURE IF EXISTS my_version; 
 
-====================================
---------------------
+2----------
+DELIMITER // 
+
+CREATE FUNCTION func1() RETURNS TINYTEXT 
+BEGIN 
+	DECLARE ver TINYTEXT; 
+	SELECT version() INTO ver; 
+RETURN ver; END//
+
+SET @ver :=func1();
+SELECT @ver;
+
+
+3--------------------
 DELIMITER // 
 CREATE FUNCTION say_hello (name CHAR(20)) RETURNS CHAR(50)
 BEGIN
@@ -739,6 +751,7 @@ SELECT say_hello('mysql');
 
 ------------
 SELECT name FROM mysql.proc WHERE type LIKE 'FUNCTION'
+SHOW FUNCTION STATUS//
 
 
 
@@ -748,7 +761,6 @@ SELECT DATABASE();
 
 INSERT INTO table10(name) VALUES('Z');
 SELECT LAST_INSERT_ID(); //11
-
 
 
 =============================
