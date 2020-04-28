@@ -1,6 +1,6 @@
+//http://zetcode.com/db/mysqlc/
 #include <my_global.h>
 #include <mysql.h>
-//#include <stdio.h>
 
 int main(int argc, char *argv[]){
 	//printf("hello\n");
