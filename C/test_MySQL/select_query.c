@@ -55,13 +55,7 @@ int main( int argc, char *argv[] ){
 		finish_with_error( conn );
 	}
 
-
 	int num_fields = mysql_num_fields( result );
-	printf("Number of fields: %i\n", num_fields );
-
-	int num_rows = mysql_num_rows( result );
-	printf("Number of rows: %i\n", num_rows );
-
 	while ( ( row = mysql_fetch_row(result) ) ){
 		for( int n = 0; n < num_fields; n++){
 			printf("%s ", row[n] ? row[n] : "null" );

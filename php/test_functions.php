@@ -98,6 +98,32 @@ print_r( $p );
 echo "</pre>\n";
 }//end
 
+//----------------------------------
+$arg = array(
+		"q" => "note/view",
+		"nid" => 11
+);
+viewNote($arg);
+
+function viewNote($params){
+		$p = array(
+			"nid" => false,
+			"title" => false
+		);
+		//check input params object ( select only 'nid' or 'title'  values )
+		$_search_keys = array();
+		foreach( $p as $key=>$value ){
+			if( !empty($params[ $key ]) ){
+				$_search_keys[ $key ] = $params[ $key ];
+			}
+		}//next
+echo "<pre>\n";
+print_r( $_search_keys );
+echo "</pre>\n";
+//......
+}//end
+
+
 //========================== Return array
 function formatSize($bytes)
 {
