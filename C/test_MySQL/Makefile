@@ -14,4 +14,5 @@ all: examples
 examples:
 		$(CC)  $(INCLUDES) $(LIBS) connect.c -o $(BIN)/connect
 		$(CC)  $(INCLUDES) $(LIBS) add_record.c -o $(BIN)/add_record
+		#$(CC)  $(INCLUDES) $(LIBS) select_query.c -o $(BIN)/select_query
 
