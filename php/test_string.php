@@ -44,6 +44,7 @@ echo "<br/>\n";
 echo strip_tags('<p>String without HTML tags</p>');
 echo "<br/>\n";
 
+
 //======================== FILTER
 /*
 $text = "\t\t\thello\r\nphp\r\ntext\n";
@@ -52,6 +53,23 @@ echo $text;
 echo nl2br( $str );
 echo "<br/>\n";
 */
+
+//https://www.php.net/manual/ru/security.database.sql-injection.php
+//https://www.php.net/manual/ru/function.sqlite-escape-string.php		
+//https://www.php.net/manual/ru/function.mysql-real-escape-string.php
+//https://www.php.net/manual/ru/function.addslashes.php
+
+		//$p["body_value"] = trim( $p["body_value"] );
+		//$p["body_value"] = htmlspecialchars( $p["body_value"] );
+//$textMessage = addslashes( htmlspecialchars($_REQUEST["text_message"]) );
+
+//$textbox=$vars['textbox']; 
+//echo "magic_quotes_gpc (экранирование кавычек в тексте формы) = ".get_magic_quotes_gpc();
+//if (get_magic_quotes_gpc()) {
+// отмена экранирования кавычек в тексте формы
+//	$textbox = stripslashes($textbox);
+//}
+
 
 //========================
 //   $n1= strrpos($dir_path, "/"); //поиск последней позиции, где встречается символ "/".
