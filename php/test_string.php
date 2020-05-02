@@ -56,6 +56,8 @@ echo "<br/>\n";
 //========================
 //   $n1= strrpos($dir_path, "/"); //поиск последней позиции, где встречается символ "/".
 //   $url = substr($dir_path, 0, $n1);
+
+//https://www.php.net/manual/ru/function.trim.php
 //	$report_line = rtrim ($report_line);// удалить в строке отчета конечный пробел
 //strlen($string)
 
