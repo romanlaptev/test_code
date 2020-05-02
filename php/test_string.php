@@ -54,10 +54,14 @@ echo nl2br( $str );
 echo "<br/>\n";
 */
 
-//https://www.php.net/manual/ru/security.database.sql-injection.php
-//https://www.php.net/manual/ru/function.sqlite-escape-string.php		
-//https://www.php.net/manual/ru/function.mysql-real-escape-string.php
+//======================== FILTER for SQL
 //https://www.php.net/manual/ru/function.addslashes.php
+//https://www.php.net/manual/ru/security.database.sql-injection.php
+//https://www.php.net/manual/ru/function.mysql-real-escape-string.php
+//https://www.php.net/manual/ru/function.sqlite-escape-string.php		
+//https://www.php.net/manual/ru/sqlite3.escapestring.php
+//https://www.php.net/manual/ru/pdo.quote.php
+//https://ru.wikipedia.org/wiki/%D0%9C%D0%BD%D0%B5%D0%BC%D0%BE%D0%BD%D0%B8%D0%BA%D0%B8_%D0%B2_HTML
 
 		//$p["body_value"] = trim( $p["body_value"] );
 		//$p["body_value"] = htmlspecialchars( $p["body_value"] );
