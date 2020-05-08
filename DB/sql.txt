@@ -47,6 +47,13 @@ SELECT LAST_INSERT_ID();//3
 	where price<100
 )
 
+=================
+SQL: выполнить вставку новой записи
+если уже существует,  то удалить старую версию
+=================
+INSERT OR REPLACE INTO `content_categories` (`content_id`,`parent_id`) VALUES ('37','59'); 
+https://www.w3resource.com/sqlite/sqlite-insert-into.php
+http://www.mysql.ru/docs/man/REPLACE.html
 
 
 =================
