@@ -51,10 +51,12 @@ SELECT LAST_INSERT_ID();//3
 SQL: выполнить вставку новой записи
 если уже существует,  то удалить старую версию
 =================
+sqlite
 INSERT OR REPLACE INTO `content_categories` (`content_id`,`parent_id`) VALUES ('37','59'); 
 https://www.w3resource.com/sqlite/sqlite-insert-into.php
-http://www.mysql.ru/docs/man/REPLACE.html
 
+mysql>REPLACE INTO table1(id,name) VALUES(13,'S');
+http://www.mysql.ru/docs/man/REPLACE.html
 
 =================
 SQL: Вложенные запросы
