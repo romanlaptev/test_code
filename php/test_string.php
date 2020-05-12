@@ -229,6 +229,9 @@ echo "<pre>";
 print_r($arr);
 echo "</pre>\n";
 
+//----------------
+//https://www.php.net/manual/ru/function.str-repeat.php
+echo str_repeat("-=", 10);//-=-=-=-=-=-=-=-=-=-=
 
 ?>
 
