@@ -394,3 +394,15 @@ INSERT INTO table10(name,description) VALUES('G','test desc');
 ALTER TABLE table10 CHARACTER SET cp1251;
 ALTER TABLE table10 CHARACTER SET utf8 COLLATE utf8_general_ci;
 
+
+======================= DUPLICATE SEARCH
+https://snipp.ru/mysql/sql-duplicate-search
+
+-- сгруппировать ноды по времени создания
+SELECT nid, title, created FROM	node GROUP BY created;
+
+-- сгруппировать ноды по времени создания и 
+-- вывести кол-во записей с одинаковым временем создания
+SELECT nid, title, created, COUNT( created ) AS count FROM	node
+GROUP BY created 
+HAVING COUNT( created ) > 1;
