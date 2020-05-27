@@ -105,17 +105,11 @@ SQL: заменить фрагмент текста
 UPDATE `field_data_body` SET `body_value` = REPLACE( body_value, 'mnt/d2', 'mnt/terra' ) ;
 ------------------
 UPDATE `field_data_field_small_img` SET `field_small_img_value` = REPLACE( field_small_img_value, '/content', '/site-content' ) ;
-
 UPDATE `field_data_field_preview_gallery_img` SET `field_preview_gallery_img_value` = REPLACE( field_preview_gallery_img_value, '/content', '/site-content' ) ;
-
 UPDATE `field_data_field_medium_img` SET `field_medium_img_value` = REPLACE( field_medium_img_value, '/content', '/site-content' ) ;
-
 UPDATE `field_data_field_large_img` SET `field_large_img_value` = REPLACE( field_large_img_value, '/content', '/site-content' ) ;
-
 UPDATE `field_data_field_original_img` SET `field_original_img_value` = REPLACE( field_original_img_value, '/content', '/site-content' ) ;
-
 UPDATE `field_data_body` SET `body_value` = REPLACE( body_value, '/content', '/site-content' ) ;
-
 
 
 
@@ -361,12 +355,6 @@ SELECT say_hello('mysql');
 SELECT name FROM mysql.proc WHERE type LIKE 'FUNCTION'
 
 
-
-=========================
-SQLite: аналог функции concat (как в MySQL) для склейки строк
-=========================
-select 'qwe' || 'asd'
-http://www.sql.ru/forum/703254/analog-funkcii-concat
 
 =========================
 mySQL: ALTER, добавить поля в БД

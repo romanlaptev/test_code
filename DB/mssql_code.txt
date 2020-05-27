@@ -1,0 +1,5 @@
+//https://stackoverflow.com/questions/7739444/declare-variable-in-sqlite-and-use-it
+
+declare @name as varchar(10)
+set name = 'name'
+select * from table where name = @name
