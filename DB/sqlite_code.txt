@@ -4,3 +4,20 @@ SQLite: аналог функции concat (как в MySQL) для склейк
 select 'qwe' || 'asd'
 http://www.sql.ru/forum/703254/analog-funkcii-concat
 
+==================UNION ALL
+SELECT 
+	book.nid as content_id
+FROM book WHERE book.nid IN (739, 809)
+
+UNION ALL
+
+SELECT 
+	book.nid as parent_id
+FROM book WHERE book.mlid IN (1585, 2413)
+
+
+content_id
+739
+809
+437
+739
