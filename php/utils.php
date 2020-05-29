@@ -1,9 +1,22 @@
 <?php
+//====================================== RUNTIME
+//$_vars=array();
+//$_vars["timer"]["start"] = microtime(true);
+
+//some code.....
+
+//$runtime = round( microtime(true) - $_vars["timer"]["start"], 4);
+//$msg = "export runtime, sec: ".$runtime;
+//$_vars["log"][] = array("message" => $msg, "type" => "info");
+
+
+//---------------------------------------
 //echo "PHP version: ".PHP_VERSION;
 //echo "; ";
 //echo "OS: ". PHP_OS;
 //echo "<br/>\n";
 
+//---------------------------------------
 //error_reporting(E_ALL|E_STRICT);
 //ini_set('display_errors', 1);
 
