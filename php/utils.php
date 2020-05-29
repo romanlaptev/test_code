@@ -9,6 +9,10 @@
 //$msg = "export runtime, sec: ".$runtime;
 //$_vars["log"][] = array("message" => $msg, "type" => "info");
 
+//$runtime_s = round( microtime(true) - $_vars["timer"]["start"], 2);
+//$runtime_m = round( $runtime_s / 60, 2);
+//$msg = "export runtime, sec: ".$runtime_s.", min: ".$runtime_m;
+//$_vars["log"][] = array("message" => $msg, "type" => "info");
 
 //---------------------------------------
 //echo "PHP version: ".PHP_VERSION;
