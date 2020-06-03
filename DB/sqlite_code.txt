@@ -1,5 +1,28 @@
+========================= узнать autoincrement ID  вставленной записи
+select * FROM sqlite_sequence;
+name									seq
+content								12 (last id)
+taxonomy_groups			2 (last id)
+taxonomy_term_data	30 (last id)
+
+......
+
+				try{
+					$result  = $connection->exec( $sql_query );
+					
+//https://www.php.net/manual/ru/pdo.lastinsertid.php					
+$lastInsertID = $connection->lastInsertId();					
+
+				} catch( PDOException $e ) {
+					//echo "Exception:". _logWrap($e);
+					$msg =  "error info: ". $e->getMessage();
+					$_vars["log"][] = array("message" => $msg, "type" => "error");
+				}
+
+
 =========================
 SQLite: аналог функции concat (как в MySQL) для склейки строк
+
 =========================
 select 'qwe' || 'asd'
 http://www.sql.ru/forum/703254/analog-funkcii-concat
