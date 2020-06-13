@@ -46,32 +46,42 @@ $msg = "server error, not support function <b>json_last_error()</b>, required PH
 */
 
 /*	
-		$visited_products_cookies=$_COOKIE['visited_products_arr'];
-		$visited_products_arr_cookies = json_decode($visited_products_cookies, true);
-		switch (json_last_error()) 
-		{
+$rpc_request = '{ "request_data": [ { "title":"item1", "content_type":"page", "body_format":"plain_text", "body_value":"test1" }, { "title":"item2", "content_type":"note", "body_format":"full_html", "body_value":"test2" } ] }';
+
+		//https://www.php.net/manual/ru/function.json-decode.php
+		$request_data = json_decode($rpc_request, true);
+		
+		$msg_type = "error";
+		switch ( json_last_error() ) {
 			case JSON_ERROR_NONE:
-				echo ' - No errors';
+				$msg_type = "success";
+				$msg = "No errors";
+echo _logWrap( $request_data );
 			break;
 			case JSON_ERROR_DEPTH:
-				echo ' - Maximum stack depth exceeded';
+				$msg = "Maximum stack depth exceeded";
 			break;
 			case JSON_ERROR_STATE_MISMATCH:
-				echo ' - Underflow or the modes mismatch';
+				$msg = "Underflow or the modes mismatch";
 			break;
 			case JSON_ERROR_CTRL_CHAR:
-				echo ' - Unexpected control character found';
+				$msg = "Unexpected control character found";
 			break;
 			case JSON_ERROR_SYNTAX:
-				echo ' - Syntax error, malformed JSON';
+				$msg = "Syntax error, malformed JSON";
 			break;
 			case JSON_ERROR_UTF8:
-				echo ' - Malformed UTF-8 characters, possibly incorrectly encoded';
+				$msg = "Malformed UTF-8 characters, possibly incorrectly encoded";
 			break;
 			default:
-				echo ' - Unknown error';
+				$msg = "Unknown error";
 			break;
 		}
+		$_vars["log"][] = array("message" => $msg, "type" => $msg_type);
+echo "<pre>";
+print_r($_vars["log"]);
+echo "</pre>\n";
+
 */
 
 ?>
