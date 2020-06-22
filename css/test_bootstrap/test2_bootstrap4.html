@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" 
+rel="stylesheet" 
+integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" 
+crossorigin="anonymous">
+
+</head>
+
+<body>
+<div class="container">
+
+	<div class="card-title">
+		<h1>Test API (RPC, Remote Call Procedures)</h1>
+	</div>
+			
+<form name="form_test" action="../../db_admin/index.php" method='post' class="">
+
+	<div class="card">
+		<div class="card-title bg-primary text-center text-white">
+			<h1>save content</h1>
+		</div>
+		<div class="card-body">
+			
+			<div class="form-group">
+<!--
+	<button type="reset" class="">reset form</button>
+	<input type='text' name="q" value='content/rpc_save'>
+-->
+
+	<input type='submit' class="btn btn-primary" value='send request'>
+			</div>
+<!--
+title:<input type='text' name='title' value='new content item'>
+content type:<input type='text' name='content type' value='1'>
+status:<input type='text' name='status' value='1'>
+body_format:<input type='text' name='body_format' value='1'>
+body_value:<input type='text' name='body_value' value='test1'>
+parent_id:<input type='text' name='parent_id' value='0'>
+-->
+			<div class="form-group">
+	<label>Request data (JSON-RPC 1.0)</label>
+	<textarea name="rpc_request" class="form-control" rows="20">
+{
+	"action": "content/rpc_save",
+	"request_data": [
+		{
+			"title":"item1",
+			"content_type":"page",
+			"body_format":"plain_text",
+			"body_value":"test1"
+		},
+		{
+			"title":"item2",
+			"content_type":"note",
+			"body_format":"full_html",
+			"body_value":"test2"
+		}
+	]
+}
+
+	</textarea>
+			</div>
+	
+		</div>
+	</div><!-- end panel -->
+
+</form>
+
+
+<!-- =================================================== -->
+<form name="form_test" action="../../db_admin/index.php" method='post' class="">
+
+	<div class="card">
+		<div class="card-header bg-secondary">
+			<h1 class="text-right text-white">remove content</h1>
+		</div>
+		<div class="card-body">
+			
+			<div class="form-group">
+<input type='submit' value='send request'>
+			</div>
+			<div class="form-group">
+	<label>Request data (JSON-RPC 1.0)</label>
+	<textarea name="rpc_request" class="form-control" rows="5">
+{
+	"action": "content/rpc_remove",
+	"request_data": [{"id":"3497"}]
+}
+
+	</textarea>
+			</div>
+	
+		</div>
+	</div><!-- end panel -->
+
+</form>
+
+
+<!-- =================================================== -->
+<form name="form_test" action="../../db_admin/index.php" method='post' class="">
+
+	<div class="card">
+		<div class="card-header bg-info">
+			<h1 class="card-title text-center text-white">get list content</h1>
+		</div>
+		<div class="card-body">
+			
+			<div class="form-group">
+<input type='submit' value='send request'>
+			</div>
+			<div class="form-group">
+	<label>Request data (JSON-RPC 1.0)</label>
+	<textarea name="rpc_request" class="form-control" rows="5">
+{
+	"action": "content/rpc_list"
+}
+
+	</textarea>
+			</div>
+	
+		</div>
+	</div><!-- end card -->
+
+</form>
+
+<!-- =================================================== -->
+<form name="form_test" action="https://romanlaptev.herokuapp.com/projects/db_admin/" method='post' class="">
+
+	<div class="card">
+		<div class="card-header bg-warning">
+			<h1 class="card-title bg-danger text-white">get list content</h1>
+			<h6 class="card-subtitle">https://romanlaptev.herokuapp.com/projects/db_admin/</h6>
+		</div>
+		<div class="card-body">
+			
+			<div class="form-group">
+<input type='submit' value='send request'>
+			</div>
+			<div class="form-group">
+	<label>Request data (JSON-RPC 1.0)</label>
+	<textarea name="rpc_request" class="form-control" rows="5">
+{
+	"action": "content/rpc_list"
+}
+
+	</textarea>
+			</div>
+	
+		</div>
+	</div><!-- end card -->
+
+</form>
+
+
+<pre>
+https://ru.wikipedia.org/wiki/REST
+https://ru.wikipedia.org/wiki/%D0%A3%D0%B4%D0%B0%D0%BB%D1%91%D0%BD%D0%BD%D1%8B%D0%B9_%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2_%D0%BF%D1%80%D0%BE%D1%86%D0%B5%D0%B4%D1%83%D1%80
+https://ru.wikipedia.org/wiki/JSON-RPC
+https://ru.wikipedia.org/wiki/XML-RPC	
+
+-----
+{
+    "method": "methodnamehere",
+    "params": [
+        {
+            "firstparam": "this contains information of the firstparam.",
+            "secondparam": 1121211234,
+            "thirdparam": "this contains information of the thirdparam."
+        },
+        {
+            "fourthparam": "this is already a different object.",
+            "secondparam": "there can be same name fields in different objects.",
+            "thirdparam": "this contains information of the thirdparam."
+        }
+    ],
+    "id": 1234
+}
+----
+
+ &lt;?xml version="1.0"?&gt;
+ &lt;methodCall&gt;
+   &lt;methodName&gt;examples.getStateName&lt;/methodName&gt;
+   &lt;params&gt;
+     &lt;param&gt;
+         &lt;value&gt;&lt;i4&gt;41&lt;/i4&gt;&lt;/value&gt;
+     &lt;/param&gt;
+   &lt;/params&gt;
+ &lt;/methodCall&gt;
+ 
+</pre>
+
+</div><!-- end container -->
+</body>
+</html>
