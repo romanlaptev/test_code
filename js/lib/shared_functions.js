@@ -32,7 +32,10 @@ _log(msg);
 		function _getById(id){
 			
 			if( document.querySelector ){
-				var obj = document.querySelector("#"+id);
+				if(id.indexOf("#") === -1){
+					id = "#" + id;
+				}
+				var obj = document.querySelector(id);
 				return obj;
 			}
 			
@@ -53,6 +56,69 @@ _log(msg);
 			
 			return false;
 		}//end _getById()
+
+
+		//USAGE: var groupBtnDelete = func.getByClass("child-nodes li");
+		function _getByClass(className){
+
+			if( typeof window.jQuery === "function"){
+				if(className.indexOf(".") === -1){
+					className = "." + className;
+				}
+				var group = $(className);
+				return group;
+			}
+
+			if( document.querySelector ){
+				if(className.indexOf(".") === -1){
+					className = "." + className;
+				}
+				var group = document.querySelectorAll(className);
+				return group;
+			}
+		
+//document.getElementsByTagName('head')
+			if( typeof document.getElementsByClassName === "function" ){
+				var group = document.getElementsByClassName(className);
+				return group;
+			}
+
+			return false;
+		}//end _getByClass()
+
+
+		function _push( ar, item){
+			if( ar.push ){
+				ar.push(item);
+			} else {
+				var num = ar.length;
+				ar[num] = item;
+			}
+		}// end _push()
+
+
+		var _timer = {};
+		var _set_timer = function (){
+			var d = new Date;
+			return d.getTime();
+		};
+
+		var _get_timer = function (timer){
+			var d = new Date;
+			return parseFloat((d.getTime() - timer)/1000);
+		};
+
+
+		function _get_attr_to_obj( attr ){
+			if( attr.length === 0){
+				return false;
+			}
+			var item_attr = {};
+			for(var item = 0; item < attr.length; item++) {
+				item_attr[attr[item].name] = attr[item].value;
+			}
+			return item_attr;
+		}//end _get_attr_to_obj()
 
 
 		function _log( msg, id){
@@ -95,38 +161,75 @@ _log(msg);
 			
 		}//end _log()
 
-		function _push( ar, item){
-			if( ar.push ){
-				ar.push(item);
-			} else {
-				var num = ar.length;
-				ar[num] = item;
+		function _alert( message, level ){
+			switch (level) {
+				case "info":
+					message = "<p class='alert alert-info'>" + message + "</p>";
+					_log(message);
+				break;
+				
+				case "warning":
+					message = "<p class='alert alert-warning'>" + message + "</p>";
+					_log(message);
+				break;
+				
+				case "danger":
+				case "error":
+					message = "<p class='alert alert-danger'>" + message + "</p>";
+					_log(message);
+				break;
+				
+				case "success":
+					message = "<p class='alert alert-success'>" + message + "</p>";
+					_log(message);
+				break;
+				
+				default:
+					_log(message);
+				break;
+			}//end switch
+			
+		}//end _alert()		
+	
+		function _wrapLogMsg( message, level ){
+			switch (level) {
+				case "info":
+					message = "<p class='alert alert-info'>" + message + "</p>";
+					return message;
+				break;
+				
+				case "warning":
+					message = "<p class='alert alert-warning'>" + message + "</p>";
+					return message;
+				break;
+				
+				case "danger":
+				case "error":
+					message = "<p class='alert alert-danger'>" + message + "</p>";
+					return message;
+				break;
+				
+				case "success":
+					message = "<p class='alert alert-success'>" + message + "</p>";
+					return message;
+				break;
+				
+				default:
+					return message;
+				break;
+			}//end switch
+			
+		}//end _wrapLogMsg()
+		
+	
+		function _addEvent( element, eventName, func ) {
+			if ( element.addEventListener ) {
+				return element.addEventListener(eventName, func, false);
+			} else if ( element.attachEvent ) {
+				return element.attachEvent("on" + eventName, func);
 			}
-		}// end _push()
+		};//end _addEvent()
 
-
-		var _timer = {};
-		var _set_timer = function (){
-			var d = new Date;
-			return d.getTime();
-		};
-
-		var _get_timer = function (timer){
-			var d = new Date;
-			return parseFloat((d.getTime() - timer)/1000);
-		};
-
-
-		function _get_attr_to_obj( attr ){
-			if( attr.length === 0){
-				return false;
-			}
-			var item_attr = {};
-			for(var item = 0; item < attr.length; item++) {
-				item_attr[attr[item].name] = attr[item].value;
-			}
-			return item_attr;
-		}//end _get_attr_to_obj()
 
 
 		// SORT by key, alphabetical sorting
@@ -1154,74 +1257,6 @@ ONLY second LEVEL !!!!!!!!!!!!
 
 		}//end _parseXmlToObj()
 
-		function _alert( message, level ){
-			switch (level) {
-				case "info":
-					message = "<p class='alert alert-info'>" + message + "</p>";
-					_log(message);
-				break;
-				
-				case "warning":
-					message = "<p class='alert alert-warning'>" + message + "</p>";
-					_log(message);
-				break;
-				
-				case "danger":
-				case "error":
-					message = "<p class='alert alert-danger'>" + message + "</p>";
-					_log(message);
-				break;
-				
-				case "success":
-					message = "<p class='alert alert-success'>" + message + "</p>";
-					_log(message);
-				break;
-				
-				default:
-					_log(message);
-				break;
-			}//end switch
-			
-		}//end _alert()		
-	
-		function _wrapLogMsg( message, level ){
-			switch (level) {
-				case "info":
-					message = "<p class='alert alert-info'>" + message + "</p>";
-					return message;
-				break;
-				
-				case "warning":
-					message = "<p class='alert alert-warning'>" + message + "</p>";
-					return message;
-				break;
-				
-				case "danger":
-				case "error":
-					message = "<p class='alert alert-danger'>" + message + "</p>";
-					return message;
-				break;
-				
-				case "success":
-					message = "<p class='alert alert-success'>" + message + "</p>";
-					return message;
-				break;
-				
-				default:
-					return message;
-				break;
-			}//end switch
-			
-		}//end _wrapLogMsg()
-		
-	
-		function _addEvent( element, eventName, func ) {
-			if ( element.addEventListener ) {
-				return element.addEventListener(eventName, func, false);
-			} else if ( element.attachEvent ) {
-				return element.attachEvent("on" + eventName, func);
-			}
-		};//end _addEvent()
 		
 
 		function _testSupport() {
@@ -1281,7 +1316,12 @@ ONLY second LEVEL !!!!!!!!!!!!
 		// public interfaces
 		return{
 			getById: _getById,
+			getByClass: _getByClass,
+
 			log:	_log,
+			logAlert: _alert,
+			wrapLogMsg: _wrapLogMsg,
+			addEvent: _addEvent,
 			
 			push: _push,
 			set_timer: _set_timer,
@@ -1304,9 +1344,6 @@ ONLY second LEVEL !!!!!!!!!!!!
 			parseXmlToObj: _parseXmlToObj,
 			convertXmlToObj: _convertXmlToObj,
 			
-			logAlert: _alert,
-			wrapLogMsg: _wrapLogMsg,
-			addEvent: _addEvent,
 			testSupport: _testSupport
 			
 			//get_content: function( params ){ 
