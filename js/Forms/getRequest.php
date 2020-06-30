@@ -36,6 +36,12 @@ print_r ($_REQUEST);
 print_r($_FILES);
 echo "</pre>";
 	break;
+
+	case "content/rpc_save":
+echo "<pre>";
+print_r ($_REQUEST);
+echo "</pre>";
+	break;
 	
 	default:
 		$_vars["log"][] = "{\"error_code\" : \"wrong_action\", \"message\" : \"wrong action...\"}";

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test JS: send form</title>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="-1">	
+	
+	<link rel="stylesheet" href="../../css/test_bootstrap/css/bootstrap335.min.css">
+	<link rel="stylesheet" href="../../css/shared.css">
+	<script src="../lib/shared_functions.js"></script>
+	<script src="../../codebase/js/jquery/jquery.min.js"></script>
+
+	<script>
+var func = sharedFunc();
+//console.log("func:", func);
+
+var _vars = {
+	"logMsg" : "",
+	"support" : func.testSupport(),
+	"serverUrl" : "getRequest.php"
+};
+console.log(_vars);
+
+
+$(document).ready(function() {
+		var msg = "jQuery version: " + jQuery.fn.jquery;
+		func.logAlert(msg, "info");
+});//end ready
+
+window.onload = function(){
+	_vars.logMsg = navigator.userAgent;
+	func.logAlert( _vars.logMsg, "info");
+
+	if( _vars["support"]["formData"] ){
+		_vars.logMsg = "This browser supports FormData object";
+		func.logAlert( _vars.logMsg, "success");
+	} else {
+		_vars.logMsg = "This browser does not support FormData object";
+		func.logAlert( _vars.logMsg, "error");
+	}
+	
+	//===============================
+	document.forms["form1"].onsubmit = function(event){
+			event = event || window.event;
+			var target = event.target || event.srcElement;
+			
+			if (event.preventDefault) { 
+				event.preventDefault();
+			} else {
+				event.returnValue = false;
+			}
+//console.log("Submit form", event, this);
+			var form = document.forms["form1"];
+console.log(form);
+//console.log(form.elements, form.elements.length);
+//console.log(form.elements["number"]);
+//form.action = "?q=save-node";
+//console.log(form.action);
+
+			var isValid = checkForm({
+					"form" : form
+			});
+			if( !isValid ){
+_vars["logMsg"] = "form validation error";
+func.logAlert(_vars["logMsg"], "error");
+				return false;
+			}
+
+			sendForm({
+				"form": form,
+				"postFunc": function(){
+_vars["logMsg"] = "send form to server: " + _vars["serverUrl"];
+func.logAlert(_vars["logMsg"], "info");
+				} 
+			});
+
+			return false;	
+	}//end event
+	
+}//end load()
+
+
+function checkForm(opt){
+		var p = {
+			"form" : null
+		};
+		
+		//extend options object
+		for(var key in opt ){
+			p[key] = opt[key];
+		}
+//console.log( p );
+
+		if( !p["form"] ){
+_vars["logMsg"] = "error, checkForm()";
+func.logAlert(_vars["logMsg"], "error");
+			return false;
+		}
+
+		var form = p["form"];
+
+		var res = true;
+		for( var n = 0; n < form.elements.length; n++){
+			var _element = form.elements[n];
+				
+			if( _element.classList.contains("invalid-field") ){
+				_element.classList.remove("invalid-field");
+			}	
+			//if( _element.type === "text" ){
+				//if( _element.className.indexOf("require-form-element") !== -1 ){
+				if( _element.classList.contains("require-form-element") ){
+//console.log( _element.value );
+					//_element.className.replace("invalid-field", "").trim();
+					if( _element.value.length === 0 ){
+						res = false;
+_vars["logMsg"] = "error, empty required input field <b>'" + _element.name +"'</b>";
+func.logAlert( _vars["logMsg"], "error");
+						//_element.className += " invalid-field";
+						_element.classList.add("invalid-field")
+//console.log( _element.className );
+//console.log( _element.classList );
+						//break;
+					}
+				}
+			//}
+				
+		}//next
+		
+		return res;
+}//end checkForm()
+
+	function sendForm( opt ){
+		var p = {
+			"form": null,
+			"url" : _vars["serverUrl"],
+			"postFunc": null
+		};
+		//extend options object
+		for(var key in opt ){
+			p[key] = opt[key];
+		}
+//console.log( p );
+		
+		if( !p["form"] ){
+_vars["logMsg"] = "error, sendForm()";
+func.logAlert(_vars["logMsg"], "error");
+			return false;
+		}
+
+		//var formData = new FormData( form );
+		//for (var pair of formData.entries()) {
+//console.log(pair[0]+ ', ' + pair[1]);
+		//}
+		
+		var formValues = $(p.form).serialize();
+console.log( formValues );
+		var url = p.url + "?action=content/rpc_save";
+
+//https://api.jquery.com/jquery.post/
+		var dataType = "json";//xml, json, script, text, html
+		$.post(	
+				url, 
+				formValues, 
+				function(data, textStatus, jqXHR){
+console.log(arguments);
+func.logAlert( data, "info");
+				}//,
+				//dataType
+		);
+			
+	}//end sendForm()
+
+	</script>
+
+<style>
+.invalid-field {
+	border: 1px solid red;
+}
+</style>
+
+</head>
+
+<body>
+<div class="container">
+
+	<div class="page-header">
+		<h2>Test JS: send form</h2>
+	</div>
+
+	<div class="log-panel panel">
+		<div class="panel-body">
+			<span class="pull-right">
+				<a id="btn-clear-log" href="#" title="Clear log" class="btn">x</a>
+			</span>
+			<div id="log" class="panel-body"></div>
+		</div>
+	</div>
+	
+<form name="form1" id="form1" action="getRequest.php" method="POST" enctype="application/x-www-form-urlencoded">
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h4>ayax request, jQuery, POST method</h4>
+		</div>
+
+		<div class="panel-body">
+
+			<div class="form-group">
+				<label>*title: </label>
+		<input type="text" class="form-control require-form-element" name="title" 
+		value="new content item" autocomplete="off">
+			</div>
+
+			<div class="form-inline">
+				<div class="">
+					<label>content type: </label>
+			<select name="content_type" class="form-control">
+				<option value="page">page</option>
+				<option value="article">article</option>
+				<option value="note" selected="selected">note</option>
+				<option value="book">book</option>
+				<option value="video">video</option>
+				<option value="music">music</option>
+			</select>
+				</div>
+	
+				<div class="">
+					<label>body format: </label>
+					<select name="body_format" class="form-control">
+						<option value="plain_text">plain text</option>
+						<option value="filtered_html">Filtered HTML</option>
+						<option value="full_html" selected="selected">Full HTML</option>
+						<option value="php_code">PHP code</option>
+					</select>
+				</div>
+			</div>
+				
+			<div class="form-group">
+				<label>*body value: </label>
+<!-- <textarea id="body-value" name="body_value" class="form-control require-form-element"  rows="10" required></textarea>-->
+<textarea id="body-value" name="body_value" class="form-control require-form-element"  rows="10"></textarea>
+			</div>
+
+		</div>
+
+      <div class="panel-footer">
+		<button type="reset" class="btn btn-large btn-warning">reset form</button>
+		<button type="submit" class="btn btn-large btn-primary">send</button>
+      </div>
+
+	</div><!-- end panel -->
+</form>
+
+
+<pre>
+https://maxsite.org/page/send-form-ajax
+Отправка произвольной формы на AJAX без перезагрузки страницы
+
+https://fructcode.com/ru/blog/how-to-send-html-form-with-ajax/
+Как отправить HTML-форму без перезагрузки страницы
+
+https://api.jquery.com/jquery.post/
+https://api.jquery.com/serialize/
+
+https://ruseller.com/jquery.php?id=8
+.serialize()
+</pre>
+
+</div><!-- end container -->
+
+</body>
+</html>

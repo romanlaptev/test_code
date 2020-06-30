@@ -117,6 +117,23 @@ $(document).ready(
 
 keyup:<div id="result"></div>
 
+<pre>
+		var formValues = $(p.form).serialize();
+console.log( formValues );
+
+//https://api.jquery.com/jquery.post/
+		var dataType = "json";//xml, json, script, text, html
+		$.post(	
+				p.url, 
+				formValues, 
+				function(data, textStatus, jqXHR){
+console.log(response);
+				}//,
+				//dataType
+		);
+
+</pre>
+
 </body>
 
 </html>
