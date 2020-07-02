@@ -155,6 +155,37 @@ console.log("click!", this);
 <pre>
 https://learn.javascript.ru/modifying-document
 https://developer.mozilla.org/ru/docs/DOM/document.createElement
+
+/*
+					//add or update input parent_id
+					var form = document.forms["form_node"];
+					if( _vars["GET"]["parent_id"] ){
+//console.log(form.elements["parent_id"]);
+if( !form.elements["parent_id"]){
+							var inpParentID = document.createElement("input");
+							inpParentID.setAttribute("name","parent_id");
+							inpParentID.setAttribute("type","text");
+							inpParentID.setAttribute("value", _vars["GET"]["parent_id"]);
+							form.appendChild( inpParentID );
+} else {
+							form.elements["parent_id"].setAttribute("value", _vars["GET"]["parent_id"]);
+}
+console.log(form);
+console.log(form.elements, form.elements.length);
+						
+					}
+	*/
+	
+	/*					
+					if( !_vars["GET"]["parent_id"] ){
+						if( form.elements["parent_id"] ){
+							var inpParentID = form.elements["parent_id"];
+							form.removeChild( inpParentID );
+		//console.log(form.elements, form.elements.length);
+						}
+					}
+	*/
+
 </pre>		
 </div>
 </body>
