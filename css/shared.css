@@ -219,6 +219,10 @@ border-top: 16px solid #1c5a83;
 }
 
 
+.template {
+ display:none
+}
+
 
 /* LIST */
 /*.list-unstyled {
