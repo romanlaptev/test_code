@@ -1,6 +1,6 @@
 <?php
-//error_reporting(E_ALL|E_STRICT);
-//ini_set('display_errors', 1);
+error_reporting(E_ALL|E_STRICT);
+ini_set('display_errors', 1);
 
 //php -S localhost:8000
 	require_once( __DIR__.'/../utils.php' );
@@ -10,14 +10,22 @@
 
 //https://simplehtmldom.sourceforge.io/manual.htm#section_quickstart
 //PHP Simple HTML DOM Parser Manual
+PageHead();
 
-	//require_once( __DIR__.'/simple_html_dom.php' );
+echo _logWrap( "<h2>PHP version: ".phpversion()."</h2>", "info");
+echo _logWrap(__DIR__, "info");
+
+$loadedExt = get_loaded_extensions();
+echo _logWrap( "loaded extensions: ");
+echo _logWrap( $loadedExt);
+
+	require_once( __DIR__.'/simple_html_dom.php' );
 	
-	//$dom = str_get_html('<html><body><div class="con-tent">Hello!</div></body></html>');
+	$dom = str_get_html('<html><body><div class="con-tent">Hello!</div></body></html>');
 //$test = $dom->find(".con-tent");
 
 	//$out = print_r($test, true);
 	//echo _logWrap($out);
 	
-echo _logWrap("tesT", "info");
+PageEnd();
 ?>
