@@ -1,0 +1,4 @@
+https://github.com/atymic/twitter/issues/250
+PHP 7.3 - preg_replace(): Compilation failed: invalid range in character class at offset 24
+
+
