@@ -1,0 +1,25 @@
+# This is /etc/email-addresses. It is part of the exim package
+#
+# This file contains email addresses to use for outgoing mail. Any local
+# part not in here will be qualified by the system domain as normal.
+#
+# It should contain lines of the form:
+#
+#user: someone@isp.com
+#otheruser: someoneelse@anotherisp.com
+
+root: roman.v.laptev@gmail.com
+#root@vbox1: roman.v.laptev@gmail.com
+root@vbox1.local: roman.v.laptev@gmail.com
+#roman: roman.v.laptev@gmail.com
+www-data: roman.v.laptev@gmail.com
+
+#root: roman-laptev@yandex.ru
+#root@vbox1: roman-laptev@yandex.ru
+#root@vbox1.local: roman-laptev@yandex.ru
+#roman: roman-laptev@yandex.ru
+#www-data: roman-laptev@yandex.ru
+
+#root: wizardgraphics@yandex.ru
+#root@vbox1.local: wizardgraphics@yandex.ru
+#www-data: wizardgraphics@yandex.ru
