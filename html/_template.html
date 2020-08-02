@@ -157,7 +157,24 @@ padding:0;
 }
 
 body {
-	background-color: #055c80;
+/*	background-color: #055c80;*/	
+background-color: #ffffff;
+}
+
+a {
+	font-family: Arial;
+	text-decoration:none;
+}
+/*
+a:link	{
+	color: white;
+	font-family: Verdana;
+	text-decoration: none;
+		}
+*/		
+a:visited {}
+a:hover	{
+	color: #ffcc00;
 }
 
 
@@ -170,15 +187,51 @@ body {
 	/*height: 5%;*/
 	/* border: 1px solid; */
 	padding: 1px;
-	background-color: #e6e6fa;
+	/*background-color: #e6e6fa;*/
+	background-color: #262626;
 }
 
 
 .header h1 {
-	text-align: center;
+	/*text-align: center;*/
+	color:#fff;
 	padding: 0;
 	/*margin: 0;*/
 }
+
+
+.header-menu ul li a {
+	text-transform: uppercase;
+	font-size: 14px;
+	font-family: 'texgyreadventorbold';
+	color: #888;
+	padding-left: 0;
+	line-height: 28px;
+}
+.header-menu ul li a:hover{
+    color: #ffcc00;
+}
+
+.sub-menu {
+    display: none;
+}
+.header-menu ul li{
+    position: relative;
+}
+.header-menu ul li .sub-menu{
+	position:absolute;
+	z-index: 1;
+	background-color: #ccc;
+	color:#000;
+	text-align: left;
+	list-style: none;
+	padding: 5px;
+}
+.header-menu ul li:hover .sub-menu{
+    display: block;
+}
+
+
 
 .menu {
 	background-color: #004586;
@@ -186,7 +239,7 @@ body {
 }
 
 .main {
-	height: 80%;
+	/*height: 80%;*/
 /*overflow: hidden;*/
 	/* border: 1px solid; */
 	/* padding: 5px; */
@@ -201,10 +254,12 @@ body {
 	height: 100%;
 }
 .sidebar-left {
-	background: #e6e6fa;
+	/*background: #e6e6fa;*/
+	background: #fff;
 }
 .sidebar-right {
-	background: #e6e6fa;
+	background: #fff;
+	/*background: #e6e6fa;*/
 }
 .content {
 	float: left;
@@ -217,10 +272,11 @@ body {
 }
 
 .footer {
-	height: 10%;
+	/*height: 10%;*/
 	/* border: 1px solid; */
 	/* padding: 5px; */
-	background-color: #e6e6fa;
+	/*background-color: #e6e6fa;*/
+	background-color: #222222;
 }
 
 
@@ -235,7 +291,9 @@ body {
 }
 
 .panel {
-	background-color: deepskyblue;
+	/*background-color: deepskyblue;*/
+	background-color: #e6f0e5;
+	border: 1px solid #dee2e6;
 /*	width: 100%;*/
 /*	max-height: 90%;*/
 	margin: 5px;
@@ -360,10 +418,10 @@ border-radius: 3px;
 	clear: both;
 	overflow: hidden;
 }
-.pull-left {
+.float-left {
 	float: left;
 }
-.pull-right {
+.float-right {
 	float: right;
 }
 .text-right{
@@ -372,7 +430,42 @@ text-align:right;
 .text-center{
 text-align:center;
 }
-/*================================*/
+
+.padding-small{
+padding:5px;
+}
+.padding20{
+padding:20px;
+}
+.margin-small{
+margin:5px;
+}
+
+/* LIST */
+.list-unstyled {
+	padding-left: 0;
+	list-style: none;
+}
+.list-inline {
+	padding-left: 0;
+	margin-left: -5px;
+	list-style: none;
+}
+.list-inline > li {
+	display: inline-block;
+	padding-right: 5px;
+	padding-left: 5px;
+}
+.list-group-item {
+	position: relative;
+	display: block;
+	padding: 10px 15px;
+	margin-bottom: -1px;
+	background-color: #fff;
+	border: 1px solid #ddd;
+}
+
+
 
 /*==================LOG===========*/
 .log-panel {
@@ -432,11 +525,41 @@ margin: 0;
 }
 </style>
 
-	<div class="header container">
+
+<div class="header container">
 		<div class="wrapper">
-			<h1>website</h1>
+
+	<div class="w50 float-left">
+		<div class="padding20">
+				<h1>wp-site</h1>
 		</div>
-	</div><!-- end header -->
+	</div>
+
+				<div class="w50 float-left text-right">
+					<div class="padding-small">
+<div class="header-menu">
+	<ul class="list-inline">
+		<li class=""><a href="/">HOME</a></li>
+		<li class=""><a href="#">INFORMATION</a>
+<ul class="sub-menu">
+	<li class=""><a href="#">ABOUT US</a></li>
+	<li class=""><a href="#">TERMS AND CONDITIONS</a></li>
+	<li class=""><a href="#">PRIVACY POLICY</a></li>
+	<li class=""><a href="#">REFUND POLICY</a></li>
+</ul>
+		</li>
+		<li class=""><a href="#">CUSTOM REQUEST</a></li>
+		<li class=""><a href="#">CONTACT US</a></li>
+	</ul>
+</div>
+					</div>
+		
+				</div>
+			<div class="row"></div>
+
+		</div>
+	</div>
+<!-- end header -->
 
 	<div class="menu container">
 		<div class="wrapper">
@@ -486,9 +609,39 @@ margin: 0;
 
 	</div><!-- end main -->
 
-	<div class="footer container">
+	<div class="footer container row">
 		<div class="wrapper">
-			<div class="panel"></div>
+
+<div class="row">
+				
+				<div class="float-left w30">
+					<div class="panel">
+		<div class="menu-container">
+			<ul class="">
+				<li class=""><a href="#">HOME</a></li>
+				<li class=""><a href="#">INFORMATION</a></li>
+				<li class=""><a href="#">CUSTOM REQUEST</a></li>
+				<li class=""><a href="#">CONTACT US</a></li>
+			</ul>
+		</div>					
+					</div>
+				</div>
+				
+				<div class="float-left w30">
+					<div class="panel">
+	<div class="menu-container">
+			<ul class="">
+				<li class=""><a href="#">LOGIN</a></li>
+<li class=""><a href="#">REGISTER</a></li>
+<li class=""><a href="#">MY ACCOUNT</a></li>
+<li class=""><a href="#">YORS FILES</a></li>
+<li class=""><a href="#">LOGOUT</a></li>
+</ul></div>					
+</div>
+				</div>
+
+			</div>
+			
 		</div>
 	</div><!-- end footer -->
 
