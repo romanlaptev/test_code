@@ -1,4 +1,4 @@
-//Переопределяем папку загрузки
+//======================================= //Переопределяем папку загрузки
 add_filter('upload_dir', 'custom_multisit_upload_dir_function');
 function custom_multisit_upload_dir_function( $dirs ) {
     $dirs['baseurl'] = network_site_url( '/wp-content/uploads' );
@@ -9,4 +9,39 @@ function custom_multisit_upload_dir_function( $dirs ) {
     return $dirs;
 }
 
+//======================================= //Хук, заменяющий e-mail получателя
+add_action("wpcf7_before_send_mail", "custom_multisite_wpcf7_before_send_mail");
+function custom_multisite_wpcf7_before_send_mail($contact_form) {
+
+//error_log( " - TEST\n", 3,	dirname(__FILE__)."/log.log");
+error_log( " - POST: ".print_r($_POST,1)."\n", 3,	dirname(__FILE__)."/log.log");
+error_log( " - SESSION: ".print_r($_SESSION,1)."\n", 3,	dirname(__FILE__)."/log.log");
+
+	//$branch_id = $_POST['branch'];
+
+	//if (empty($branch_id)){
+		//$branch_id = $_POST['branch_id'];
+	//}
+
+	$branch_id = $_SESSION['current_branch_id'];
+	$city_id = $_POST['city_id'];
+
+	if (empty($branch_id) || empty($city_id)){
+		return;
+	}
+
+	$new_email = MultiSite::getBranchOption('email', $branch_id, $city_id);
+error_log( " - new_email: ".$new_email."\n", 3,	dirname(__FILE__)."/log.log");
+  
+	$address = MultiSite::getBranchOption('address', $branch_id, $city_id);
+error_log( " - address: ".$address."\n", 3,	dirname(__FILE__)."/log.log");
+
+	if (!empty($new_email)){
+		$mail = $contact_form->prop('mail');
+		$mail['recipient'] = $new_email;
+error_log( " - mail: ".print_r($mail,1)."\n", 3,	dirname(__FILE__)."/log.log");
+      
+		$contact_form->set_properties(array('mail'=>$mail));
+	}
+}
 
