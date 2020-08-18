@@ -1,0 +1,12 @@
+//Переопределяем папку загрузки
+add_filter('upload_dir', 'custom_multisit_upload_dir_function');
+function custom_multisit_upload_dir_function( $dirs ) {
+    $dirs['baseurl'] = network_site_url( '/wp-content/uploads' );
+    $dirs['basedir'] = ABSPATH . 'wp-content/uploads';
+    $dirs['path'] = $dirs['basedir'] . $dirs['subdir'];
+    $dirs['url'] = $dirs['baseurl'] . $dirs['subdir'];
+
+    return $dirs;
+}
+
+
