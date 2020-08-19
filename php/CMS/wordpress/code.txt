@@ -3,7 +3,7 @@ https://www.youtube.com/watch?v=NPlJkphom5w
 
 http://testpoint.beget.tech/test-page/
 [products limit="3" columns="2"]
-
+[products limit="3" columns="2" class="class-1" attribute="product_type" terms="video"]
 
 //======================================= //Переопределяем папку загрузки
 add_filter('upload_dir', 'custom_multisit_upload_dir_function');
