@@ -5,6 +5,70 @@ http://testpoint.beget.tech/test-page/
 [products limit="3" columns="2"]
 [products limit="3" columns="2" class="class-1" attribute="product_type" terms="video"]
 
+
+
+//======================================= HOOKS
+//add_filter( 'get_search_form', 'keyhole_search_form' );
+//add_action( 'after_setup_theme', 'keyhole_after_setup' );
+//add_action( 'wp_footer', 'keyhole_footer' );
+
+
+add_action("init", function () { });
+
+//add_filter( 'woocommerce_before_output_product_categories', '_before_output_product_categories' );
+//add_filter( 'woocommerce_after_output_product_categories', '_after_output_product_categories' );
+
+//add_action( 'woocommerce_before_subcategory', 'change_product_category_view' );
+//add_action( 'woocommerce_before_subcategory_title', 'test' );
+
+//add_filter( 'woocommerce_shop_loop_subcategory_title', 'test' );
+//wc-template-hooks.php, 
+//add_action( 'woocommerce_shop_loop_subcategory_title', 'woocommerce_template_loop_category_title', 10 );
+// /wp-content/plugins/woocommerce/includes/wc-template-functions.php:		<h2 class="woocommerce-loop-category__title">
+
+//'woocommerce_after_subcategory_title'
+//'woocommerce_after_subcategory'
+
+//add_action( 'wp_ajax_product_quickview', '_product_quickview' );
+//add_action( 'wp_ajax_nopriv_product_quickview', '_product_quickview' );
+
+//add_filter( 'woocommerce_product_categories_widget_args', '_product_categories_widget_args' );
+
+//add_filter( 'woocommerce_product_categories', '_product_categories' );
+//function _product_categories( $terms ){
+//echo "terms:<pre>";	
+//print_r($terms);
+//echo "</pre>";
+	//return $terms;
+//}
+
+//======================================= //hook, filter template
+add_filter("template_include", function( $path ){
+echo "include template: ".$path;
+echo "<br>";
+  return $path;
+});
+
+
+//======================================= hook, filter content
+//https://wp-kama.ru/hook/the_title
+add_filter( 'the_title', '_filter_title' );
+
+//https://wp-kama.ru/hook/the_content
+add_filter( 'the_content', '_filter_content' );
+
+function _filter_title( $title ) {
+	return "<div>".htmlspecialchars( "---".$title."---" )."</div>";
+	//return $title;
+}//end
+
+function _filter_content( $content ) {
+	return "<dv>".htmlspecialchars( $content )."</div>";
+	//return $content;
+}//end
+
+
+
 //======================================= //Переопределяем папку загрузки
 add_filter('upload_dir', 'custom_multisit_upload_dir_function');
 function custom_multisit_upload_dir_function( $dirs ) {
@@ -51,4 +115,21 @@ error_log( " - mail: ".print_r($mail,1)."\n", 3,	dirname(__FILE__)."/log.log");
 		$contact_form->set_properties(array('mail'=>$mail));
 	}
 }
+
+//======================================= hook, include theme styles, scripts
+add_action( 'wp_enqueue_scripts', '_register_css_js' );
+function _register_css_js() {
+    wp_enqueue_style( 'parent-style', get_template_directory_uri() . '/style.css' );
+	wp_enqueue_style( 'child-style',
+        get_stylesheet_directory_uri() . '/style.css',
+        array( 'parent-style' ),
+        wp_get_theme()->get('Version')
+    );
+
+	$handle = "script";
+	$src = get_stylesheet_directory_uri() . "/js/script.js";
+	wp_enqueue_script( $handle, $src);
+}//end
+
+
 
