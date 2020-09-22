@@ -5,6 +5,9 @@ http://testpoint.beget.tech/test-page/
 [products limit="3" columns="2"]
 [products limit="3" columns="2" class="class-1" attribute="product_type" terms="video"]
 
+[product_categories number="0" parent="0"]
+
+[recent_products]
 
 
 //======================================= HOOKS
@@ -41,6 +44,15 @@ add_action("init", function () { });
 //echo "</pre>";
 	//return $terms;
 //}
+
+//======================================= //hook, get_terms, filter categories....
+add_filter( 'get_terms', '_filter_terms', 10, 4 );
+
+....
+function _filter_terms($terms, $taxonomies, $args, $term_query){
+......
+    return $terms;
+}//end
 
 //======================================= //hook, filter template
 add_filter("template_include", function( $path ){
