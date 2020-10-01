@@ -1,3 +1,10 @@
+//======================================= CONFIG
+//wp-config.php, rewrite DB site path variables
+
+define('WP_SITEURL', 'http://'.$_SERVER['HTTP_HOST']);
+define('WP_HOME', 'http://'.$_SERVER['HTTP_HOST']);
+
+
 //======================================= SHORTCODES
 https://www.youtube.com/watch?v=NPlJkphom5w
 
