@@ -427,6 +427,19 @@ clientX, clientY
 button, which
 altKey, ctrlKey, metaKey, shiftKey
 detail
+
+------------------------------ show / hide product cart 
+....
+	$("#top-mini-cart").on("mouseover", function(e) {
+//console.log( "mouseover on ", e);
+    	$("#top-mini-cart .topcart_content").show(500);
+	});//end event
+	
+	$("#top-mini-cart").on("mouseleave", function(e) {
+console.log( "mouseout leave ", e);
+    	$("#top-mini-cart .topcart_content").hide(500);
+	});//end event
+....
 </pre>					
 						<ul class="uk-nav-sub">
 							<li><a id="mouse-over" href="#">*onmouseover</a></li>
