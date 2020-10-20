@@ -97,12 +97,17 @@ margin: 0;
 	clear: both;
 	overflow: hidden;
 }
-.pull-left {
+.clearfix {
+	clear: both;
+}
+
+.float-left, .pull-left {
 	float: left;
 }
-.pull-right {
+.float-right, .pull-right {
 	float: right;
 }
+
 .text-right{
 text-align:right;
 }
@@ -110,12 +115,35 @@ text-align:right;
 text-align:center;
 }
 
+
 .padding-small{
 padding:5px;
 }
+
 .margin-small{
 margin:5px;
 }
+
+.padding-small{
+padding:5px;
+}
+.padding20{
+padding:20px;
+}
+.padding-top-50 {
+	padding-top: 50px;
+}
+.padding-top-60 {
+	padding-top: 60px;
+}
+
+.text-white{
+color:#fff;
+}
+.border-white{
+border: 1px solid #fff;
+}
+
 
 .panel {
 	margin: 10px;
