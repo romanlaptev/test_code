@@ -52,6 +52,16 @@ add_action("init", function () { });
 	//return $terms;
 //}
 
+
+//======================================= //hook, get_terms, filter categories....
+add_filter( 'get_term', '_get_term', 10, 2 );
+
+function _get_term( $_term, $taxonomy ){
+echo "function _get_term()";
+echo "<br>";
+	return $_term;
+}
+
 //======================================= //hook, get_terms, filter categories....
 add_filter( 'get_terms', '_filter_terms', 10, 4 );
 
