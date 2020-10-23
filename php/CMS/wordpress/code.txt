@@ -53,14 +53,50 @@ add_action("init", function () { });
 //}
 
 
+//================ MENU
+add_filter( 'wp_nav_menu_args', '_nav_args',3000001);
+add_filter( 'wp_nav_menu_items', '_nav_search',9999);
+
+//https://wp-kama.ru/hook/nav_menu_item_args
+add_filter( 'nav_menu_item_args', '_change_menu_item_args', 10, 2 );
+
+//https://wp-kama.ru/hook/wp_nav_menu_objects
+add_filter( 'wp_nav_menu_objects', '_menu_objects' );
+function _menu_objects( $items ) {
+echo "<pre>";
+print_r($items);
+echo "</pre>";
+	return $items;
+}
+
+function _change_menu_item_args( $args, $item ) {
+	//if ( $item->object == 'page' ) {
+		//$args->link_before = '<span class="dashicons dashicons-admin-links"></span>';
+	//}
+	
+	//if ( $item->object == 'product_cat' ) {
+//print_r($args);
+//print_r($item);
+	//}
+
+	//$args->link_before = $item->object;
+	return $args;
+}
+
+
+
 //======================================= //hook, get_terms, filter categories....
 add_filter( 'get_term', '_get_term', 10, 2 );
 
 function _get_term( $_term, $taxonomy ){
 echo "function _get_term()";
 echo "<br>";
+	if( $taxonomy == "product_cat"){
+		$_term->name = $_term->name." (".$_term->count.")";
+	}
 	return $_term;
 }
+
 
 //======================================= //hook, get_terms, filter categories....
 add_filter( 'get_terms', '_filter_terms', 10, 4 );
