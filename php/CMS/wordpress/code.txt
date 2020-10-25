@@ -1,11 +1,11 @@
-//======================================= CONFIG
+//================== CONFIG
 //wp-config.php, rewrite DB site path variables
 
 define('WP_SITEURL', 'http://'.$_SERVER['HTTP_HOST']);
 define('WP_HOME', 'http://'.$_SERVER['HTTP_HOST']);
 
 
-//======================================= SHORTCODES
+//================== SHORTCODES
 https://www.youtube.com/watch?v=NPlJkphom5w
 
 http://testpoint.beget.tech/test-page/
@@ -17,7 +17,36 @@ http://testpoint.beget.tech/test-page/
 [recent_products]
 
 
-//======================================= HOOKS
+
+//================== CUSTOM FIELDS
+//https://wp-kama.ru/function-cat/proizvolnyie-polya
+//https://wp-kama.ru/function/get_post_custom_values
+$field_preview_img = get_post_custom_values('field_preview_img_value');
+//echo "TEST1";	
+//var_dump($field_preview_img);
+
+//https://wp-kama.ru/function/get_post_meta
+//$test = get_post_meta( $post->ID);
+//echo "<pre>";
+//print_r($test);
+//echo "</pre>";
+
+//https://wp-kama.ru/function/the_meta
+//the_meta();
+
+----------------------------
+https://misha.blog/wordpress/custom-fields.html
+Произвольные поля
+
+//if not exists menu SCREEN settings / CUSTOM FIELDS
+add_action("init", function () {
+	//https://misha.blog/wordpress/custom-fields.html
+	//add_post_type_support( 'page', 'custom-fields');
+});
+
+
+
+//================== HOOKS
 //add_filter( 'get_search_form', 'keyhole_search_form' );
 //add_action( 'after_setup_theme', 'keyhole_after_setup' );
 //add_action( 'wp_footer', 'keyhole_footer' );
@@ -85,7 +114,7 @@ function _change_menu_item_args( $args, $item ) {
 
 
 
-//======================================= //hook, get_terms, filter categories....
+//================== //hook, get_terms, filter categories....
 add_filter( 'get_term', '_get_term', 10, 2 );
 
 function _get_term( $_term, $taxonomy ){
@@ -98,7 +127,7 @@ echo "<br>";
 }
 
 
-//======================================= //hook, get_terms, filter categories....
+//================== //hook, get_terms, filter categories....
 add_filter( 'get_terms', '_filter_terms', 10, 4 );
 
 ....
@@ -107,7 +136,7 @@ function _filter_terms($terms, $taxonomies, $args, $term_query){
     return $terms;
 }//end
 
-//======================================= //hook, filter template
+//================== //hook, filter template
 add_filter("template_include", function( $path ){
 echo "include template: ".$path;
 echo "<br>";
@@ -115,7 +144,7 @@ echo "<br>";
 });
 
 
-//======================================= hook, filter content
+//================== hook, filter content
 //https://wp-kama.ru/hook/the_title
 add_filter( 'the_title', '_filter_title' );
 
@@ -134,7 +163,7 @@ function _filter_content( $content ) {
 
 
 
-//======================================= //Переопределяем папку загрузки
+//================== //Переопределяем папку загрузки
 add_filter('upload_dir', 'custom_multisit_upload_dir_function');
 function custom_multisit_upload_dir_function( $dirs ) {
     $dirs['baseurl'] = network_site_url( '/wp-content/uploads' );
@@ -145,7 +174,7 @@ function custom_multisit_upload_dir_function( $dirs ) {
     return $dirs;
 }
 
-//======================================= //Хук, заменяющий e-mail получателя
+//================== //Хук, заменяющий e-mail получателя
 add_action("wpcf7_before_send_mail", "custom_multisite_wpcf7_before_send_mail");
 function custom_multisite_wpcf7_before_send_mail($contact_form) {
 
@@ -181,7 +210,7 @@ error_log( " - mail: ".print_r($mail,1)."\n", 3,	dirname(__FILE__)."/log.log");
 	}
 }
 
-//======================================= hook, include theme styles, scripts
+//================== hook, include theme styles, scripts
 add_action( 'wp_enqueue_scripts', '_register_css_js' );
 function _register_css_js() {
     wp_enqueue_style( 'parent-style', get_template_directory_uri() . '/style.css' );
