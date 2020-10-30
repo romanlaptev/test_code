@@ -152,6 +152,17 @@ border: 1px solid #fff;
 	background-color: #e6f0e5;
 }
 
+/* remove outline */
+a:active, a:focus { outline: none; }
+
+input, textarea {outline:none;}
+input:active, textarea:active {outline:none;}
+:focus {outline:none;}
+textarea {resize:none;}
+textarea {resize:vertical;}
+textarea {resize:horizontal;}
+
+
 /* PANELS */
 /*.panel {
 	margin-bottom: 20px;
