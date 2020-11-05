@@ -226,4 +226,17 @@ function _register_css_js() {
 }//end
 
 
-
+//===================== FILTER PAGINATION
+add_filter( 'woocommerce_pagination_args', '_pagination_args' );
+function _pagination_args( $array ){
+//echo "<div style='display:none'>";
+//echo "<pre>";	
+//print_r($array);
+//echo "</pre>";
+$array["prev_text"] = str_replace("Prev","Назад", $array["prev_text"]);
+$array["next_text"] = str_replace("Next","Далее", $array["next_text"]);
+//echo htmlspecialchars($array["prev_text"]);
+//echo "</div>";	
+	return $array;
+}
+//<span class="btn btn-link"><i class="ion-left ion ion-ios-arrow-back"></i> Prev</span>	
