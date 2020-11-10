@@ -240,3 +240,13 @@ $array["next_text"] = str_replace("Next","Далее", $array["next_text"]);
 	return $array;
 }
 //<span class="btn btn-link"><i class="ion-left ion ion-ios-arrow-back"></i> Prev</span>	
+
+========================== CATEGORY API
+		$categories = get_categories(array(
+			'taxonomy' => 'category',
+			'hide_empty' => false
+		));
+echo "categories:<pre>";	
+print_r($categories);
+echo "</pre>";	
+
