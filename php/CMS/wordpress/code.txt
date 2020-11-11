@@ -1,3 +1,17 @@
+//================== Remove and replace hook
+add_action( 'after_setup_theme', function(){
+	if( remove_action( 'widgets_init', 'infinity_widgets_init' ) ){
+		echo "-- remove hook widgets_init";
+	} else {
+		echo "-- fail remove hook widgets_init";
+	}
+});
+
+add_action( 'widgets_init', '_widgets_init' );
+function _widgets_init(){
+...
+}
+
 //================== CONFIG
 //wp-config.php, rewrite DB site path variables
 
