@@ -70,6 +70,12 @@ add_action("init", function () {
 //add_action( 'after_setup_theme', 'keyhole_after_setup' );
 //add_action( 'wp_footer', 'keyhole_footer' );
 
+//https://wp-kama.ru/hook/wp_head
+//add_action( 'wp_head', 'chld_thm_cfg_add_parent_dep', 2 );
+//add_action( 'wp_head', 'action_function_name_11' );
+//function action_function_name_11(){
+	// action...
+//}
 
 add_action("init", function () { });
 
