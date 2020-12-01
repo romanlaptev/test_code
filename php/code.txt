@@ -1,0 +1,25 @@
+//========================= Извлечение данных с помощью регулярных выражений PHP
+https://snipp.ru/php/preg-match#link-tekst-iz-html-tegov
+
+Анкоры ссылок
+
+$text = '
+	<a href="http://ya.ru">Яндекс</a>
+	<a href="http://google.ru">Google</a>
+	<a href="http://mail.ru">Mail.ru</a>
+';
+ 
+preg_match_all('/<a.*?>(.*?)<\/a>/i', $text, $matches);
+
+print_r($matches[1]);
+
+PHP
+Результат:
+
+Array
+(
+    [0] => Яндекс
+    [1] => Google
+    [2] => Mail.ru
+)
+//=========================
