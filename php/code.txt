@@ -22,4 +22,27 @@ Array
     [1] => Google
     [2] => Mail.ru
 )
-//=========================
+
+//========================= STRING
+https://www.php.net/manual/ru/ref.strings.php
+
+---
+   echo "string size: ".strlen($string);
+    echo "<br/>";
+
+----
+<?
+   $string = substr("Hello, world!", 6, 3);
+   echo ($string)."<br/>\n"; 
+
+   $str1 = "/mnt/win_e/lib/books/A";
+   $str2 = "/mnt/win_e/lib/books/A/Adams.Douglas/A_science_fiction_hitch_1.txt ";
+   $n1=strlen($str1); 
+   $string = substr($str2, $n1);
+   echo($string)."<br/>\n"; 
+?>
+
+----
+       // Поиск начала статьи (<dd>)
+       $pos = strpos($file_array[$n1], "dd>");
+
