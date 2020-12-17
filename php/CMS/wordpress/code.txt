@@ -280,3 +280,22 @@ echo "categories:<pre>";
 print_r($categories);
 echo "</pre>";	
 
+
+
+//========================== DB API
+//https://wp-kama.ru/function/wp_query
+
+//получить все посты из рубрики portfolio
+$query_obj = new WP_Query;
+$args = array(
+//	'post_type' => 'post',
+	//'cat' => 1,
+	'category_name' => 'portfolio',
+	'posts_per_page'   => -1,
+);
+$portfolio_posts = $query_obj->query($args);
+echo "portfolio_posts:". count($portfolio_posts);	
+
+foreach( $portfolio_posts as $_post ){
+	echo "<li>".$_post->post_title."</li>";
+}
