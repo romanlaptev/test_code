@@ -1,5 +1,0 @@
-; $Id$
-name = update_price
-description =update price for lessibstroytorg.dev.gorodgid.ru.
-core = 6.x
-

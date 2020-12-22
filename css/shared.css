@@ -17,15 +17,32 @@ header .navbar {
     margin-bottom: 0;
 }
 */
+
 .alert {
-	margin-bottom: 3px !important;
-	padding: 10px !important;
+	padding: 15px;
+	margin-bottom: 3px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	padding: 10px;
 }
+
 .alert-warning {
 	color: #000;
 	background-color: #ffb515;
 	/*border-color: #8a6d3b;*/
 	border-color: #ffb515;
+}
+
+.alert-danger {
+	color: #a94442;
+	background-color: #f2dede;
+	border-color: #ebccd1;
+}
+
+.alert-info {
+	color: #31708f;
+	background-color: #d9edf7;
+	border-color: #bce8f1;
 }
 
 
@@ -97,12 +114,17 @@ margin: 0;
 	clear: both;
 	overflow: hidden;
 }
-.pull-left {
+.clearfix {
+	clear: both;
+}
+
+.float-left, .pull-left {
 	float: left;
 }
-.pull-right {
+.float-right, .pull-right {
 	float: right;
 }
+
 .text-right{
 text-align:right;
 }
@@ -110,12 +132,35 @@ text-align:right;
 text-align:center;
 }
 
+
 .padding-small{
 padding:5px;
 }
+
 .margin-small{
 margin:5px;
 }
+
+.padding-small{
+padding:5px;
+}
+.padding20{
+padding:20px;
+}
+.padding-top-50 {
+	padding-top: 50px;
+}
+.padding-top-60 {
+	padding-top: 60px;
+}
+
+.text-white{
+color:#fff;
+}
+.border-white{
+border: 1px solid #fff;
+}
+
 
 .panel {
 	margin: 10px;
@@ -123,6 +168,17 @@ margin:5px;
 	border: 1px solid #dee2e6;
 	background-color: #e6f0e5;
 }
+
+/* remove outline */
+a:active, a:focus { outline: none; }
+
+input, textarea {outline:none;}
+input:active, textarea:active {outline:none;}
+:focus {outline:none;}
+textarea {resize:none;}
+textarea {resize:vertical;}
+textarea {resize:horizontal;}
+
 
 /* PANELS */
 /*.panel {

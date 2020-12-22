@@ -1,4 +1,18 @@
 <?php
+//====================================== Function argument list
+//https://www.php.net/manual/ru/function.func-get-args.php
+/*
+add_filter( 'woocommerce_before_subcategory', 'test' );
+
+function test( $category ){
+	$numargs = func_num_args();	
+	$arg_list = func_get_args();
+echo "argument list:<pre>";	
+print_r($arg_list);
+echo "</pre>";	
+}//end
+*/
+
 //====================================== RUNTIME
 //$_vars=array();
 //$_vars["timer"]["start"] = microtime(true);

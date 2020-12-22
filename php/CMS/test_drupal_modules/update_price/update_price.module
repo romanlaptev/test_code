@@ -1,0 +1,917 @@
+<?php
+/**
+ * Implementation of hook_node_info().
+ */
+/*
+function update_price_node_info() {
+  return array(
+    'update_price' => array(
+      'name' => t('update_price page'),
+      'module' => 'update_price',
+      'description' => t('update_price page node type.'),
+    )
+  );
+}
+*/
+
+function update_price_perm()
+{
+    //return array('Доступ к обновлению прайс-листа');
+    return array('access update_price content');
+
+}
+
+
+/**
+ * Implementation of hook_access().
+ */
+function update_price_access($op, $node) {
+  global $user;
+
+  if ($op == 'create') {
+    return (user_access('create update_price'));
+  }
+
+  // This code has a BUG that we'll find in testing
+  // Correct version
+  // if ($op == 'update' || $op == 'delete') {
+
+  // Incorrect version we'll use to demonstrate test failure. We were always testing
+  // with User 1, so it always allowed access and the bug wasn't noticed!
+  if ($op == 'delete') {
+    return (user_access('edit own update_price') && ($user->uid == $node->uid));
+  }
+}
+
+
+function update_price_init()
+{
+	//drupal_set_message("function update_price_init !!!");
+	//drupal_get_form('update_price_form');
+}
+
+function update_price_form_alter(&$form, $form_state, $form_id)
+{
+}
+
+function update_price_menu ()
+{
+    $items = array();
+
+    $items['admin/settings/update_price'] = array(
+     'title' => 'update price module settings',
+     'description' => 'Description of your update price settings page',
+     'page callback' => 'drupal_get_form',// создание формы
+     'page arguments' => array ('update_price_form_admin_form'),	// вызов функции 
+     'access arguments' => array ('access administration pages'),
+     //'type' => MENU_NORMAL_ITEM,
+    );
+
+    $items['update_price'] = array(
+    'title' => 'Обновление данных о товарах и ценах',	//Заголовок страницы
+    'page callback' => 'drupal_get_form',// создание формы
+    'page arguments' => array('update_price_form'),//Содержимое формы
+    'access arguments' => array('access update_price content')
+    );
+//-------------------------------------------
+    $items['update_price/process'] = array(
+        'title' => 'Обновление данных о товарах и ценах',
+        'page callback' => 'update_price_process',
+        'type' => MENU_CALLBACK,
+        'access arguments' => array('access update_price content')
+    );
+//-------------------------------------------
+    $items['update_price/unpublic_product'] = array(
+        'title' => 'снятие товаров каталога с публикации',
+	'description'     => 'Update price service',
+        'page callback' => 'update_price_unpublic_product',
+	'access callback' => TRUE,
+    );
+//-------------------------------------------
+    $items['update_price/public_product'] = array(
+        'title' => 'опубликовать все товаров каталога',
+	'description'     => 'Update price service',
+        'page callback' => 'update_price_public_product',
+	'access callback' => TRUE,
+    );
+//-------------------------------------------
+  $items['update_price/remove_product'] = array(
+    'title'           => 'Remove all product',
+    'description'     => 'remove all product',
+    'page callback'   => 'update_price_remove_product',
+    'access callback' => TRUE,
+  );
+//-------------------------------------------
+
+    return $items;
+}//================= end function
+
+function update_price_form($form_state)
+{
+//--------------------------------
+	$form['#attributes'] = array('enctype' => "multipart/form-data");
+	$form['upload']['upload_fieldset'] = array(
+		'#type' => 'fieldset',
+		//'#title' => t('Обновление данных о товарах и ценах'),
+		'#description' => t('<strong>Для начала импорта выберите прайс в формате XLS (Excel).</strong>'),
+		'#collapsible' => TRUE,
+		'#collapsed' => false,
+	);
+	$form['upload']['upload_fieldset']['file_upload'] = array(
+		'#type' => 'file',
+		'#title' => t('File'),
+		'#size' => '60',
+	);
+	$form['upload']['upload_fieldset']['file_upload_button'] = array(
+		'#type' => 'submit',
+		'#value' => t('Upload file'),
+		'#submit' => array('update_price_add_form_submit_upload_file'),
+	);
+
+//--------------------------------
+	global $base_url;
+	$urls= "
+<a href='update_price/remove_product'>удалить все товары каталога</a><br>
+<a href='update_price/unpublic_product'>снятие товаров каталога с публикации</a><br>
+<a href='update_price/public_product'>опубликовать все товары каталога</a><br>
+<a href='".$base_url."/scripts/parce_csv_price.php'>parce_csv_price.php</a><br>
+<a href='".$base_url."/scripts/update_price.php' target=_blank>update_price.php</a><br>";
+
+    $form['update_price_wrapper']['base'] = array(
+	'#prefix' => '<div style="display:none;">',
+        '#type' => 'fieldset',
+        '#title' => t('сервисные функции по обработке прайс-листа'),
+	'#value' => t($urls),
+        '#collapsible' => true,
+        '#collapsed' => true,
+    );
+
+	return $form;
+}
+//=======================================
+//
+//=======================================
+function update_price_process()
+{
+	drupal_set_message("function update_price_process.");
+/*	
+    $form_state = array('storage' => NULL, 'submitted' => FALSE);
+    $form_build_id = $_POST['form_build_id'];
+
+    $form = form_get_cache($form_build_id, $form_state);
+
+    $args = $form['#parameters'];
+    $form_id = array_shift($args);
+    $form['#post'] = $form_state['post'] = $_POST;
+    $form['#redirect'] = $form['#programmed'] = FALSE;
+
+    drupal_process_form($form_id, $form, $form_state);
+    $form = drupal_rebuild_form($form_id, $form_state, $args, $form_build_id);
+
+    $result  = $form['update_price_wrapper'];
+    unset($result['#prefix'],  $result['#suffix']);
+    $javascript  = drupal_add_js(NULL, NULL, 'header');
+
+    $output  = theme('status_messages') . drupal_render($result);
+
+    return drupal_json(
+        array(
+            'status' => TRUE,
+            'data' => theme('status_messages') . $output,
+            'settings' => call_user_func_array('array_merge_recursive', $javascript['setting'])
+        )
+    );
+*/
+}//================= end function
+
+
+function update_price_add_form_submit_upload_file($form, &$form_state) 
+{
+	//drupal_set_message("function update_price_add_form_submit_upload_file");
+
+	$validators = array(
+		//'file_validate_extensions' => array('xls', 'xlsx'),
+	);
+	$dir = file_directory_path() . '/imports';
+	$replace = FILE_EXISTS_REPLACE;
+	if (file_check_directory($dir, 1)) 
+	 {
+		$file = file_save_upload('file_upload', $validators, $dir, $replace);
+		file_set_status($file, FILE_STATUS_PERMANENT);
+		$form_state['values']['fid'] = $file->fid;
+	} 
+	else 
+	{
+		drupal_set_message("error, file_save_upload");
+		drupal_set_message(t('Can\'t acces directory'));		
+	}
+
+	if ($file) 
+	{
+		drupal_set_message(t('New file %name uploaded to %path.', array('%name' => $file->filename, '%path' => $file->filepath)));
+	} 
+	else 
+	{
+		drupal_set_message(t('File was not uploaded'));
+	}
+
+/*
+stdClass Object
+(
+    [filename] => instrukciya.txt
+    [filepath] => sites/default/files/imports/instrukciya.txt
+    [filemime] => text/plain
+    [source] => file_upload
+    [destination] => sites/default/files/imports/instrukciya.txt
+    [filesize] => 1013
+    [uid] => 1
+    [status] => 1
+    [timestamp] => 1342277424
+    [fid] => 132
+)
+*/
+	$type = $file->filemime;
+	if (($type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') OR 
+		($type == 'application/vnd.ms-excel') OR
+			($type == 'application/x-excel'))
+				{
+					drupal_set_message(t(''));
+					$message = "<font color='green'>Ok, загружен файл в формате Excel (".$type."),  продолжаем импорт...</font>";
+					$type = 'warning';
+					$repeat = TRUE;
+					drupal_set_message($message, $type, $repeat);
+
+					$price_filename = $file->filepath;
+					update_price_import_from_xls($price_filename);
+				}
+				else
+				{
+					$message ="<font color='red'>Ошибка. Недопустимый формат файла</font> ".$type."<br>";
+					$message .= 'Для импорта необходим формат файла Excel (.xls, .xlsx).';
+					$type = 'error';
+					$repeat = TRUE;
+					drupal_set_message($message, $type, $repeat);
+
+					if (unlink ($file->filepath))
+					  {
+						$message = 'Remove '.$file->filepath;
+						$type = 'error';
+						$repeat = TRUE;
+						drupal_set_message($message, $type, $repeat);
+					  }
+
+				}
+}//================= end function
+
+function update_price_import_from_xls($price_filename)
+{
+	$message =  "Чтение данных из  <b>".$price_filename."</b><br>";
+	$message .= "Используемый формат прайс-листа:
+<ul>
+	<li>1 колонка - Раздел</li>
+	<li>2 колонка - Подраздел</li>
+	<li>3 колонка - Группа</li>
+	<li>4 колонка - Подгруппа</li>
+	<li>5 колонка - Наименование товара </li>
+	<li>6 колонка - Цена</li>
+	<li>7 колонка - Единица измерения</li>
+</ul>";
+	$type = 'warning';
+	$repeat = TRUE;
+	drupal_set_message($message, $type, $repeat);
+
+	require_once getcwd().'/sites/all/libraries/PHPExcel/PHPExcel/IOFactory.php';
+	$objPHPExcel = PHPExcel_IOFactory::load($price_filename);
+
+	$output = "";
+	foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)
+	{
+		$worksheetTitle = $worksheet->getTitle(); //Лист1Лист2Лист3 
+
+		$highestRow = $worksheet->getHighestRow(); 
+		$highestColumn = $worksheet->getHighestColumn(); 
+		$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
+		$nrColumns = ord($highestColumn) - 64;
+	
+		$output .= "<br>В таблице ".$worksheetTitle." ";
+		$output .= $nrColumns . ' колонок (A-' . $highestColumn . ') ';
+		$output .= ' и ' . $highestRow . ' строк.';
+
+		$output .= '<br>Данные: <table border="1"><tr>';
+		$output .= '<table><tr>';
+		for ($row = 1; $row <= $highestRow; ++ $row)
+		{
+//echo "row = ".$row;
+//echo "<br>";
+			$output .= '<tr>';
+			for ($col = 0; $col < $highestColumnIndex; ++ $col)
+			{
+//echo "col = ".$col;
+//echo "<br>";
+				$cell = $worksheet->getCellByColumnAndRow($col, $row);
+				$val = $cell->getValue();
+				if (!empty($val))
+				  {
+					$price[$row-1][$col]= $val;
+				  }
+				$output .= '<td>'.$val.'</td>';
+			}
+			$output .= '</tr>';
+		}
+		$output .= '</table>';
+
+	} //------------------------ enf foreach
+
+	//$output = iconv("UTF-8", "windows-1251",$output);
+	//$type = 'warning';
+	//$repeat = TRUE;
+	//drupal_set_message($output, $type, $repeat);
+
+	update_price_import_price_in_db($price); // Занести прайс из XLS-таблицы в базу данных
+
+}//================= end function
+
+//=======================================
+// Занести прайс из XLS-таблицы в базу данных
+//=======================================
+function update_price_import_price_in_db($price)
+{
+//echo "price = <pre>";
+//print_r($price);
+//echo "</pre>";
+//echo count ($price);
+//echo "<br>";
+//--------------------------------------------------------------------------------------------------
+//   Определяем начало блока разделов, наименований товаров, цен
+//--------------------------------------------------------------------------------------------------
+	//setlocale(LC_ALL, 'ru_RU.UTF8'); // Решение проблемы strtolower() strtoupper() в кириллице 
+
+	$output = "";
+	for ($n1=0; $n1 < count($price); $n1++)
+	  {
+		if (isset($price[$n1]))
+		{
+//echo count ($price[$n1]);
+//echo "<br>";
+			for ($n2=0; $n2 < count($price[$n1]); $n2++)
+			  {
+//echo $n2;
+//-------------------------------------------------------------------------------------------------------------------------
+				if (isset($price[$n1][$n2]))
+				{
+					//$test_str = strtoupper($price[$n1][$n2]);
+					$test_str = $price[$n1][$n2];
+//echo $test_str;
+					if (substr_count($test_str, "Раздел") > 0) 
+					  {
+						$start_num_row = $n1;
+						$part1_num_col = $n2;
+						$output .= "Найден столбец <b>".$price[$n1][$n2]."</b> в строке ".$start_num_row.", колонка ".$part1_num_col;
+						$output .= "<br>";
+					  } //------------------------------------- end if
+				  } 
+//-------------------------------------------------------------------------------------------------------------------------
+				if (isset($price[$n1][$n2]))
+				{
+					$test_str = $price[$n1][$n2];
+					if (substr_count($test_str, "Подраздел") > 0) 
+					  {
+						$start_num_row = $n1;
+						$part2_num_col = $n2;
+						$output .= "Найден столбец <b>".$price[$n1][$n2]."</b> в строке ".$start_num_row.", колонка ".$part2_num_col;
+						$output .= "<br>";
+					  } //------------------------------------- end if
+				  } 
+//-------------------------------------------------------------------------------------------------------------------------
+				if (isset($price[$n1][$n2]))
+				{
+					$test_str = $price[$n1][$n2];
+					if (substr_count($test_str, "Групп") > 0) 
+					  {
+						$start_num_row = $n1;
+						$part3_num_col = $n2;
+						$output .= "Найден столбец <b>".$price[$n1][$n2]."</b> в строке ".$start_num_row.", колонка ".$part3_num_col;
+						$output .= "<br>";
+					  } //------------------------------------- end if
+				  } 
+//-------------------------------------------------------------------------------------------------------------------------
+				if (isset($price[$n1][$n2]))
+				{
+					$test_str = $price[$n1][$n2];
+					if (substr_count($test_str, "Подгрупп") > 0) 
+					  {
+						$start_num_row = $n1;
+						$part4_num_col = $n2;
+						$output .= "Найден столбец <b>".$price[$n1][$n2]."</b> в строке ".$start_num_row.", колонка ".$part4_num_col;
+						$output .= "<br>";
+					  } //------------------------------------- end if
+				  } 
+//-------------------------------------------------------------------------------------------------------------------------
+				if (isset($price[$n1][$n2]))
+				{
+					$test_str = $price[$n1][$n2];
+					if (substr_count($test_str, "Наименование") > 0) 
+					  {
+						$start_num_row = $n1;
+						$product_num_col = $n2;
+						$output .= "Найден столбец <b>".$price[$n1][$n2]."</b> в строке ".$start_num_row.", колонка ".$product_num_col;
+						$output .= "<br>";
+					  } //------------------------------------- end if
+				  } 
+//-------------------------------------------------------------------------------------------------------------------------
+				if (isset($price[$n1][$n2]))
+				{
+					$test_str = $price[$n1][$n2];
+					if (($test_str == "Цена")  OR (substr_count($test_str, "Розничная цена") > 0))
+					  {
+						$start_num_row = $n1;
+						$price_num_col = $n2;
+						$output .= "Найден столбец <b>".$price[$n1][$n2]."</b> в строке ".$start_num_row.", колонка ".$price_num_col;
+						$output .= "<br>";
+					  } //------------------------------------- end if
+				  } 
+//-------------------------------------------------------------------------------------------------------------------------
+				if (isset($price[$n1][$n2]))
+				{
+					$test_str = $price[$n1][$n2];
+					if ((substr_count($test_str, "измерения") > 0))
+					  {
+						$start_num_row = $n1;
+						$units_num_col = $n2;
+						$output .= "Найден столбец <b>".$price[$n1][$n2]."</b> в строке ".$start_num_row.", колонка ".$units_num_col;
+						$output .= "<br>";
+					  } //------------------------------------- end if
+				  } 
+//-------------------------------------------------------------------------------------------------------------------------
+			  } //------------------------------------- end for
+//echo "<br>";
+
+		  } //------------------------------------- end if
+
+	  }//------------------------------------- end for
+
+
+	if ($start_num_row) 
+	  {
+		if (isset ($part1_num_col)) 
+		  {
+			if (isset ($part2_num_col)) 
+			  {
+				if (isset ($part3_num_col)) 
+				  {
+					//if (isset ($part4_num_col)) 
+					  //{
+						if (isset ($product_num_col)) 
+						  {
+							if (isset ($price_num_col)) 
+							  {
+								if (isset ($units_num_col)) 
+								  {
+									$output .= "<font color='green'>Ok, формат прайса успешно определен</font>";
+									$output .= "<br>";
+								  }
+							  }
+						  }
+					  //}
+				  }
+			  }
+		  }
+	  }
+
+
+	if ($start_num_row > 0)
+	  {
+		//chdir('../');
+//echo getcwd();
+		//require_once './includes/bootstrap.inc';drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+
+		$start_num_row++; // Переход к первой строке с данными о товаре
+		//echo "начало блока данных в строке ".$start_num_row;
+		//echo "<br>";
+
+//------------------------------------------------------------------------------------------------------- информация о кол-ве разделов, подразделов, товаров
+//   Определяем кол-во разделов, подраздел, групп
+//--------------------------------------------------------------------------------------------------
+		$part1_name = "";
+		$part1_num = 0;
+
+		$part2_name = "";
+		$part2_num = 0;
+
+		$part3_name = "";
+		$part3_num = 0;
+
+		$part4_name = "";
+		$part4_num = 0;
+
+		$num_products = 0;
+
+		$end_num = count($price) + $start_num_row;
+		for ($n1 = $start_num_row; $n1 < $end_num ; $n1++)
+		  {
+
+			if (isset($price[$n1][$part1_num_col]))
+			{
+				if ($price[$n1][$part1_num_col] != $part1_name)
+				  {
+					$part1_name = $price[$n1][$part1_num_col];
+					$part1_num ++;
+				  }
+				else
+				  {
+				        //echo $n1.". <font color=red>ошибка, не найден раздел товара</font><br>";
+				  }//------------------------ end if
+			  }
+
+			if (isset($price[$n1][$part2_num_col]))
+			{
+				if ($price[$n1][$part2_num_col] != $part2_name)
+				  {
+					$part2_name = $price[$n1][$part2_num_col];
+					$part2_num ++;
+				  }
+				else
+				  {
+				        //echo $n1.". <font color=red>ошибка, не найден подраздел товара</font><br>";
+				  }//------------------------ end if
+			  }
+
+			if (isset($price[$n1][$part3_num_col]))
+			{
+				if ($price[$n1][$part3_num_col] != $part3_name)
+				  {
+					$part3_name = $price[$n1][$part3_num_col];
+					$part3_num ++;
+				  }
+				else
+				  {
+				        //echo $n1.". <font color=red>ошибка, не найдена группа товара</font><br>";
+				  }//------------------------ end if
+			  }
+
+			if ( isset($part4_num_col) )
+			  {
+				if ( isset($price[$n1][$part4_num_col]) )
+				  {
+					if ($price[$n1][$part4_num_col] != $part4_name)
+					  {
+						$part4_name = $price[$n1][$part4_num_col];
+						$part4_num ++;
+					  }
+				  }
+				else
+				  {
+				        //echo $n1.". <font color=red>ошибка, не найдена подгруппа товара</font><br>";
+				  }//------------------------ end if
+			  }
+
+			if (isset($price[$n1][$product_num_col]))
+			  {
+				$num_products ++;
+			  }
+
+		  }//------------------------------------- end for
+
+		$output .= "<ul>";
+
+		$output .= "Количество разделов: ".$part1_num;
+		$output .= "<br>";
+
+		$output .= "Количество подразделов: ".$part2_num;
+		$output .= "<br>";
+
+		$output .= "Количество групп: ".$part3_num;
+		$output .= "<br>";
+
+		$output .= "Количество подгрупп: ".$part4_num;
+		$output .= "<br>";
+
+		$output .= "Количество товаров для импорта: ".$num_products;
+		$output .= "<br>";
+
+		$output .= "</ul>";
+//-----------------------------------------------------------------------------------------------------------------------------
+
+//----------------------------------- ИМПОРТ
+		$output .= "<b>Начало импорта</b>";
+		$output .= "<br>";
+		$output .= update_price_unpublic_product();// Снятие товаров каталога с публикации перед импортом
+
+		// кол-во товаров + начальная строка блока товаров определяют номер последнего элемента массива прайса
+		$end_num = $num_products + $start_num_row;  
+		//$end_num = 5 + $start_num_row;
+		for ($n1 = $start_num_row; $n1 < $end_num ; $n1++)
+		  {
+//echo $n1.". ";
+//echo $n1 - $start_num_row;
+//echo "<br>";
+			if ( !empty($price[$n1][$part4_num_col])  ) // если у товара заполнена погруппа, используем ее как термин словаря
+			  {
+				$termin = $price[$n1][$part4_num_col];
+			  }
+			else
+			  {
+				if ( !empty($price[$n1][$part3_num_col])  ) // если у товара заполнена Группа, используем ее как термин словаря
+				  {
+					$termin = $price[$n1][$part3_num_col];
+				  }
+				else
+				  {
+					if ( !empty($price[$n1][$part2_num_col])  ) // если у товара заполнен Подраздел, используем его как термин словаря
+					  {
+						$termin = $price[$n1][$part2_num_col];
+					  }
+					else
+					  {
+						if ( !empty($price[$n1][$part1_num_col])  ) // если у товара заполнен  Раздел, используем его как термин словаря
+						  {
+							$termin = $price[$n1][$part1_num_col];
+						  }
+					  }
+				  }
+			  }//------------------------------------ end elseif
+
+			$title = $price[$n1][$product_num_col];
+			$body = $price[$n1][$product_num_col];
+//-----------------------------------------------------------------------------------------------------------------
+// SCU , Артикул - сумма ASCII кодов названия товара 
+//(при следующем импорте, товар с существующим артикулом только обновится)
+//-----------------------------------------------------------------------------------------------------------------
+//echo "title = ".$title.", ".strlen($title);
+//echo "  -- ";
+			$sku=0;
+			for ($n2=0; $n2 < strlen($title); $n2++)
+			  {
+				$sku = $sku + ord($title[$n2]);
+//echo $n2. " ".ord($title[$n2]);
+//echo "  -- ";
+//echo " ".$sku;
+//echo "<br>";
+			  }
+			$model  = $sku;
+//echo "model = ".$model.", ".$n2;
+//echo "<br>";
+//-----------------------------------------------------------------------------------------------------------------
+			$product_price = $price[$n1][$price_num_col];
+			$units = $price[$n1][$units_num_col];
+			$num = ($n1 - $start_num_row) + 1;
+			$output .= test_product($num, $title, $body, $model, $product_price, $termin, $units); // Обновление или создание  товара
+		  }//------------------------------------- end for
+
+
+	  } //------------------------------------- end if
+	else
+	  {
+		$output .= "<font color='red'>Ошибка, не найден блок данных о товарах</font>, ";
+		$output .= "неверный  формат прайса ";
+		$output .= "<br>";
+	  } //------------------------------------- end else if
+
+	$type = 'warning';
+	$repeat = TRUE;
+	drupal_set_message($output, $type, $repeat);
+
+}//================= end function
+
+//-----------------------------------------------------------
+// Обновление или создание  товара
+//-----------------------------------------------------------
+function test_product($num, $title, $body, $model, $product_price, $termin, $units)
+{
+	$model_result = 0;
+	//Узнать статус товара с текущим (++++++артикулом) названием (существует или новый)
+	//$type ="product";
+	//$query = "SELECT nid, model FROM {uc_products} WHERE model =".$model;
+	$query = "SELECT nid, title FROM {node} WHERE type='product' AND title='".$title."';";
+	$result = db_query($query);
+//echo "query = ". $query;
+//echo "<br>";
+	while ($row = db_fetch_object($result)) 
+	  {  
+//echo "<pre>";
+//print_r($row);
+//echo "</pre>";
+		$model_result = 1;
+		//$output .= $num.". <font color='darkblue'>найден товар ".$row->nid." с артикулом</font> ".$model."<br>";
+		$output .= update_product($num, $title, $body, $model, $product_price, $termin, $units, $row->nid); // Обновление товара
+	  }
+
+	if ($model_result == 0)
+	  {
+		//$output .= $num.". <font color='darkblue'>нет товара с артикулом</font> ".$model."<br>";
+		$output .= new_product($num, $title, $body, $model, $product_price, $termin, $units); // Создание нового товара
+	  }
+	return $output;
+
+}//----------------------- end func
+
+//-----------------------------------------------------------
+// Создание нового товара
+//-----------------------------------------------------------
+function new_product($num, $title, $body, $model, $price, $termin, $units)
+{
+	global $base_url;
+	if (empty($termin))
+	  {
+		$output .= "<font color='red'>Ошибка, нет раздела товара!!!</font><br>";
+		return $output;
+	  }
+
+	$vid = 1; //Словарь Каталог
+	$terms = taxonomy_get_tree($vid);
+// Определить по названию, tid термина таксономии
+	$termin_tid = 0;
+	foreach ( $terms as $term )
+	  {
+//echo $term->tid.", ".$term->name." == ".$termin;
+//echo "<br>";
+		if ($term->name == $termin)
+		  {
+			$termin_tid = $term->tid;
+//echo "termin_tid = ".$termin_tid;
+//echo "<br>";
+		  }
+	  }
+
+	if ($termin_tid > 0)
+	  {
+		$node = new stdClass();
+
+		//$node->taxonomy['tags'] = array(vid=>$termin);
+		$node->taxonomy[] = array($termin_tid);
+
+		$node->type = 'product';
+		$node->title = $title;
+		$node->body = $body;
+	//	$node->teaser = 'Текст анонса';
+		$node->model = $model;
+		$node->list_price = $price;
+		$node->cost = $price;
+		$node->sell_price = $price;
+		$node->field_units[]['value'] = $units;
+		$node->uid = 1;                  // id автора
+		$node->status = 1;               // 1 - опубликовано, 0 - нет
+		$node->promote = 1;              // 1 - показывать на главной, 0 - нет
+	 	node_save($node);
+
+		$output .= $num.". Добавление нового товара ".$node->model
+." <a href='".$base_url."/node/".$node->nid."' target=_blank><b>".$node->title."</b></a> ("
+.$node->list_price
+.") в раздел <b>".$termin."</b>";
+		$output .= "<br>";
+	  }
+	else
+	  {
+		$output .= $num.". <font color='red'>Ошибка, не найден раздел товара</font>.<br> "
+."Проверьте наличие <b>".$termin."</b> в терминах словаря <b>Каталог</b> "
+."( <a href='".$base_url."/admin/content/taxonomy/1'>Управление содержимым - Таксономия - Список - список терминов</a> )<br>"
+."и повторите импорт";
+		$output .= "<br>";
+	  } //------------------------------------- end else if
+	return $output;
+}//----------------------- end func
+
+//-----------------------------------------------------------
+// Обновление товара
+//-----------------------------------------------------------
+function update_product($num, $title, $body, $model, $price, $termin, $units, $product_nid)
+{
+	global $base_url;
+	if (empty($termin))
+	  {
+		$output .= "<font color='red'>Ошибка, нет раздела товара!!!</font><br>";
+		return $output;
+	  }
+
+//--------------------------------------------------------------------------------
+	$vid = 1; //Словарь Каталог
+	$terms = taxonomy_get_tree($vid);
+// Определить по названию, tid термина таксономии
+	$termin_tid = 0;
+	foreach ( $terms as $term )
+	  {
+//echo $term->tid.", ".$term->name." == ".$termin;
+//echo "<br>";
+		if ($term->name == $termin)
+		  {
+			$termin_tid = $term->tid;
+//echo "termin_tid = ".$termin_tid;
+//echo "<br>";
+		  }
+	  }
+//--------------------------------------------------------------------------------
+	if ($termin_tid > 0)
+	  {
+		$node = node_load($product_nid);
+
+		if ($title != $node->title)
+		  {
+			$output .= "<font color='red'>Ошибка!!!</font><br>";
+			$output .= "Артикул существующего товара ".$node->model ." (".$node->title.") совпадает с импортируемым ".$model ." (".$title.")<br>";
+			//return $output;
+		  }
+
+		unset($node->taxonomy);
+		$node->taxonomy[] = array($termin_tid);
+
+		$node->title = $title;
+		//$node->body = $body;
+		//$node->model = $model;
+		$node->list_price = $price;
+		$node->cost = $price;
+		$node->sell_price = $price;
+		$node->field_units[]['value'] = $units;
+		//$node->uid = 1;                  // id автора
+		$node->status = 1;               // 1 - опубликовано, 0 - нет
+		//$node->promote = 1;              // 1 - показывать на главной, 0 - нет
+		 node_save($node);
+
+		$output .= $num.". Обновление товара ".$node->model
+." <a href='".$base_url."/node/".$node->nid."' target=_blank><b>".$node->title."</b></a> ("
+.$node->list_price
+.") в разделе <b>".$termin."</b>";
+		$output .= "<br>";
+
+		$result = db_query("UPDATE node SET status = '1' WHERE nid = '".$product_nid."'"); //Опубликовать товар
+	  }
+	else
+	  {
+		$output .= $num.". <font color='red'>Ошибка, не найден раздел товара</font>.<br> "
+."Проверьте наличие <b>".$termin."</b> в терминах словаря <b>Каталог</b> "
+."( <a href='".$base_url."/admin/content/taxonomy/1'>Управление содержимым - Таксономия - Список - список терминов</a> )<br>"
+."и повторите импорт";
+		$output .= "<br>";
+	  } //------------------------------------- end else if
+
+	return $output;
+}//----------------------- end func
+
+function update_price_unpublic_product() 
+{
+	//drupal_set_message("function update_price_unpublic_product");
+	$text =  t("Снятие товаров каталога с публикации");
+	$text = "";
+
+	$type ="product";
+	db_query("UPDATE node SET status = '0' WHERE type = '".$type."'");
+
+	return $text;
+}//================= end function
+
+function update_price_public_product() 
+{
+	drupal_set_message("function update_price_public_product");
+	$text = "";
+
+	$type ="product";
+	db_query("UPDATE node SET status = '1' WHERE type = '".$type."'");
+
+	return $text;
+}//================= end function
+
+function update_price_remove_product() 
+{
+	drupal_set_message("function update_price_remove_product");
+	drupal_set_message("удалить все товары каталога");
+	//$text =  t("удалить все товары каталога");
+	$text = "";
+
+	$type ="product";
+	$query = db_query("SELECT nid FROM {node} AS n WHERE type = '%s'",$type);
+	while ($row = db_fetch_object($query)) 
+	  {
+//drupal_set_message(t('Remove product '.$row->nid));		
+		node_delete($row->nid);
+	  }
+	drupal_set_message("Clear uc_product_stock"); // Очистить таблицу складских остатков
+	$query = db_query("TRUNCATE TABLE {uc_product_stock}");
+
+	return $text;
+}//================= end function
+
+function update_price_form_admin_form($form_state)
+{
+	drupal_set_message("function update_price_form_admin_form");
+/*
+    $form = array();
+
+    $form['base'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('base'),
+        '#collapsible' => true,
+        '#collapsed' => false,
+    );
+
+    $form['mortgage']['credit_calc_mortgage_sh'] = array(
+        '#type' => 'textfield',
+        '#title' => t('sh'),
+        '#default_value' => variable_get('credit_calc_mortgage_sh', ''),
+        '#size' => 2,
+        '#maxlength' => 2,
+    );
+
+    return system_settings_form($form);
+*/
+}
+
+?>

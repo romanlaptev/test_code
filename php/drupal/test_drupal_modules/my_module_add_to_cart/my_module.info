@@ -1,5 +1,0 @@
-; $Id$
-name = my_module
-description = My test module.
-core = 6.x
-

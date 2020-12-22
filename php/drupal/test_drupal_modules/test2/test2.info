@@ -1,4 +1,0 @@
-; $Id$
-name = test2
-description = description for my module2
-core = 6.x

@@ -1,0 +1,301 @@
+//=================== Debug
+$out = "<pre>".print_r($categoryInfo, 1)."</pre>";
+error_log( 	date("Y-m-d H:i:s") . " - categoryInfo = ".$out."\n", 	3, 	dirname(__FILE__)."/log.txt");
+
+
+//================== Remove and replace hook
+add_action( 'after_setup_theme', function(){
+	if( remove_action( 'widgets_init', 'infinity_widgets_init' ) ){
+		echo "-- remove hook widgets_init";
+	} else {
+		echo "-- fail remove hook widgets_init";
+	}
+});
+
+add_action( 'widgets_init', '_widgets_init' );
+function _widgets_init(){
+...
+}
+
+//================== CONFIG
+//wp-config.php, rewrite DB site path variables
+
+define('WP_SITEURL', 'http://'.$_SERVER['HTTP_HOST']);
+define('WP_HOME', 'http://'.$_SERVER['HTTP_HOST']);
+
+//https://ipipe.ru/info/wordpress-logi-oshibok
+//Как включить/выключить логирование
+define( 'WP_DEBUG', true );
+define( 'WP_DEBUG_DISPLAY', false );
+define( 'WP_DEBUG_LOG', true );
+
+//================== SHORTCODES
+https://www.youtube.com/watch?v=NPlJkphom5w
+
+http://testpoint.beget.tech/test-page/
+[products limit="3" columns="2"]
+[products limit="3" columns="2" class="class-1" attribute="product_type" terms="video"]
+
+[product_categories number="0" parent="0"]
+
+[recent_products]
+
+
+
+//================== CUSTOM FIELDS
+//https://wp-kama.ru/function-cat/proizvolnyie-polya
+//https://wp-kama.ru/function/get_post_custom_values
+$field_preview_img = get_post_custom_values('field_preview_img_value');
+//echo "TEST1";	
+//var_dump($field_preview_img);
+
+//https://wp-kama.ru/function/get_post_meta
+//$test = get_post_meta( $post->ID);
+//echo "<pre>";
+//print_r($test);
+//echo "</pre>";
+
+//https://wp-kama.ru/function/the_meta
+//the_meta();
+
+----------------------------
+https://misha.blog/wordpress/custom-fields.html
+Произвольные поля
+
+//if not exists menu SCREEN settings / CUSTOM FIELDS
+add_action("init", function () {
+	//https://misha.blog/wordpress/custom-fields.html
+	//add_post_type_support( 'page', 'custom-fields');
+});
+
+
+
+//================== HOOKS
+//add_filter( 'get_search_form', 'keyhole_search_form' );
+//add_action( 'after_setup_theme', 'keyhole_after_setup' );
+//add_action( 'wp_footer', 'keyhole_footer' );
+
+//https://wp-kama.ru/hook/wp_head
+//add_action( 'wp_head', 'chld_thm_cfg_add_parent_dep', 2 );
+//add_action( 'wp_head', 'action_function_name_11' );
+//function action_function_name_11(){
+	// action...
+//}
+
+add_action("init", function () { });
+
+//add_filter( 'woocommerce_before_output_product_categories', '_before_output_product_categories' );
+//add_filter( 'woocommerce_after_output_product_categories', '_after_output_product_categories' );
+
+//add_action( 'woocommerce_before_subcategory', 'change_product_category_view' );
+//add_action( 'woocommerce_before_subcategory_title', 'test' );
+
+//add_filter( 'woocommerce_shop_loop_subcategory_title', 'test' );
+//wc-template-hooks.php, 
+//add_action( 'woocommerce_shop_loop_subcategory_title', 'woocommerce_template_loop_category_title', 10 );
+// /wp-content/plugins/woocommerce/includes/wc-template-functions.php:		<h2 class="woocommerce-loop-category__title">
+
+//'woocommerce_after_subcategory_title'
+//'woocommerce_after_subcategory'
+
+//add_action( 'wp_ajax_product_quickview', '_product_quickview' );
+//add_action( 'wp_ajax_nopriv_product_quickview', '_product_quickview' );
+
+//add_filter( 'woocommerce_product_categories_widget_args', '_product_categories_widget_args' );
+
+//add_filter( 'woocommerce_product_categories', '_product_categories' );
+//function _product_categories( $terms ){
+//echo "terms:<pre>";	
+//print_r($terms);
+//echo "</pre>";
+	//return $terms;
+//}
+
+
+//================ MENU
+add_filter( 'wp_nav_menu_args', '_nav_args',3000001);
+add_filter( 'wp_nav_menu_items', '_nav_search',9999);
+
+//https://wp-kama.ru/hook/nav_menu_item_args
+add_filter( 'nav_menu_item_args', '_change_menu_item_args', 10, 2 );
+
+//https://wp-kama.ru/hook/wp_nav_menu_objects
+add_filter( 'wp_nav_menu_objects', '_menu_objects' );
+function _menu_objects( $items ) {
+echo "<pre>";
+print_r($items);
+echo "</pre>";
+	return $items;
+}
+
+function _change_menu_item_args( $args, $item ) {
+	//if ( $item->object == 'page' ) {
+		//$args->link_before = '<span class="dashicons dashicons-admin-links"></span>';
+	//}
+	
+	//if ( $item->object == 'product_cat' ) {
+//print_r($args);
+//print_r($item);
+	//}
+
+	//$args->link_before = $item->object;
+	return $args;
+}
+
+
+
+//================== //hook, get_terms, filter categories....
+add_filter( 'get_term', '_get_term', 10, 2 );
+
+function _get_term( $_term, $taxonomy ){
+echo "function _get_term()";
+echo "<br>";
+	if( $taxonomy == "product_cat"){
+		$_term->name = $_term->name." (".$_term->count.")";
+	}
+	return $_term;
+}
+
+
+//================== //hook, get_terms, filter categories....
+add_filter( 'get_terms', '_filter_terms', 10, 4 );
+
+....
+function _filter_terms($terms, $taxonomies, $args, $term_query){
+......
+    return $terms;
+}//end
+
+//================== //hook, filter template
+add_filter("template_include", function( $path ){
+echo "include template: ".$path;
+echo "<br>";
+  return $path;
+});
+
+
+//================== hook, filter content
+//https://wp-kama.ru/hook/the_title
+add_filter( 'the_title', '_filter_title' );
+
+//https://wp-kama.ru/hook/the_content
+add_filter( 'the_content', '_filter_content' );
+
+function _filter_title( $title ) {
+	return "<div>".htmlspecialchars( "---".$title."---" )."</div>";
+	//return $title;
+}//end
+
+function _filter_content( $content ) {
+	return "<dv>".htmlspecialchars( $content )."</div>";
+	//return $content;
+}//end
+
+
+
+//================== //Переопределяем папку загрузки
+add_filter('upload_dir', 'custom_multisit_upload_dir_function');
+function custom_multisit_upload_dir_function( $dirs ) {
+    $dirs['baseurl'] = network_site_url( '/wp-content/uploads' );
+    $dirs['basedir'] = ABSPATH . 'wp-content/uploads';
+    $dirs['path'] = $dirs['basedir'] . $dirs['subdir'];
+    $dirs['url'] = $dirs['baseurl'] . $dirs['subdir'];
+
+    return $dirs;
+}
+
+//================== //Хук, заменяющий e-mail получателя
+add_action("wpcf7_before_send_mail", "custom_multisite_wpcf7_before_send_mail");
+function custom_multisite_wpcf7_before_send_mail($contact_form) {
+
+//error_log( " - TEST\n", 3,	dirname(__FILE__)."/log.log");
+error_log( " - POST: ".print_r($_POST,1)."\n", 3,	dirname(__FILE__)."/log.log");
+error_log( " - SESSION: ".print_r($_SESSION,1)."\n", 3,	dirname(__FILE__)."/log.log");
+
+	//$branch_id = $_POST['branch'];
+
+	//if (empty($branch_id)){
+		//$branch_id = $_POST['branch_id'];
+	//}
+
+	$branch_id = $_SESSION['current_branch_id'];
+	$city_id = $_POST['city_id'];
+
+	if (empty($branch_id) || empty($city_id)){
+		return;
+	}
+
+	$new_email = MultiSite::getBranchOption('email', $branch_id, $city_id);
+error_log( " - new_email: ".$new_email."\n", 3,	dirname(__FILE__)."/log.log");
+  
+	$address = MultiSite::getBranchOption('address', $branch_id, $city_id);
+error_log( " - address: ".$address."\n", 3,	dirname(__FILE__)."/log.log");
+
+	if (!empty($new_email)){
+		$mail = $contact_form->prop('mail');
+		$mail['recipient'] = $new_email;
+error_log( " - mail: ".print_r($mail,1)."\n", 3,	dirname(__FILE__)."/log.log");
+      
+		$contact_form->set_properties(array('mail'=>$mail));
+	}
+}
+
+//================== hook, include theme styles, scripts
+add_action( 'wp_enqueue_scripts', '_register_css_js' );
+function _register_css_js() {
+    wp_enqueue_style( 'parent-style', get_template_directory_uri() . '/style.css' );
+	wp_enqueue_style( 'child-style',
+        get_stylesheet_directory_uri() . '/style.css',
+        array( 'parent-style' ),
+        wp_get_theme()->get('Version')
+    );
+
+	$handle = "script";
+	$src = get_stylesheet_directory_uri() . "/js/script.js";
+	wp_enqueue_script( $handle, $src);
+}//end
+
+
+//===================== FILTER PAGINATION
+add_filter( 'woocommerce_pagination_args', '_pagination_args' );
+function _pagination_args( $array ){
+//echo "<div style='display:none'>";
+//echo "<pre>";	
+//print_r($array);
+//echo "</pre>";
+$array["prev_text"] = str_replace("Prev","Назад", $array["prev_text"]);
+$array["next_text"] = str_replace("Next","Далее", $array["next_text"]);
+//echo htmlspecialchars($array["prev_text"]);
+//echo "</div>";	
+	return $array;
+}
+//<span class="btn btn-link"><i class="ion-left ion ion-ios-arrow-back"></i> Prev</span>	
+
+========================== CATEGORY API
+		$categories = get_categories(array(
+			'taxonomy' => 'category',
+			'hide_empty' => false
+		));
+echo "categories:<pre>";	
+print_r($categories);
+echo "</pre>";	
+
+
+
+//========================== DB API
+//https://wp-kama.ru/function/wp_query
+
+//получить все посты из рубрики portfolio
+$query_obj = new WP_Query;
+$args = array(
+//	'post_type' => 'post',
+	//'cat' => 1,
+	'category_name' => 'portfolio',
+	'posts_per_page'   => -1,
+);
+$portfolio_posts = $query_obj->query($args);
+echo "portfolio_posts:". count($portfolio_posts);	
+
+foreach( $portfolio_posts as $_post ){
+	echo "<li>".$_post->post_title."</li>";
+}
