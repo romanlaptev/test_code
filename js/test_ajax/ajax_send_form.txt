@@ -1,0 +1,53 @@
+//банкротство физ лиц, отправка формы с телефоном
+$(document).ready(function(){ 
+
+	$(".hustle-layout-form").on("submit", function(e){
+console.log(e.type);
+/*
+		if (event.preventDefault) { 
+			event.preventDefault();
+		} else {
+			event.returnValue = false;				
+		}
+*/ 
+		var _url = "/wp-content/themes/fin-expert/bankrotstvo_send_form.php";
+		var	formData = { 
+			name: "a", 
+			email: "b", 
+			tel: "c"
+		};
+
+		$.ajax({
+			url: _url,
+			type: 'POST',
+			dataType: 'text',
+			data: formData,
+			
+			beforeSend: function(XMLHttpRequest){
+//console.log("ajax beforeSend, ", arguments);
+			},				
+		
+			complete: function(xhr, state){
+console.log("ajax send complete, ", arguments);
+			},
+			
+			success: function(data){
+console.log( "success", arguments );
+			},
+			
+			error: function( data, status, errorThrown ){
+console.log( "error", arguments );
+//console.log( "status:" + status );
+//for(var key in errorThrown){
+//console.log( key +" : "+ errorThrown[key] );
+//}
+			}
+			
+		});//end ajax
+
+		//return false;
+	});//end event
+
+	
+});//end ready
+
