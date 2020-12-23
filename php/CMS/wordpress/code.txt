@@ -17,6 +17,53 @@ function _widgets_init(){
 ...
 }
 
+
+//================== WIDGETS
+https://wp-kama.ru/function/the_widget
+https://wpincode.com/kak-dobavit-podderzhku-vidzhetov-v-temu-wordpress-v-3-shaga/
+https://misha.agency/wordpress/sidebars.html
+
+function.php
+//======================
+add_action( 'widgets_init', '_register_wp_sidebars' );
+function _register_wp_sidebars() {
+ 
+	register_sidebar(
+		array(
+			'id' => 'footer-widgets',
+			'name' => 'Footer',
+			'description' => 'Перетащите сюда виджеты, чтобы добавить их в футер.',
+			'before_widget' => '<div id="%1$s" class="foot widget %2$s">',
+			'after_widget' => '</div>',
+			'before_title' => '<h4 class="widget-title">',
+			'after_title' => '</h4>'
+		)
+	);
+	
+}//end
+
+
+footer.php
+<?php 
+$display = true;
+
+if( strpos($_SERVER['REQUEST_URI'], "contacts") ){
+	$display = false;
+}
+
+if( $display ){
+	dynamic_sidebar( 'footer-widgets' ); 
+}
+
+?>
+
+HTML-widget
+<div style='display:none'>test</div>
+
+
+
+
+
 //================== CONFIG
 //wp-config.php, rewrite DB site path variables
 
