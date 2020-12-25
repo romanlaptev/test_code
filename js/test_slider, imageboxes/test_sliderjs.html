@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-	<meta charset="utf-8">
+<meta charset="utf-8">
+<title>Slides, A Slideshow Plugin for jQuery</title>
+<!--
+<link rel="stylesheet" href="../../codebase/js/plugins/slides/css/global.css">
+-->
+<script src="../../codebase/js/jquery/jquery.min.js"></script>
+<script src="../../codebase/js/plugins/slides/slides.min.jquery.js"></script>
 
-	<title>Slides, A Slideshow Plugin for jQuery</title>
-
-
-	<script src="js/jquery.min.js"></script>
-	<script src="js/slides.min.jquery.js"></script>
-	<script>
+<script>
 		$(function(){
 			// Set starting slide to 1
 			var startSlide = 1;
@@ -19,7 +20,7 @@
 			// Initialize Slides
 			$('#slides').slides({
 				preload: true,
-				preloadImage: '../img/loading.gif',
+				preloadImage: '../../codebase/js/plugins/slides/img/loading.gif',
 				generatePagination: true,
 				play: 0,
 				pause: 2500,
@@ -32,74 +33,130 @@
 				}
 			});
 		});
-	</script>
-</head>
-<body>
-http://slidesjs.com/
-<!--
-	<div id="container">
-		<div id="example">
--->
-			<div id="slides">
-			
-						<p><a href="#4" class="link">Check out the fourth slide &rsaquo;</a></p>
-						<p><a href="#5" class="link">Check out the fifth slide &rsaquo;</a></p>
-						<p><a href="#1" class="link">Check out the first slide &rsaquo;</a></p>
-						<p><a href="#6" class="link">Check out the sixth slide &rsaquo;</a></p>
-						<p><a href="#7" class="link">Check out the seventh slide &rsaquo;</a></p>
-						<p><a href="#1" class="link">Check out the first slide &rsaquo;</a></p>
-						<p><a href="#3" class="link">Check out the third slide &rsaquo;</a></p>
-				<div class="slides_container">
-				
-					<div class="slide">
-						<h1>First Slide</h1>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
-					</div>
-					
-					<div class="slide">
-						<h1>Second Slide</h1>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
-					</div>
-					
-					<div class="slide">
-						<h1>Third Slide</h1>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
-					</div>
-					
-					<div class="slide">
-						<h1>Fourth Slide</h1>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
-					</div>
-					
-					<div class="slide">
-						<h1>Fifth Slide</h1>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
-					</div>
-					
-					<div class="slide">
-						<h1>Sixth Slide</h1>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
-					</div>
-					
-					<div class="slide">
-						<h1>Seventh Slide</h1>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
-					</div>
-					
-				</div>
-				<a href="#" class="prev"><img src="../img/arrow-prev.png" width="24" height="43" alt="Arrow Prev"></a>
-				<a href="#" class="next"><img src="../img/arrow-next.png" width="24" height="43" alt="Arrow Next"></a>
-			</div>
-<!--
-			<img src="../img/example-frame.png" width="739" height="341" alt="Example Frame" id="frame">
-		</div>
+</script>
 
-		<div id="footer">
-			<p>For full instructions go to <a href="http://slidesjs.com" target="_blank">http://slidesjs.com</a>.</p>
-			<p>Slider design by Orman Clark at <a href="http://www.premiumpixels.com/" target="_blank">Premium Pixels</a>. You can donwload the source PSD at <a href="http://www.premiumpixels.com/clean-simple-image-slider-psd/" target="_blank">Premium Pixels</a></p>
-			<p>&copy; 2010 <a href="http://nathansearles.com" target="_blank">Nathan Searles</a>. All rights reserved. Slides is licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache license</a>.</p>
-		</div>
+<style>
+.container{
+width:70%;
+margin:auto;
+}
+.list-inline{
+list-style: disclosure-closed;
+}
+.pagination {
+	text-align: center;
+}
+.pagination li {
+	display: inline-block;
+	padding: 10px 17px;
+	background-color: #000;
+	color: #fff;
+	border-radius: 35px;
+	margin: 0 10px;
+}
+.pagination li a {
+	color: #fff;
+	text-decoration: none;
+}
+
+/* GRID */
+.w10{width:10%;}
+.w20{width:20%;}
+.w25{width:25%;}
+.w30{width:30%;}
+.w33{width:33%;}
+.w50{width:50%;}
+.w60{width:60%;}
+.w65{width:65%;}
+.w70{width:70%;}
+.w80{width:80%;}
+.w90{width:90%;}
+.w100{width:100%;}
+
+.row {
+	/* float: none; */
+	clear: both;
+	overflow: hidden;
+}
+.clearfix {
+	clear: both;
+}
+
+.float-left, .pull-left {
+	float: left;
+}
+
+</style>
+
+</head>
+
+<body>
+	<div class="container">
+
+<h1>Slides, A Slideshow Plugin for jQuery</h1>
+
+<pre>
+http://slidesjs.com/
+</pre>
+
+		<div id="slides" class="row">
+
+			<div class="float-left w20">
+				<ul class="list-inline">			
+					<li><a href="#4" class="link">fourth slide</a></li>
+					<li><a href="#5" class="link">fifth slide</a></li>
+					<li><a href="#1" class="link">first slide</a></li>
+					<li><a href="#6" class="link">sixth slide</a></li>
+					<li><a href="#7" class="link">seventh slide</a></li>
+					<li><a href="#1" class="link">first slide</a></li>
+					<li><a href="#3" class="link">third slide</a></li>
+				</ul>
+			</div>
+
+	<div class="float-left w80">
+					<div class="slides_container">
+				
+						<div class="slide">
+							<h1>First Slide</h1>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
+						</div>
+					
+						<div class="slide">
+							<h1>Second Slide</h1>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
+						</div>
+					
+						<div class="slide">
+							<h1>Third Slide</h1>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
+						</div>
+					
+						<div class="slide">
+							<h1>Fourth Slide</h1>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
+						</div>
+					
+						<div class="slide">
+							<h1>Fifth Slide</h1>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
+						</div>
+					
+						<div class="slide">
+							<h1>Sixth Slide</h1>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
+						</div>
+					
+						<div class="slide">
+							<h1>Seventh Slide</h1>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
+						</div>
+					
+					</div>
+					<a href="#" class="prev"><img src="../../codebase/js/plugins/slides/img/arrow-prev.png" width="24" height="43" alt="Arrow Prev"></a>
+					<a href="#" class="next"><img src="../../codebase/js/plugins/slides/img/arrow-next.png" width="24" height="43" alt="Arrow Next"></a>
+				</div>
 	</div>
--->
+
+</div>
 </body>
 </html>
