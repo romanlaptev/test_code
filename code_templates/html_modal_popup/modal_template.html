@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<title>modal template</title>
 
-<script type='text/javascript' src='../codebase/js/jquery/jquery.min.js'></script>
+<script type='text/javascript' src='../../codebase/js/jquery/jquery.min.js'></script>
 <style>
 html, body{
 	height:100%;
@@ -370,8 +370,8 @@ border: 1px solid #818a91;
 	left: 50%;
     z-index: 1001;
 	background: #FF7425;
-	margin-left: -25%;
-	width: 50%;
+	margin-left: -10%;
+	width: 20%;
 }
 
 #popup-fields .wpcf7-not-valid-tip {
@@ -389,6 +389,77 @@ border: 1px solid #818a91;
     height: 100%;
     z-index: 1000;
     display: none;
+}
+
+#btn-close-popup-fields {
+	/* float: right; */
+	position: relative;
+	top: -10px;
+	left: 10px;
+	width: 25px;
+	height: 25px;
+	padding: 0;
+	/* line-height: 15px; */
+	background-color: #000;
+	color: #fff;
+	border-radius: 15px;
+	font-weight: bold;
+}
+
+@media screen and (max-width:1090px){
+	#form-request-price {
+		width: 90%;
+	}
+}
+
+@media screen and (max-width:870px){
+	#form-request-price {
+		width: 90%;
+	}
+	#popup-fields {
+		margin-left: -20%;
+		width: 40%;
+	}	
+}
+
+@media screen and (max-width:790px){
+	#form-request-price {
+		width: 90%;
+	}
+}
+
+@media screen and (max-width:690px){
+	#form-request-price {
+		width: 100%;
+	}
+	#popup-fields {
+		margin-left: -27%;
+		width: 55%;
+	}	
+}
+
+@media screen and (max-width:610px){
+	#form-request-price .float-left{
+		float: none;
+	}
+	#form-request-price .w30{
+		width: 100%;
+	}
+}
+
+@media screen and (max-width:480px){
+	#popup-fields {
+		margin-left: -35%;
+		width: 70%;
+	}	
+}
+
+@media screen and (max-width:340px){
+	#popup-fields {
+		left: 0;
+		width: 100%;
+		margin-left: 0;		
+	}
 }
 </style>
 
@@ -498,7 +569,6 @@ sidebar-left
 		  <div class="wrapper">
 				<div class="panel">
 		
-<article id="post-9" class="post-9 page type-page status-publish hentry">
 	<header class="entry-header">
 		<h1 class="entry-title">test</h1>	</header><!-- .entry-header -->
 
@@ -507,14 +577,15 @@ sidebar-left
 		<div role="form" class="wpcf7" id="wpcf7-f11-p9-o1" lang="ru-RU" dir="ltr">
 <div class="screen-reader-response" role="alert" aria-live="polite"></div>
 <form action="/#wpcf7-f11-p9-o1" method="post" class="wpcf7-form init" novalidate="novalidate">
-<div style="display: none;">
-<input type="hidden" name="_wpcf7" value="11" />
-<input type="hidden" name="_wpcf7_version" value="5.2.2" />
-<input type="hidden" name="_wpcf7_locale" value="ru_RU" />
-<input type="hidden" name="_wpcf7_unit_tag" value="wpcf7-f11-p9-o1" />
-<input type="hidden" name="_wpcf7_container_post" value="9" />
-<input type="hidden" name="_wpcf7_posted_data_hash" value="" />
-</div>
+
+	<div style="display: none;">
+		<input type="hidden" name="_wpcf7" value="11" />
+		<input type="hidden" name="_wpcf7_version" value="5.2.2" />
+		<input type="hidden" name="_wpcf7_locale" value="ru_RU" />
+		<input type="hidden" name="_wpcf7_unit_tag" value="wpcf7-f11-p9-o1" />
+		<input type="hidden" name="_wpcf7_container_post" value="9" />
+		<input type="hidden" name="_wpcf7_posted_data_hash" value="" />
+	</div>
 
 <div id="form-request-price">
 	<div class="group-selectors">
@@ -546,11 +617,20 @@ sidebar-left
 			</div>
 
 <div class="float-left w30">
-<div class="panel">
-<h4>Степень самостоятельности</h4>
-<p>		<span class="wpcf7-form-control-wrap menu-307"><select name="menu-307" class="wpcf7-form-control wpcf7-select" aria-invalid="false"><option value="не выбрана">не выбрана</option><option value="ходячий">ходячий</option><option value="передвигается с помощью">передвигается с помощью</option><option value="лежачий">лежачий</option></select></span>
-				</p></div>
-</p></div>
+	<div class="panel">
+		<h4>Степень самостоятельности</h4>
+		<p>		
+			<span class="wpcf7-form-control-wrap menu-307">
+				<select name="menu-307" class="wpcf7-form-control wpcf7-select" aria-invalid="false">
+					<option value="не выбрана">не выбрана</option>
+					<option value="ходячий">ходячий</option>
+					<option value="передвигается с помощью">передвигается с помощью</option>
+					<option value="лежачий">лежачий</option>
+				</select>
+			</span>
+		</p>
+	</div>
+</div>
 
 <div class="float-left w30">
 <div class="panel">
@@ -564,7 +644,7 @@ sidebar-left
 <div class="float-left w30">
 <div class="panel">
 <h4>Возраст</h4>
-<p>		<span class="wpcf7-form-control-wrap text-4"><input type="text" name="text-4" value="" size="40" class="wpcf7-form-control wpcf7-text" aria-invalid="false" placeholder="Например, 65 лет" /></span>
+<p>		<span class="wpcf7-form-control-wrap text-4"><input type="text" name="text-4" value="" size="" class="wpcf7-form-control wpcf7-text" aria-invalid="false" placeholder="Например, 65 лет" /></span>
 				</p></div>
 </p></div>
 
@@ -591,13 +671,13 @@ sidebar-left
 <div id="popup-fields" class="" style="display: none">
 		<button id="btn-close-popup-fields" class="float-right">x</button>		</p>
 <div class="padding20">
-<span class="wpcf7-form-control-wrap your-name"><input type="text" name="your-name" value="" size="40" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required" aria-required="true" aria-invalid="false" placeholder="Ваше имя *" /></span>
+<span class="wpcf7-form-control-wrap your-name"><input type="text" name="your-name" value="" size="" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required" aria-required="true" aria-invalid="false" placeholder="Ваше имя *" /></span>
 		</div>
 <div class="padding20">
-<span class="wpcf7-form-control-wrap tel-713"><input type="tel" name="tel-713" value="" size="40" class="wpcf7-form-control wpcf7-text wpcf7-tel wpcf7-validates-as-required wpcf7-validates-as-tel" aria-required="true" aria-invalid="false" placeholder="Телефон *" /></span>
+<span class="wpcf7-form-control-wrap tel-713"><input type="tel" name="tel-713" value="" size="" class="wpcf7-form-control wpcf7-text wpcf7-tel wpcf7-validates-as-required wpcf7-validates-as-tel" aria-required="true" aria-invalid="false" placeholder="Телефон *" /></span>
 		</div>
 <div class="padding20">
-<span class="wpcf7-form-control-wrap your-email"><input type="email" name="your-email" value="" size="40" class="wpcf7-form-control wpcf7-text wpcf7-email wpcf7-validates-as-required wpcf7-validates-as-email" aria-required="true" aria-invalid="false" placeholder="E-mail *" /></span>
+<span class="wpcf7-form-control-wrap your-email"><input type="email" name="your-email" value="" size="" class="wpcf7-form-control wpcf7-text wpcf7-email wpcf7-validates-as-required wpcf7-validates-as-email" aria-required="true" aria-invalid="false" placeholder="E-mail *" /></span>
 		</div>
 <div class="text-center">
 <input type="submit" value="Отправить" class="wpcf7-form-control wpcf7-submit" />
@@ -608,9 +688,6 @@ sidebar-left
 <div class="wpcf7-response-output" role="alert" aria-hidden="true"></div></form></div>
 	</div><!-- .entry-content -->
 
-	<footer class="entry-footer">
-			</footer><!-- .entry-footer -->
-</article><!-- #post-9 -->
 
 				</div>
 			</div>
