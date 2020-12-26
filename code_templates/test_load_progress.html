@@ -8,8 +8,10 @@
 	<meta http-equiv="Expires" content="-1">	
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-
+<!--
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>	
+-->
+	<link rel="stylesheet" href="../css/test_materialize/css/materialize.min.css"/>	
 <style>
 
 /*--------------------- LOAD --------------*/
@@ -77,8 +79,8 @@
 	<script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
 <!--	
 	<script src="js/lib/jquery-2.1.1.min.js"></script>	
--->	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+-->	
 	<script>
 
 $(document).ready(function(){
@@ -97,6 +99,7 @@ $(document).ready(function(){
 			var sizeBlockBytes = 5168;
 			var totalLoadedBytes = 0;
 			var percentComplete = 0;
+			var bytesPerPercent = totalBytes / 100;
 			
 			var num = 1;
 			var interval = setInterval(function(){
@@ -112,11 +115,15 @@ $(document).ready(function(){
 				}
 				
 				percentComplete = Math.ceil( totalLoadedBytes / totalBytes * 100);
+				
+				test = Math.ceil( totalLoadedBytes / bytesPerPercent );
+				
 //var msg = "Loaded " + totalLoadedBytes + " bytes of total " + totalBytes;
 //console.log( msg, percentComplete +"%" );
 
 				$("#load-progress-bar").css("width", num+"%");
 				$("#percent-complete").html(percentComplete+"%");
+				$("#percent-complete-test").html(test+"%");
 
 			}, 500);
 			
@@ -177,6 +184,7 @@ $(document).ready(function(){
 				<div id="load-progress" class="">
 					<div class="center-align">ajax load data 
 						<span id="percent-complete"></span>
+						<span id="percent-complete-test"></span>
 						<span id="num-total-load"></span>
 					</div>
 					<div class="progress">
