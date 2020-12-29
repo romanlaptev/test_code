@@ -12,6 +12,9 @@
 <script type="text/javascript" charset="utf-8">
 $(document).ready(function(){
 
+	$("#fancybox-version").text($.fancybox.version);
+	$("#jquery-version").text($.fn.jquery);
+
 	$(".fancybox").fancybox({
 'transitionIn' : 'elastic',
 'transitionOut' : 'elastic',
@@ -164,7 +167,8 @@ console.info( current.opts.$orig );
 <div class="container">
 
 	<div class="page-header">
-		<h2>Test  plugin Fancybox 3.5.7 (jQuery 3)</h2>
+		<h2>Test  plugin Fancybox</h2>
+		<h3>plugin version: <span id="fancybox-version"></span>,  jquery version: <span id="jquery-version"></span></h3>
 	</div>
 		
 	<ul>
@@ -208,6 +212,10 @@ http://fancyapps.com/fancybox/3/docs/
 
 https://cdnjs.com/libraries/fancybox
 https://github.com/fancyapps/fancybox
+
+---------
+https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js 
+https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.css
 
 </pre>
 
