@@ -56,8 +56,9 @@ a:active, a:focus { outline: none; }
 .padding-top-50 {padding-top: 50px;}
 .padding-top-60 {padding-top: 60px;}
 
-.text-white{color:#fff;}
-.border-white{border: 1px solid #fff;}
+.colorbox { padding:20px; }
+.lr-font-bold{	font-weight:bold;}
+.lr-font-italic{ font-style:italic;}
 
 .hidden {display:none;}
 
@@ -212,7 +213,6 @@ border-top: 16px solid #1c5a83;
 }
 .lr-list-disclosure > li {
 	list-style: disclosure-closed;
-
 }
 
 
