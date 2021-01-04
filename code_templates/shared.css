@@ -1,4 +1,4 @@
-﻿.lr-container {
+.lr-container {
 	width: 90%;
 	margin: auto;
 	padding: 20px;
@@ -707,3 +707,14 @@ padding: 10px;
 }
 
 #log p{margin: 0;}
+
+
+.picture {
+	padding: 10px;
+	border: 1px solid;
+	box-shadow: 5px 5px silver;
+}
+.picture:hover {
+	box-shadow: 0 0 5px inset;
+}
+
