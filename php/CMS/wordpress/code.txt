@@ -159,6 +159,59 @@ add_action("init", function () { });
 //}
 
 
+
+//================ custom Contact form validation
+//доп. валидация в Contact form 7 WP
+//https://qna.habr.com/q/352060
+//https://wp-kama.ru/plugin/contact-form-7/hook/wpcf7_validate_(type)
+//add_filter('wpcf7_validate_tel*', 'dco_wpcf7_validate', 10, 2);
+//add_filter('wpcf7_validate_email*', 'dco_wpcf7_validate', 10, 2);
+//add_filter('wpcf7_validate_text*', 'dco_wpcf7_validate', 10, 2);
+//add_filter('wpcf7_validate_textarea*', 'dco_wpcf7_validate', 10, 2);
+
+
+add_filter("wpcf7_validate_tel", "_wpcf7_validate", 10, 2);
+add_filter("wpcf7_validate_email", "_wpcf7_validate", 10, 2);
+
+function _wpcf7_validate( $result, $tag ){
+	$name = $tag->name;
+	$value = "";
+	if( isset( $_POST[ $name] ) ){
+		$value = trim( wp_unslash( strtr( (string) $_POST[$name], "\n", " " ) ) );
+	}
+
+	if ( $tag->basetype == "tel" ) {
+		if(!empty( $_POST[ "your-email" ] ) ){
+			return $result;
+		}
+
+		if ( empty($value) ) {
+			$result->invalidate( $tag, wpcf7_get_message( "invalid_required" ) );
+			return $result;
+		} 
+
+	}
+
+	if ( $tag->basetype == "email" ) {
+		if(!empty( $_POST[ "tel-713" ] ) ){
+			return $result;
+		}
+
+		if ( empty($value) ) {
+			$result->invalidate( $tag, wpcf7_get_message( "invalid_required" ) );
+			return $result;
+		} 
+
+		if ( ! is_email( $value ) ) {
+			$result->invalidate( $tag, wpcf7_get_message( "invalid_email" ) );
+			return $result;
+		}
+	}
+	
+	return $result;
+}//end _wpcf7_validate()
+
+
 //================ MENU
 add_filter( 'wp_nav_menu_args', '_nav_args',3000001);
 add_filter( 'wp_nav_menu_items', '_nav_search',9999);
