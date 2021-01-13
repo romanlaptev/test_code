@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Test lazyload images</title>
+	<title>Test adaptive images</title>
 	<meta charset="utf-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -10,31 +10,77 @@
 
 </head>
 
-<body>
+<body class="text-center">
 
-<div class="main container">
-		
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3>Test lazyload images<h3>
+		<div class="page-header">
+			<h3>Test adaptive images<h3>
 		</div>
-		
-		<div class="panel-body">
-			<h4>thumbnail image</h4>
-			<div class="thumbnail">			
-				<img class="" alt=""  src="img/vyveska-visit-scaled.jpg">
+
+		<div class="">
+			<h3>Responsive image: scale image</h3>
+			<h4>.. img width:100% ....</h4>
+			<div>			
+				<img style="width:100%" class="" alt=""  src="img/vyveska-visit.jpeg">
 			</div>
 		</div>
-			
-		<div class="panel-body">
-			<h4>lazyload image, different sizes....</h4>
+
+		<div class="">
+			<h3>Responsive image: select image size on screen resolution </h3>
+<!--
 <img class="" alt=""  loading="lazy" 
 srcset="img/vyveska-visit-300x150.jpg 300w, img/vyveska-visit-370x185.jpg 370w, img/vyveska-visit-760x379.jpg 760w, img/vyveska-visit-768x383.jpg 768w, img/vyveska-visit-1024x511.jpg 1024w, img/vyveska-visit-scaled.jpg 1170w" 
 src="img/vyveska-visit-300x150.jpg" 
 sizes="(max-width: 300px) 100vw, (max-width: 370px) 100vw, (max-width: 760px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 1170px">
-			
+-->			
+
+<!--
+				<img class="" alt=""  src="img/vyveska-visit_w360.jpeg">
+				<img class="" alt=""  src="img/vyveska-visit_w375.jpeg">
+-->
+<img class="" alt=""  loading="lazy" 
+
+srcset="img/vyveska-visit_w360.jpeg 360w,  
+img/vyveska-visit_w375.jpeg 375w,   
+img/vyveska-visit_w480.jpeg 480w,  
+img/vyveska-visit_w640.jpeg 640w,  
+img/vyveska-visit_w768.jpeg 768w,  
+img/vyveska-visit_w920.jpeg 920w,  
+img/vyveska-visit_w1024.jpeg 1024w,  
+img/vyveska-visit_w1170.jpeg 1170w,  
+img/vyveska-visit.jpeg 1280w" 
+
+sizes="(max-width: 360px) 100vw,  
+(max-width: 375px) 100vw,  
+(max-width: 480px) 100vw,  
+(max-width: 640px) 100vw,  
+(max-width: 768px) 100vw,  
+(max-width: 1024px) 100vw,  
+(max-width: 1170px) 100vw,  
+(max-width: 920px) 100vw,  
+1280px"
+
+src="" >
+
 		</div>
-	</div>
+
+		<div class="">
+			<h3>Responsive image: select image size on screen resolution, tag PICTURE </h3>
+<picture>
+    <source srcset="img/vyveska-visit_w360.jpeg" media="(max-width: 360px)">
+    <source srcset="img/vyveska-visit_w375.jpeg" media="(max-width: 375px)">
+    <source srcset="img/vyveska-visit_w480.jpeg" media="(max-width: 480px)">
+    <source srcset="img/vyveska-visit_w640.jpeg" media="(max-width: 640px)">
+    <source srcset="img/vyveska-visit_w768.jpeg" media="(max-width: 768px)">
+    <source srcset="img/vyveska-visit_w920.jpeg" media="(max-width: 920px)">
+    <source srcset="img/vyveska-visit_w1024.jpeg" media="(max-width: 1024px)">
+    <source srcset="img/vyveska-visit_w1170.jpeg" media="(max-width: 1170px)">
+    <img srcset="img/vyveska-visit.jpeg" alt="My default image">
+</picture>
+		</div>
+				
+<div class="main container">
+		
+	<div class="panel panel-primary">
 		
 <pre>
 https://developer.mozilla.org/ru/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images
@@ -47,8 +93,15 @@ https://webdesign.tutsplus.com/ru/tutorials/quick-tip-how-to-use-html5-picture-f
 как использовать HTML "picture" для адаптивных изображений
 
 </pre>
+			
+	</div>
+
+	<div class="panel panel-primary">
+	    <img srcset="https://c1.staticflickr.com/5/4267/34897595276_719fc22e92_c.jpg" alt="Flickr, direct link">
+	</div>
 
 </div><!-- end main -->
+		
 
 </body>
 </html>
