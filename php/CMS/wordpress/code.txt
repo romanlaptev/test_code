@@ -1,3 +1,20 @@
+//================== CONFIG
+//wp-config.php, rewrite DB site path variables
+
+define('WP_SITEURL', 'http://'.$_SERVER['HTTP_HOST']);
+define('WP_HOME', 'http://'.$_SERVER['HTTP_HOST']);
+
+define('WP_SITEURL', 'http://'.$_SERVER['HTTP_HOST'].$_SERVER["REQUEST_URI"]);
+define('WP_HOME', 'http://'.$_SERVER['HTTP_HOST'].$_SERVER["REQUEST_URI"]);
+
+
+//https://ipipe.ru/info/wordpress-logi-oshibok
+//Как включить/выключить логирование
+define( 'WP_DEBUG', true );
+define( 'WP_DEBUG_DISPLAY', false );
+define( 'WP_DEBUG_LOG', true );
+
+
 //=================== Debug
 $out = "<pre>".print_r($categoryInfo, 1)."</pre>";
 error_log( 	date("Y-m-d H:i:s") . " - categoryInfo = ".$out."\n", 	3, 	dirname(__FILE__)."/log.txt");
@@ -64,17 +81,6 @@ HTML-widget
 
 
 
-//================== CONFIG
-//wp-config.php, rewrite DB site path variables
-
-define('WP_SITEURL', 'http://'.$_SERVER['HTTP_HOST']);
-define('WP_HOME', 'http://'.$_SERVER['HTTP_HOST']);
-
-//https://ipipe.ru/info/wordpress-logi-oshibok
-//Как включить/выключить логирование
-define( 'WP_DEBUG', true );
-define( 'WP_DEBUG_DISPLAY', false );
-define( 'WP_DEBUG_LOG', true );
 
 //================== SHORTCODES
 https://www.youtube.com/watch?v=NPlJkphom5w
