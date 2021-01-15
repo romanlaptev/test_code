@@ -512,7 +512,7 @@ https://www.omiod.com/colors/?rgb=d0ccd5
 .bg-color-test14D5D53 { background:#4D5D53;}  /*:Фельдграу, #4D5D53 */
 
 
-.bg-color-test1cccc99 { background:#cccc99;}
+.bg-light-weak-yellow { background:#cccc99;}
 
 .bg-bluegreen{  background-color: #006666;}
 .bg-bluegreen2{  background-color: #336666 !important;}
@@ -570,7 +570,17 @@ https://www.omiod.com/colors/?rgb=d0ccd5
 .bg-indianred {background-color: #cd5c5c;}
 .bg-indigo {background-color: #4b0082;}
 .bg-ivory {background-color: #fffff0;}
+
 .bg-khaki {background-color: #f0e68c;}
+
+.bg-khaki-desktop {background-color: #7E735F;}/* win10, desktop color*/
+.bg-moss {background-color: #486860;}/* win10, desktop color*/
+.bg-sea-desktop {background-color: #038387;}/* win10, desktop color*/
+.bg-mint {background-color: #018574;}/* win10, desktop color*/
+.bg-golden {background-color: #FF8C00;}/* win10, desktop color, light-orange*/
+
+
+
 .bg-lavender {background-color: #e6e6fa;}
 .bg-lavenderblush {background-color: #fff0f5;}
 .bg-lawngreen {background-color: #7cfc00;}
@@ -726,36 +736,10 @@ https://www.omiod.com/colors/?rgb=d0ccd5
 .bg-peach {  background-color: #ffcc99;}
 .bg-vivid-orange {  background-color:  #ffaa00;}
 
+.bg-medium-teal {  background-color:  #65a3be;}
+.bg-medium-blue {  background-color:  #5f99cf;}
 
 /* Buttons */
-.btn-blue {
-	background-color: #007bff;
-	color: #fff;
-	-webkit-box-shadow: inset 0 36px 38px -38px #fff;
-	-moz-box-shadow: inset 0 36px 38px -38px #fff;
-	box-shadow: inset 0 36px 38px -38px #fff;
-	
-  font-family: avantgarde;
-  font-size: 14px;
-  font-weight: 400;
-}
-.btn-blue:hover {
-	background-color: #ff8c00 !important;
-	color: #000 !important;
-}
-.btn-blue:focus {
-	color: #fff !important;
-	outline: 0;
-}
-.btn-blue:active:focus {
-	color: #000 !important;
-}
-.btn-blue:active {
-	/*color:  #fff !important;*/
-}
-.btn-blue:visited {
-	/*color:  #000 !important;*/
-}
 
 .btn-blue-c4 {
     color: #fff;
@@ -787,28 +771,6 @@ https://www.omiod.com/colors/?rgb=d0ccd5
 .btn-blue-green:focus {
 	color: #fff !important;
 }
-
-
-.btn-darkblue {
-	background-color: #004586;
-	-webkit-box-shadow: inset 0 36px 38px -38px #fff;
-	-moz-box-shadow: inset 0 36px 38px -38px #fff;
-	box-shadow: inset 0 36px 38px -38px #fff;
-	border-color: #3f9cca;
-	color: #fff;
-  font-family: ticker_taperegular;
-  font-size: 14px;
-  font-weight: 400;
-}
-.btn-darkblue:hover {
-	background-color: #ff8c00;
-	border-color: #ff8c00;
-	color: #000 !important;
-}
-.btn-darkblue:focus {
-	color: #fff !important;
-}
-
 
 
 .btn-violet-fb {
@@ -961,56 +923,6 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fed081', endCo
 }
 
 
-.btn-green {
-	background-color: #1bcb49;
-	background: -webkit-linear-gradient(#4fcb4f, #00b04e);
-	background: -o-linear-gradient(#4fcb4f, #00b04e);
-	background: -moz-linear-gradient(#4fcb4f, #00b04e);
-	background: linear-gradient(#4fcb4f, #00b04e);
-	border-color: #4fcb4f;
-}
-.btn-green:focus:not(:disabled):not(.disabled){
-	border-color: #005C2A;
-}
-
-.btn-green-shadow {
-/*
-	display: inline-block;
-	padding: 10px;
-	margin: 3px;
-*/
-	/* font-size: 12px; */
-	/* font-weight: bold; */
-	/* font-family: Tahoma, Geneva, sans-serif; */
-/*
-	line-height: 1.2em;
-	text-align: center;
-	text-decoration: none;
-	vertical-align: middle;
-*/
-	color: #fff;
-	background-color: #008b8b;
-	border-color: #008b8b;
-/*
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-*/
-	-webkit-box-shadow: inset 0 36px 38px -38px #fff;
-	-moz-box-shadow: inset 0 36px 38px -38px #fff;
-	box-shadow: inset 0 36px 38px -38px #fff;
-	
-/*  font-family: Lobster;*/
-  font-size: 14px;
-  font-weight: 400;
-}
-.btn-green-shadow:hover, 
-.btn-green-shadow:focus 
-{
-    color: #000;
-	border-color: #ff8c00;
-	background-color: #ff8c00;
-}
 
 
 
