@@ -1,3 +1,12 @@
+/* calc padding within div*/
+html {
+	box-sizing:border-box;
+}
+*, *::before, *::after {
+	box-sizing:inherit;
+}
+
+
 .lr-container {
 	width: 90%;
 	margin: auto;
@@ -901,12 +910,12 @@ padding: 10px;
 }
 
 /*====== MEDIA styles =======*/
-
-/*====== MEDIA styles =======*/
 @media screen and (max-width:1600px){}
+@media screen and (max-width:1439px){}
 @media screen and (max-width:1300px){}
 @media screen and (max-width:1280px){}
 @media screen and (max-width:1090px){}
+@media screen and (max-width:1023px){}
 
 @media screen and (max-width: 990px){
 /*
@@ -953,6 +962,10 @@ padding: 10px;
 	}
 }
 
+@media screen and (max-width:550px){
+}
+
+
 @media screen and (max-width:480px){
 	.lr-container {
 		width: 99%;
@@ -960,14 +973,14 @@ padding: 10px;
 	.page-header h1 {
 		font-size: 120%;
 	}
-}
-@media (max-width: 480px){
 	.lr-panel-inline {
 		display: block;
 	}
 }
 
-@media screen and (max-width:340px){
+@media screen and (max-width:479px){
 }
 
+@media screen and (max-width:340px){
+}
 
