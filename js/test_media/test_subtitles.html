@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>video collection</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+	
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="-1">	
+
+</head>
+
+<body class="bg-darkblue-project">
+	
+
+<div class="container lr-container bg-light-purple">
+
+<video id="player1" controls="controls">
+	<source src="http://i5/mnt/terra/video/films/H/Homeland/Season%201/S01E01.mp4">
+	<track label="English" srclang="en" kind="subtitles" src="http://i5/mnt/terra/video/films/H/Homeland/Season%201/Subtitles/S01E01.ENG.vtt" default>
+	Tag <b>video</b> not supported by this browser.... 
+</video>
+					
+</div><!-- end container -->
+
+<div class="container lr-container bg-light-purple">
+<!--
+<video id="player2" controls="controls" preload="metadata">
+	<source src="S01E06.mp4" type="video/mp4">
+	<track label="English" srclang="en" kind="subtitles" src="S01E01-ENG.vtt" default>
+	Tag <b>video</b> not supported by this browser.... 
+</video>
+-->	
+<pre>		
+https://developer.mozilla.org/ru/docs/Web/API/WebVTT_API
+Формат Web Video Text Tracks (WebVTT)
+
+https://atelier.u-sub.net/srt2vtt/
+Simple SubRip to WebVTT converter
+
+Субтитры не отображаются с помощью WebVTT
+https://coderoad.ru/16092609/%D0%A1%D1%83%D0%B1%D1%82%D0%B8%D1%82%D1%80%D1%8B-%D0%BD%D0%B5-%D0%BE%D1%82%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B0%D1%8E%D1%82%D1%81%D1%8F-%D1%81-%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D1%8C%D1%8E-WebVTT
+
+Вы используете неправильный формат метки времени. После второго значения должно быть . (точка).
+Это должно быть так: 00:00:00.000 --> 00:00:10.000
+
+
+https://superuser.com/questions/117929/open-source-command-line-subtitle-converter/1143003
+Open source command line subtitle converter
+
+ffmpeg -i file.srt file.vtt
+for i in *.ass ; do ffmpeg -i "$i" "$i.srt" ; done
+</pre>
+		
+</div><!-- end container -->
+
+
+</body>
+</html>
