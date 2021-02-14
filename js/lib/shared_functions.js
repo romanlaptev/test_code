@@ -27,7 +27,9 @@ _log(msg);
 		}
 		
 		// private variables and functions
-		//.......
+		var _vars = {
+			"logOrderBy": "ASC"
+		};//end _vars
 
 		function _getById(id){
 			
@@ -141,8 +143,13 @@ _log(msg);
 				if( msg.length == 0){
 					output.innerHTML = "";
 				} else {
-					output.innerHTML += msg;
-					//output.innerHTML = msg + output.innerHTML;
+
+					if( _vars["logOrderBy"] === "DESC"){
+						output.innerHTML = msg+output.innerHTML;
+					} else {
+						output.innerHTML += msg;
+					}
+
 				}
 				
 			} else {
@@ -1315,6 +1322,8 @@ ONLY second LEVEL !!!!!!!!!!!!
 		
 		// public interfaces
 		return{
+			vars : _vars,
+
 			getById: _getById,
 			getByClass: _getByClass,
 
