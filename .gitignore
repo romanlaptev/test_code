@@ -4,3 +4,16 @@ protected/runtime/*
 !protected/runtime/.gitignore
 protected/data/*.db
 themes/classic/views/
+
+*/mybd.xml
+*/*/mybd.xml
+*/*/*/mybd.xml
+
+*/bookmarks.xml
+*/*/bookmarks.xml
+*/*/*/bookmarks.xml
+
+*/notes.xml
+*/*/notes.xml
+*/*/*/notes.xml
+
