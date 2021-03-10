@@ -1,3 +1,7 @@
+//=================== error display
+error_reporting(E_ALL|E_STRICT);
+ini_set('display_errors', 1);
+
 //========================= Извлечение данных с помощью регулярных выражений PHP
 https://snipp.ru/php/preg-match#link-tekst-iz-html-tegov
 
