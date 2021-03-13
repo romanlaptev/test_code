@@ -1,0 +1,142 @@
+API 
+
+Интеграция с API:
+  Yandex
+  Mail
+  Vk
+  Flickr
+  YouTube, 
+  Google, 
+  Wikipedia, 
+  SoundCloud, 
+  Spotify, 
+  Geonames, 
+  Foursquare, 
+  Momondo, 
+  Agoda, 
+  NomadList, 
+  Numbeo и т. д. 
+
+ 
+=========================== Яндекс 
+https://tech.yandex.ru/
+https://yandex.ru/dev/
+https://yandex.ru/blog/yatechnologies
+
+https://developer.tech.yandex.ru/services/
+Яндекс.Кабинет разработчика
+
+  Видео
+  Заметки
+  API Переводчика, 
+  API Словаря, 
+  Яндекс.Спеллер, 
+  API Диска, 
+  YandexAudio API,  
+  Яндекс.XML (поиск),  
+  Локатор (определяет местоположение пользователя мобильного устройства), 
+  API Яндекс.Карт, API Расписаний, Диалоги Алисы????,  
+  API Яндекс.Погоды, https://tech.yandex.ru/weather/doc/dg/concepts/pricing-docpage/ 
+  SDK Яндекс.Паспорта для мобильных приложений 
+
+
+--- API Яндекс.Погода
+http://yandex.ru/pogoda
+https://developer.tech.yandex.ru/services/18
+
+--- API Яндекс.Расписаний
+https://developer.tech.yandex.ru/services/4
+https://romanlaptev.herokuapp.com/projects/schedule_app/
+https://romanlaptev.github.io/projects/schedule/app.html
+
+--- JavaScript API и HTTP Геокодер
+https://developer.tech.yandex.ru/services/3
+http://romanlaptev.github.io/webapps/geolocation/app.html
+
+--- API Паспорта
+https://yandex.ru/dev/passport/
+
+
+--- API Диска
+https://yandex.ru/dev/disk/
+
+REST API Диска
+WebDAV API Диска
+
+--- API Переводчика
+https://yandex.ru/dev/translate/
+
+----Спеллер
+Яндекс.Спеллер помогает находить и исправлять орфографические ошибки в русском, 
+украинском или английском тексте. 
+Языковые модели Спеллера включают сотни миллионов слов и словосочетаний.
+https://yandex.ru/dev/speller/
+
+----  API Видеохостинга
+https://yandex.ru/support/video-hosting/index.html
+https://yandex.ru/dev/videohosting/doc/concepts/about.html
+
+
+------- YandexAudio API
+YandexAudio API — это JavaScript-библиотека для воспроизведения аудио в браузере. 
+С ее помощью на странице можно проигрывать музыку, аудиокниги и прочие звуковые файлы. 
+С примером использования данной библиотеки можно ознакомиться на данной странице.
+
+https://yandex.ru/dev/audio/jsapi/doc/dg/concepts/webaudio-usage.html
+
+https://music.yandex.ru/api/v2.1/
+
+https://habr.com/ru/post/462607/
+Как я библиотеку для сервиса «Яндекс.Музыка» писал
+
+========================== Google
+
+Google Drive APIs, https://developers.google.com/drive/api/v2/reference/ 
+
+YouTube API Services, https://developers.google.com/youtube/terms/branding-guidelines 
+
+----------- 
+
+https://api.mail.ru/docs/ 
+
+Авторизация для сайтов, Авторизация для мобильных сайтов, cloud mail ru api, 
+mailru.common.photos.getAlbums 
+
+ 
+
+https://apiok.ru/ 
+
+ 
+
+----------- 
+
+Api.flickr.com 
+https://www.flickr.com/services/api/ 
+
+api.flickr.com/services/feeds/photos_public.gne 
+
+--------------------- 
+
+https://developer.microsoft.com/ru-ru/onedrive 
+
+Центр разработчиков OneDrive 
+
+------------- 
+
+http://rutube.ru/api/metainfo/tv/28/video/?format=xml 
+
+https://yadi.sk/d/KSB7UuJtTaPgYQ 
+
+---------------- 
+
+https://www.dropbox.com/developers/documentation/http/documentation 
+
+Dropbox for HTTP Developers 
+
+ 
+
+ 
+
+GearHost API 
+
+https://gearhost.docs.apiary.io/# 
