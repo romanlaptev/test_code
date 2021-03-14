@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<title>test API: yandex weather</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+	<meta charset="utf-8"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link type="text/css" rel="stylesheet" href="../code_templates/shared.css">
+<link type="text/css" rel="stylesheet" href="../code_templates/colors.css">
+<script src="../js/lib/shared_functions.js"></script>
+
+<script>
+var func = sharedFunc();
+//console.log("func:", func);
+func.vars["logOrderBy"] = "DESC";//sort log message by date
+
+_vars = {
+	"apiKey" : "dab03f2c-c76d-4fb6-9445-faa84fa80973",
+	"dataUrl" : ""
+};
+
+_vars["dataUrl"] = "https://romanlaptev-cors.herokuapp.com/";
+_vars["dataUrl"] += "https://api.weather.yandex.ru/v2/informers?";
+_vars["dataUrl"] += "lat={{latitude}}&";
+_vars["dataUrl"] += "lon={{longitude}}&";
+_vars["dataUrl"] += "lang=ru_RU";
+
+window.onload = function(){
+
+//var logMsg = "Test";
+//func.logAlert( logMsg, "danger");
+//func.log( "000", "response");
+
+	var btn_request = document.querySelector("#btn-request");
+	btn_request.addEventListener("click", function(event){
+		//var url = document.querySelector("#inp-url").value;
+		//if( !url || url.length === 0){
+//logMsg = "error, empty or undefined url", url;
+//console.log(logMsg);
+			//return false;
+		//}
+		sendRequest({
+			//"url": url,
+			"latitude": 55.75396,
+			"longitude": 37.620393,
+			"callback" : function( response ){
+//console.log(arguments);
+				if(response){
+					_parseAjax( response );
+				}
+			}//end callback
+		});
+	});//end event
+
+};//end window.load
+console.log(_vars);
+
+function sendRequest( opt ){
+	var p = {
+		"url" : false,
+		"latitude": false,
+		"longitude": false,
+		"callback" : function(){
+//console.log(arguments);
+		}//end callback
+	};
+//console.log(opt);
+	//extend p object
+	for(var key in opt ){
+		p[key] = opt[key];
+	}
+//console.log(p);
+
+	if( !p.latitude || p.latitude.length === 0){
+logMsg = "error, empty or undefined latitude", p.latitude;
+console.log(logMsg);
+		return false;
+	}
+
+	if( !p.longitude || p.longitude.length === 0){
+logMsg = "error, empty or undefined longitude", p.longitude;
+console.log(logMsg);
+		return false;
+	}
+
+	var dataUrl = _vars["dataUrl"]
+.replace("{{latitude}}", p["latitude"] )
+.replace("{{longitude}}", p["longitude"] );
+console.log( dataUrl );		
+	
+	try{
+		var xhr = new XMLHttpRequest();
+		xhr.open("GET", dataUrl, true);
+		xhr.setRequestHeader("X-Yandex-API-Key", p.apikey );
+		//xhr.setRequestHeader("Access-Control-Allow-Credentials", "true");
+		
+		xhr.onload = function(e) {
+console.log(arguments);
+// console.log("event type:" + e.type);
+console.log("time: " + e.timeStamp);
+console.log("total: " + e.total);
+console.log("loaded: " + e.loaded);	
+//console.log( this.responseText );
+func.log( this.responseText, "response");
+			
+			var _response = false;
+			if( this.responseText.length > 0 ){
+				_response = this.responseText;
+				_vars["contentType"] = xhr.getResponseHeader('content-type');
+			}
+			
+			if( typeof p.callback === "function"){
+				p.callback(_response);
+			}
+		}//end onload
+		
+		xhr.onerror = function(e) {
+console.log(arguments);		
+console.log(e);		
+//for(var key in xhr){
+//console.log( key +" : "+xhr[key] );
+//}
+
+_vars["logMsg"] = "error, ajax load failed...";
+//_message( _vars["logMsg"], "error");
+func.logAlert( _vars["logMsg"], "danger");
+			p.callback(false);
+		}
+		
+		xhr.onloadend = function(e){
+//console.log(xhr.getResponseHeader('X-Powered-By') );
+console.log( xhr.getAllResponseHeaders() );
+		}//end onloadend
+		
+		xhr.send();
+		
+	} catch(e){
+console.log(e);	
+	}	
+	
+}//end sendRequest()
+
+
+
+function _parseAjax( data ){
+	
+	//if( _vars["contentType"].indexOf("application/xml") !== -1){
+		//_parseXML( data );
+	//}
+	
+	if( _vars["contentType"].indexOf("application/json") !== -1){
+		_parseJSON( data );
+	}
+	
+}//_parseAjax()
+
+
+function _parseJSON( jsonStr ){
+	try{
+		var jsonObj = JSON.parse( jsonStr, function(key, value) {
+//console.log( key, value );
+			return value;
+		});
+//console.log( jsonObj );
+		
+		_vars["data"] = jsonObj;
+		
+	} catch(error) {
+_vars["logMsg"] = "error, error JSON.parse server response data...." ;
+console.log( error );
+func.logAlert(_vars["logMsg"], "error");
+		return;
+	}//end catch
+
+}//end _parseJSON()
+</script>
+
+
+</head>
+
+<body class="bg-whitesmoke">
+	
+<div class="lr-container bg-white">
+	<div class="lr-panel">
+		<div class="panel-heading">
+			<h3>test Yandex APi, weather</h3>
+		</div>
+		<div class="lr-panel-body">
+			
+<!--
+<input type="text" size="80" 
+id="inp-url" class=""  autocomplete="off" 
+value=""/>
+-->
+
+			<a href="#" 
+class="lr-btn bg-darkblue text-white" id="btn-request">Run request</a>
+
+		</div>
+		
+		<div class="lr-panel-body lr-border-box lr-border-cyan" >
+<pre id="response">
+now 	Время сервера в формате Unixtime. 	Число
+now_dt 	Время сервера в UTC. 	Строка
+info 	Объект информации о населенном пункте. 	Объект
+fact 	Объект фактической информации о погоде. 	Объект
+forecast 	Объект прогнозной информации о погоде. 	Объект
+
+Объект info
+
+Объект содержит информацию о населенном пункте.
+Поле 	Описание 	Формат
+lat 	Широта (в градусах). 	Число
+lon 	Долгота (в градусах). 	Число
+url 	Страница населенного пункта на сайте Яндекс.Погода. 	Строка
+		
+Объект fact
+
+Объект содержит информацию о погоде на данный момент.
+Поле 	Описание 	Формат
+temp 	Температура (°C). 	Число
+feels_like 	Ощущаемая температура (°C). 	Число
+temp_water 	Температура воды (°C). Параметр возвращается для населенных пунктов, где данная информация актуальна. 	Число
+icon 	Код иконки погоды. Иконка доступна по адресу https://yastatic.net/weather/i/icons/blueye/color/svg/<значение из поля icon>.svg. 	Строка
+condition 	Код расшифровки погодного описания. Возможные значения:
+
+    clear — ясно.
+    partly-cloudy — малооблачно.
+    cloudy — облачно с прояснениями.
+    overcast — пасмурно.
+    drizzle — морось.
+    light-rain — небольшой дождь.
+    rain — дождь.
+    moderate-rain — умеренно сильный дождь.
+    heavy-rain — сильный дождь.
+    continuous-heavy-rain — длительный сильный дождь.
+    showers — ливень.
+    wet-snow — дождь со снегом.
+    light-snow — небольшой снег.
+    snow — снег.
+    snow-showers — снегопад.
+    hail — град.
+    thunderstorm — гроза.
+    thunderstorm-with-rain — дождь с грозой.
+    thunderstorm-with-hail — гроза с градом.
+
+	Строка
+wind_speed 	Скорость ветра (в м/с). 	Число
+wind_gust 	Скорость порывов ветра (в м/с). 	Число
+wind_dir 	Направление ветра. Возможные значения:
+
+    «nw» — северо-западное.
+    «n» — северное.
+    «ne» — северо-восточное.
+    «e» — восточное.
+    «se» — юго-восточное.
+    «s» — южное.
+    «sw» — юго-западное.
+    «w» — западное.
+    «с» — штиль.
+
+	Строка
+pressure_mm 	Давление (в мм рт. ст.). 	Число
+pressure_pa 	Давление (в гектопаскалях). 	Число
+humidity 	Влажность воздуха (в процентах). 	Число
+daytime 	Светлое или темное время суток. Возможные значения:
+
+    «d» — светлое время суток.
+    «n» — темное время суток.
+
+	Строка
+polar 	Признак того, что время суток, указанное в поле daytime, является полярным. 	Логический
+season 	Время года в данном населенном пункте. Возможные значения:
+
+    «summer» — лето.
+    «autumn» — осень.
+    «winter» — зима.
+    «spring» — весна.
+
+	Строка
+obs_time 	Время замера погодных данных в формате Unixtime. 	Число		
+
+
+Объект forecast
+
+Объект содержит данные прогноза погоды.
+Поле 	Описание 	Формат
+date 	Дата прогноза в формате ГГГГ-ММ-ДД. 	Строка
+date_ts 	Дата прогноза в формате Unixtime. 	Число
+week 	Порядковый номер недели. 	Число
+sunrise 	Время восхода Солнца, локальное время (может отсутствовать для полярных регионов). 	Строка
+sunset 	Время заката Солнца, локальное время (может отсутствовать для полярных регионов). 	Строка
+moon_code 	Код фазы Луны. Возможные значения:
+
+    0 — полнолуние.
+    1-3 — убывающая Луна.
+    4 — последняя четверть.
+    5-7 — убывающая Луна.
+    8 — новолуние.
+    9-11 — растущая Луна.
+    12 — первая четверть.
+    13-15 — растущая Луна.
+
+	Число
+moon_text 	Текстовый код для фазы Луны. Возможные значения:
+
+    moon-code-0 — полнолуние.
+    moon-code-1 — убывающая луна.
+    moon-code-2 — убывающая луна.
+    moon-code-3 — убывающая луна.
+    moon-code-4 — последняя четверть.
+    moon-code-5 — убывающая луна.
+    moon-code-6 — убывающая луна.
+    moon-code-7 — убывающая луна.
+    moon-code-8 — новолуние.
+    moon-code-9 — растущая луна.
+    moon-code-10 — растущая луна.
+    moon-code-11 — растущая луна.
+    moon-code-12 — первая четверть.
+    moon-code-13 — растущая луна.
+    moon-code-14 — растущая луна.
+    moon-code-15 — растущая луна.
+
+	Строка
+parts 	Прогнозы по времени суток. Содержит следующие поля:
+
+    part_name
+    temp_min
+    temp_max
+    temp_avg
+    feels_like
+    icon
+    condition
+    daytime
+    polar
+    wind_speed
+    wind_gust
+    wind_dir
+    pressure_mm
+    pressure_pa
+    humidity
+    prec_mm
+    prec_period
+    prec_prob
+
+Все прогнозы погоды на время суток имеют одинаковый набор полей.
+
+Ответ содержит прогноз на 2 ближайших периода.
+	Объект
+part_name 	Название времени суток. Возможные значения:
+
+    night — ночь.
+    morning — утро.
+    day — день.
+    evening — вечер.
+
+	Строка.
+temp_min 	Минимальная температура для времени суток (°C). 	Число
+temp_max 	Максимальная температура для времени суток (°C). 	Число
+temp_avg 	Средняя температура для времени суток (°C). 	Число
+feels_like 	Ощущаемая температура (°C). 	Число
+icon 	Код иконки погоды. Иконка доступна по адресу https://yastatic.net/weather/i/icons/blueye/color/svg/<значение из поля icon>.svg. 	Строка
+condition 	Код расшифровки погодного описания. Возможные значения:
+
+    clear — ясно.
+    partly-cloudy — малооблачно.
+    cloudy — облачно с прояснениями.
+    overcast — пасмурно.
+    drizzle — морось.
+    light-rain — небольшой дождь.
+    rain — дождь.
+    moderate-rain — умеренно сильный дождь.
+    heavy-rain — сильный дождь.
+    continuous-heavy-rain — длительный сильный дождь.
+    showers — ливень.
+    wet-snow — дождь со снегом.
+    light-snow — небольшой снег.
+    snow — снег.
+    snow-showers — снегопад.
+    hail — град.
+    thunderstorm — гроза.
+    thunderstorm-with-rain — дождь с грозой.
+    thunderstorm-with-hail — гроза с градом.
+
+	Строка
+daytime 	Светлое или темное время суток. Возможные значения:
+
+    «d» — светлое время суток.
+    «n» — темное время суток.
+
+	Строка
+polar 	Признак того, что время суток, указанное в поле daytime, является полярным. 	Логический
+wind_speed 	Скорость ветра (в м/с). 	Число
+wind_gust 	Скорость порывов ветра (в м/с). 	Число
+wind_dir 	Направление ветра. Возможные значения:
+
+    «nw» — северо-западное.
+    «n» — северное.
+    «ne» — северо-восточное.
+    «e» — восточное.
+    «se» — юго-восточное.
+    «s» — южное.
+    «sw» — юго-западное.
+    «w» — западное.
+    «с» — штиль.
+
+	Строка
+pressure_mm 	Давление (в мм рт. ст.). 	Число
+pressure_pa 	Давление (в гектопаскалях). 	Число
+humidity 	Влажность воздуха (в процентах). 	Число
+prec_mm 	Прогнозируемое количество осадков (в мм). 	Число
+prec_period 	Прогнозируемый период осадков (в минутах). 	Число
+prec_prob 	Вероятность выпадения осадков. 	Число
+
+</pre>
+		</div>
+		
+	</div>
+
+	
+<pre class="bg-snow lr-padding-small">
+http://yandex.ru/pogoda
+https://developer.tech.yandex.ru/services/18
+
+https://yandex.ru/dev/weather/doc/dg/concepts/about.html
+https://yandex.ru/dev/weather/doc/dg/concepts/pricing.html#about
+
+https://romanlaptev-cors.herokuapp.com/
+
+Погода на вашем сайте
+Тариф для отображения погодных данных на сайтах. 
+Позволяет получать фактические погодные значения и 
+прогноз на 2 ближайших периода (ночь, утро, день или вечер). 
+Лимит обращений — 50 запросов в сутки.
+
+Доступ к API предоставляется при соблюдении условий размещения:
+
+Рядом с погодными данными необходимо разместить логотип Яндекс.Погоды или 
+текст «Яндекс.Погода». Логотип или текст должны вести на 
+главную страницу Яндекс.Погоды вашего города 
+(например, https://yandex.ru/pogoda/moscow) и 
+располагаться на белой или черной непрозрачной подложке. 
+Рекомендуемый шрифт — Arial с размером 15 px и интерлиньяжем 2 px.
+
+Необходимо указывать источник данных — «Яндекс.Погода» или 
+«По данным Яндекс.Погоды». Рекомендуемый шрифт — Arial.
+
+
+https://yandex.ru/dev/weather/doc/dg/concepts/forecast-info.html
+
+send header X-Yandex-API-Key: dab03f2c-c76d-4fb6-9445-faa84fa80973
+
+https://api.weather.yandex.ru/v2/informers?
+lat=55.75396&
+lon=37.620393&
+lang=ru_RU
+
+Россия Москва и Московская область Москва
+
+--------------------
+- добавить тест возможностей браузера
+</pre>
+
+</div><!-- end container -->
+
+	<div class="log-panel lr-panel bg-lightsteelblue5">
+		<div class="">
+			<div class="text-right lr-margin-small">
+				<a id="btn-toggle-log" href="#?q=toggle-log" title="Toggle log" class="btn btn-sm btn-default">-</a>
+				<a id="btn-clear-log" href="#?q=clear-log" title="Clear log" class="btn btn-sm btn-default">x</a>
+			</div>
+			<div id="log" class=""></div>
+		</div>
+	</div>
+
+</body>
+</html>

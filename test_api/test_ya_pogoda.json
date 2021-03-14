@@ -1,0 +1,80 @@
+{
+  "contentType": "application/json",
+  "data": {
+    "now": 1615701510,
+    "now_dt": "2021-03-14T05:58:30.074302Z",
+    "info": {
+      "url": "https://yandex.ru/pogoda/213?lat=55.75396&lon=37.620393",
+      "lat": 55.75396,
+      "lon": 37.620393
+    },
+    "fact": {
+      "obs_time": 1615698000,
+      "temp": 0,
+      "feels_like": -5,
+      "icon": "ovc",
+      "condition": "overcast",
+      "wind_speed": 4.7,
+      "wind_dir": "s",
+      "pressure_mm": 744,
+      "pressure_pa": 991,
+      "humidity": 92,
+      "daytime": "d",
+      "polar": false,
+      "season": "spring",
+      "wind_gust": 8.5
+    },
+    "forecast": {
+      "date": "2021-03-14",
+      "date_ts": 1615669200,
+      "week": 10,
+      "sunrise": "06:47",
+      "sunset": "18:29",
+      "moon_code": 8,
+      "moon_text": "moon-code-8",
+      "parts": [
+        {
+          "part_name": "day",
+          "temp_min": 2,
+          "temp_avg": 2,
+          "temp_max": 2,
+          "wind_speed": 4.7,
+          "wind_gust": 8.9,
+          "wind_dir": "s",
+          "pressure_mm": 742,
+          "pressure_pa": 990,
+          "humidity": 91,
+          "prec_mm": 3,
+          "prec_prob": 90,
+          "prec_period": 360,
+          "icon": "ovc_+sn",
+          "condition": "snow",
+          "feels_like": -3,
+          "daytime": "d",
+          "polar": false
+        },
+        {
+          "part_name": "evening",
+          "temp_min": 2,
+          "temp_avg": 2,
+          "temp_max": 3,
+          "wind_speed": 5.1,
+          "wind_gust": 10.4,
+          "wind_dir": "s",
+          "pressure_mm": 742,
+          "pressure_pa": 989,
+          "humidity": 92,
+          "prec_mm": 0.9,
+          "prec_prob": 80,
+          "prec_period": 360,
+          "icon": "ovc_-ra",
+          "condition": "light-rain",
+          "feels_like": -3,
+          "daytime": "n",
+          "polar": false
+        }
+      ]
+    }
+  },
+  "jsonObj": {}
+}

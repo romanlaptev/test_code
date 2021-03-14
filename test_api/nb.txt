@@ -44,6 +44,40 @@ https://developer.tech.yandex.ru/services/
 http://yandex.ru/pogoda
 https://developer.tech.yandex.ru/services/18
 
+https://yandex.ru/dev/weather/doc/dg/concepts/about.html
+https://yandex.ru/dev/weather/doc/dg/concepts/pricing.html#about
+
+
+Погода на вашем сайте
+Тариф для отображения погодных данных на сайтах. 
+Позволяет получать фактические погодные значения и 
+прогноз на 2 ближайших периода (ночь, утро, день или вечер). 
+Лимит обращений — 50 запросов в сутки.
+
+Доступ к API предоставляется при соблюдении условий размещения:
+
+Рядом с погодными данными необходимо разместить логотип Яндекс.Погоды или 
+текст «Яндекс.Погода». Логотип или текст должны вести на 
+главную страницу Яндекс.Погоды вашего города 
+(например, https://yandex.ru/pogoda/moscow) и 
+располагаться на белой или черной непрозрачной подложке. 
+Рекомендуемый шрифт — Arial с размером 15 px и интерлиньяжем 2 px.
+
+Необходимо указывать источник данных — «Яндекс.Погода» или 
+«По данным Яндекс.Погоды». Рекомендуемый шрифт — Arial.
+
+
+https://yandex.ru/dev/weather/doc/dg/concepts/forecast-info.html
+
+send header X-Yandex-API-Key: dab03f2c-c76d-4fb6-9445-faa84fa80973
+
+https://api.weather.yandex.ru/v2/informers?
+lat=55.75396&
+lon=37.620393&
+lang=ru_RU
+ 
+ 
+
 --- API Яндекс.Расписаний
 https://developer.tech.yandex.ru/services/4
 https://romanlaptev.herokuapp.com/projects/schedule_app/
@@ -78,6 +112,7 @@ https://yandex.ru/dev/videohosting/doc/concepts/about.html
 
 
 ------- YandexAudio API
+https://yandex.ru/dev/audio/jsapi/doc/intro/index.html
 YandexAudio API — это JavaScript-библиотека для воспроизведения аудио в браузере. 
 С ее помощью на странице можно проигрывать музыку, аудиокниги и прочие звуковые файлы. 
 С примером использования данной библиотеки можно ознакомиться на данной странице.
@@ -88,6 +123,7 @@ https://music.yandex.ru/api/v2.1/
 
 https://habr.com/ru/post/462607/
 Как я библиотеку для сервиса «Яндекс.Музыка» писал
+
 
 ========================== Google
 
