@@ -34,16 +34,16 @@ window.onload = function(){
 
 	var btn_request = document.querySelector("#btn-request");
 	btn_request.addEventListener("click", function(event){
-		//var url = document.querySelector("#inp-url").value;
-		//if( !url || url.length === 0){
-//logMsg = "error, empty or undefined url", url;
-//console.log(logMsg);
-			//return false;
-		//}
+		var url = document.querySelector("#inp-url").value;
+		if( !url || url.length === 0){
+logMsg = "error, empty or undefined url", url;
+console.log(logMsg);
+			return false;
+		}
 		sendRequest({
-			//"url": url,
-			"latitude": 55.75396,
-			"longitude": 37.620393,
+			"dataUrl": url,
+			//"latitude": 55.75396,
+			//"longitude": 37.620393,
 			"callback" : function( response ){
 //console.log(arguments);
 				if(response){
@@ -58,7 +58,7 @@ console.log(_vars);
 
 function sendRequest( opt ){
 	var p = {
-		"url" : false,
+		"dataUrl" : false,
 		"latitude": false,
 		"longitude": false,
 		"callback" : function(){
@@ -71,7 +71,7 @@ function sendRequest( opt ){
 		p[key] = opt[key];
 	}
 //console.log(p);
-
+/*
 	if( !p.latitude || p.latitude.length === 0){
 logMsg = "error, empty or undefined latitude", p.latitude;
 console.log(logMsg);
@@ -88,11 +88,12 @@ console.log(logMsg);
 .replace("{{latitude}}", p["latitude"] )
 .replace("{{longitude}}", p["longitude"] );
 console.log( dataUrl );		
-	
+*/	
+	var dataUrl = p["dataUrl"];
 	try{
 		var xhr = new XMLHttpRequest();
 		xhr.open("GET", dataUrl, true);
-		xhr.setRequestHeader("X-Yandex-API-Key", p.apikey );
+		xhr.setRequestHeader("X-Yandex-API-Key", _vars["apiKey"] );
 		//xhr.setRequestHeader("Access-Control-Allow-Credentials", "true");
 		
 		xhr.onload = function(e) {
@@ -188,11 +189,10 @@ func.logAlert(_vars["logMsg"], "error");
 		</div>
 		<div class="lr-panel-body">
 			
-<!--
+
 <input type="text" size="80" 
 id="inp-url" class=""  autocomplete="off" 
-value=""/>
--->
+value="https://romanlaptev-cors.herokuapp.com/https://api.weather.yandex.ru/v2/informers?lat=55.75396&lon=37.620393&lang=ru_RU"/>
 
 			<a href="#" 
 class="lr-btn bg-darkblue text-white" id="btn-request">Run request</a>
