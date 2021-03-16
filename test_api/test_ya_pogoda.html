@@ -222,16 +222,30 @@ function _drawResponse(){
 .replace("%moon_text%", _vars["data"]["forecast"]["moon_text"]);
 
 //forecast parts
-	var html_parts=document.querySelector("#forecast-parts").innerHTML;
-	html_parts = html_parts
-.replace("%part_name%", _vars["data"]["forecast"]["parts"][0]["part_name"]);
-
-	//for(var n = 0; n < _vars["data"]["forecast"]["parts"].length; n++){
-		//var _part = _vars["data"]["forecast"]["parts"][n];
-		
-	//}//next
+	var html_parts=document.querySelector("#forecast-parts-0").innerHTML;
 	
-	html = html.replace("%forecast_parts%", html_parts);
+	var eveningObj = _vars["data"]["forecast"]["parts"][0];
+	html_parts = html_parts
+.replace("%part_name%", eveningObj["part_name"])
+.replace("%temp_min%", eveningObj["temp_min"])
+.replace("%temp_max%", eveningObj["temp_max"])
+.replace("%temp_avg%", eveningObj["temp_avg"])
+.replace("%feels_like%", eveningObj["feels_like"])
+.replace("%icon%", eveningObj["icon"])
+.replace("%condition%", eveningObj["condition"])
+.replace("%daytime%", eveningObj["daytime"])
+.replace("%polar%", eveningObj["polar"])
+.replace("%wind_speed%", eveningObj["wind_speed"])
+.replace("%wind_gust%", eveningObj["wind_gust"])
+.replace("%wind_dir%", eveningObj["wind_dir"])
+.replace("%pressure_mm%", eveningObj["pressure_mm"])
+.replace("%pressure_pa%", eveningObj["pressure_pa"])
+.replace("%humidity%", eveningObj["humidity"])
+.replace("%prec_mm%", eveningObj["prec_mm"])
+.replace("%prec_period%", eveningObj["prec_period"])
+.replace("%prec_prob%", eveningObj["prec_prob"]);
+
+	html = html.replace("%forecast_part0%", html_parts);
 
 
 	document.querySelector("#response").innerHTML = html;
@@ -257,7 +271,7 @@ id="inp-url" class=""  autocomplete="off"
 value="https://romanlaptev-cors.herokuapp.com/https://api.weather.yandex.ru/v2/informers?lat=55.75396&lon=37.620393&lang=ru_RU"/>
 
 			<a href="#" 
-class="lr-btn bg-darkblue text-white" id="btn-request">Run request</a>
+class="lr-btn bg-darkblue text-white" id="btn-request">Run ajax request</a>
 
 		</div>
 		
@@ -410,21 +424,7 @@ class="lr-btn bg-darkblue text-white" id="btn-request">Run request</a>
 		
 		<li>
 <div class="lr-padding-20 bg-maroon lr-border-box lr-border-red">
-%forecast_parts%	
-			<ul id="forecast-parts" class="lr-list-group  color-white">
-<h4>parts 	Прогнозы по времени суток.</h4>
-<p>Все прогнозы погоды на время суток имеют одинаковый набор полей.
-Ответ содержит прогноз на 2 ближайших периода.</p>
-				<li>part_name: <b>%part_name%</b>	
-					<small>Название времени суток. Возможные значения:</small>
-					<pre>
-				night — ночь.
-				morning — утро.
-				day — день.
-				evening — вечер.
-					</pre>
-				</li>
-			</ul>
+%forecast_part0%
 </div>			
 		</li><!-- end parts info -->
 		
@@ -433,84 +433,86 @@ class="lr-btn bg-darkblue text-white" id="btn-request">Run request</a>
 </div>
 			</div><!-- end response block -->
 
-<pre>
- 	
- 	
- 	
+<div id="forecast-parts-0">
+	<ul  class="lr-list-group bg-indianred color-white">
+<h4>parts 	Прогнозы по времени суток.</h4>
+<p>Все прогнозы погоды на время суток имеют одинаковый набор полей.
+Ответ содержит прогноз на 2 ближайших периода.</p>
 
-<!--
-<li>part_name: <b>%part_name%</b>	
-	<small>Название времени суток. Возможные значения:</small>
-	<pre>
+		<li>part_name: <b>%part_name%</b>	
+			<small>Название времени суток. Возможные значения:</small>
+<pre>
 night — ночь.
 morning — утро.
 day — день.
 evening — вечер.
-	</pre>
-</li>
--->
+</pre>
+		</li>
+		<li>temp_min: <b>%temp_min%</b>	<small>Минимальная температура для времени суток (°C). 	Число</small></li>
+		<li>temp_max: <b>%temp_max%</b>	<small>Максимальная температура для времени суток (°C). 	Число</small></li>
+		<li>temp_avg: <b>%temp_avg%</b>	<small>Средняя температура для времени суток (°C). 	Число</small></li>
+		<li>feels_like: <b>%feels_like%</b>	<small>Ощущаемая температура (°C). 	Число</small></li>
 
-temp_min 	Минимальная температура для времени суток (°C). 	Число
-temp_max 	Максимальная температура для времени суток (°C). 	Число
-temp_avg 	Средняя температура для времени суток (°C). 	Число
-feels_like 	Ощущаемая температура (°C). 	Число
-icon 	Код иконки погоды. Иконка доступна по адресу https://yastatic.net/weather/i/icons/blueye/color/svg/<значение из поля icon>.svg. 	Строка
-condition 	Код расшифровки погодного описания. Возможные значения:
-
-    clear — ясно.
-    partly-cloudy — малооблачно.
-    cloudy — облачно с прояснениями.
-    overcast — пасмурно.
-    drizzle — морось.
-    light-rain — небольшой дождь.
-    rain — дождь.
-    moderate-rain — умеренно сильный дождь.
-    heavy-rain — сильный дождь.
-    continuous-heavy-rain — длительный сильный дождь.
-    showers — ливень.
-    wet-snow — дождь со снегом.
-    light-snow — небольшой снег.
-    snow — снег.
-    snow-showers — снегопад.
-    hail — град.
-    thunderstorm — гроза.
-    thunderstorm-with-rain — дождь с грозой.
-    thunderstorm-with-hail — гроза с градом.
-
-	Строка
-daytime 	Светлое или темное время суток. Возможные значения:
-
+		<li>icon: <b>%icon%</b>	<small>Код иконки погоды. Иконка доступна по адресу https://yastatic.net/weather/i/icons/blueye/color/svg/<значение из поля icon>.svg. 	Строка</small></li>
+		<li>condition: <b>%condition%</b>	
+<small>Код расшифровки погодного описания. Возможные значения:</small>
+<pre>
+clear — ясно.
+partly-cloudy — малооблачно.
+cloudy — облачно с прояснениями.
+overcast — пасмурно.
+drizzle — морось.
+light-rain — небольшой дождь.
+rain — дождь.
+moderate-rain — умеренно сильный дождь.
+heavy-rain — сильный дождь.
+continuous-heavy-rain — длительный сильный дождь.
+showers — ливень.
+wet-snow — дождь со снегом.
+light-snow — небольшой снег.
+snow — снег.
+snow-showers — снегопад.
+hail — град.
+thunderstorm — гроза.
+thunderstorm-with-rain — дождь с грозой.
+thunderstorm-with-hail — гроза с градом.
+</pre>
+		</li>
+		<li>daytime: <b>%daytime%</b>	
+<small>Светлое или темное время суток. Возможные значения:</small>
+<pre>
     «d» — светлое время суток.
     «n» — темное время суток.
-
-	Строка
-polar 	Признак того, что время суток, указанное в поле daytime, является полярным. 	Логический
-wind_speed 	Скорость ветра (в м/с). 	Число
-wind_gust 	Скорость порывов ветра (в м/с). 	Число
-wind_dir 	Направление ветра. Возможные значения:
-
-    «nw» — северо-западное.
-    «n» — северное.
-    «ne» — северо-восточное.
-    «e» — восточное.
-    «se» — юго-восточное.
-    «s» — южное.
-    «sw» — юго-западное.
-    «w» — западное.
-    «с» — штиль.
-
-	Строка
-pressure_mm 	Давление (в мм рт. ст.). 	Число
-pressure_pa 	Давление (в гектопаскалях). 	Число
-humidity 	Влажность воздуха (в процентах). 	Число
-prec_mm 	Прогнозируемое количество осадков (в мм). 	Число
-prec_period 	Прогнозируемый период осадков (в минутах). 	Число
-prec_prob 	Вероятность выпадения осадков. 	Число
-
 </pre>
+</li>
+		<li>polar: <b>%polar%</b>	<small>Признак того, что время суток, указанное в поле daytime, является полярным. 	Логический</small></li>
+
+		<li>wind_speed: <b>%wind_speed%</b>	<small>Скорость ветра (в м/с). 	Число</small></li>
+		<li>wind_gust: <b>%wind_gust%</b>	<small>Скорость порывов ветра (в м/с). 	Число</small></li>
+		<li>wind_dir: <b>%wind_dir%</b>	
+<small>Направление ветра. Возможные значения:</small>
+<pre>
+«nw» — северо-западное.
+«n» — северное.
+«ne» — северо-восточное.
+«e» — восточное.
+«se» — юго-восточное.
+«s» — южное.
+«sw» — юго-западное.
+«w» — западное.
+«с» — штиль.
+</pre>
+</li>
+		<li>pressure_mm: <b>%pressure_mm%</b>	<small>Давление (в мм рт. ст.). 	Число</small></li>
+		<li>pressure_pa: <b>%pressure_pa%</b>	<small>Давление (в гектопаскалях). 	Число</small></li>
+		<li>humidity: <b>%humidity%</b>	<small>Влажность воздуха (в процентах). 	Число</small></li>
+		<li>prec_mm: <b>%prec_mm%</b>	<small>Прогнозируемое количество осадков (в мм). 	Число</small></li>
+		<li>prec_period: <b>%prec_period%</b>	<small>Прогнозируемый период осадков (в минутах). 	Число</small></li>
+		<li>prec_prob: <b>%prec_prob%</b>	<small>Вероятность выпадения осадков. 	Число</small></li>
+	</ul>
+</div>			
 
 		</div>
-		
 	</div>
 
 	
