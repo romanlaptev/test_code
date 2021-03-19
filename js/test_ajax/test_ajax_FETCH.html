@@ -356,7 +356,7 @@ func.logAlert( logMsg, "error");
 	input url:<input type="text" class="form-control" id="input-url" name="input_url" value=""/>
 	<button id="btn-test-fetch" class="btn btn-danger">test FETCH</button>
 	<button id="btn-ajax" class="btn btn-primary" >ajax request</button>
-	
+
 	<pre>
 data/test.html
 data/test.xml
@@ -388,6 +388,34 @@ https://github.com/github/fetch
 window.fetch polyfill
 		</pre>
 	
+<pre>	
+function sendForm(n) {
+	let obj = Object.fromEntries(calculatorMap);
+
+	fetch("/calculator/mail.php", {
+		method: 'post',
+		body: JSON.stringify({ items: obj, name: n.name.value, phone: n.phone.value, code: n.code.value }),
+		headers: {
+			'Content-Type': 'application/json'
+		}
+	}).then(function (response) {
+		return response.text();
+	}).then(function (text) {
+		if (text === 'ok') {
+			ym(51755942, 'reachGoal', 'calculator');
+			alert('Спасибо! Ваша заявка получена, мы свяжемся с Вами в ближайшее время.');
+			n.classList.remove('codesent');
+			n.reset();
+
+		} else {
+			alert(text);
+		}
+	}).catch(function (error) {
+		log('Request failed', error)
+	});
+}
+</pre>
+
 </div> <!-- end container -->
 
 </body>
