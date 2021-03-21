@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<title>test API</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+	<meta charset="utf-8"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link type="text/css" rel="stylesheet" href="../code_templates/lr.css">
+<script src="../js/lib/shared_functions.js"></script>
+
+<script>
+var func = sharedFunc();
+//console.log("func:", func);
+func.vars["logOrderBy"] = "DESC";//sort log message by date
+
+_vars = {
+	"apiKey" : "7440bb4eee1e2d8d92bd8ca4a926ddd6",
+	"dataUrl" : "",
+	"requestParams" : {
+		"latitude": 55.038115899999994,
+		"longitude": 83.0094459,
+//Дачная улица, 38
+//посёлок Октябрьский, Мошковский район, Новосибирская область, Россия
+				//"latitude": 55.169005, 
+				//"longitude": 83.160846
+	},
+};
+
+_vars["dataUrl"] = "https://api.openweathermap.org/data/2.5/weather?";
+_vars["dataUrl"] += "lat={{latitude}}&";
+_vars["dataUrl"] += "lon={{longitude}}&";
+_vars["dataUrl"] += "units=metric&";
+_vars["dataUrl"] += "appid={{apiKey}}";
+
+window.onload = function(){
+
+//var logMsg = "Test";
+//func.logAlert( logMsg, "danger");
+//func.log( "000", "response");
+
+	var btn_request = document.querySelector("#btn-request");
+	btn_request.addEventListener("click", function(event){
+		var url = document.querySelector("#inp-url").value;
+		if( !url || url.length === 0){
+logMsg = "error, empty or undefined url", url;
+console.log(logMsg);
+			return false;
+		}
+		sendRequest({
+			"dataUrl": url,
+			//"latitude": 55.75396,
+			//"longitude": 37.620393,
+			"callback" : function( response ){
+//console.log(arguments);
+				if(response){
+					_parseAjax( response );
+var logMsg = "end parse ajax response";
+func.logAlert( logMsg, "info");
+				}
+				if( _vars["data"] ){
+					_drawResponse();
+				}
+			}//end callback
+		});
+	});//end event
+
+};//end window.load
+console.log(_vars);
+
+function sendRequest( opt ){
+	var p = {
+		"dataUrl" : false,
+		"latitude": false,
+		"longitude": false,
+		"callback" : function(){
+//console.log(arguments);
+		}//end callback
+	};
+//console.log(opt);
+	//extend p object
+	for(var key in opt ){
+		p[key] = opt[key];
+	}
+//console.log(p);
+/*
+	if( !p.latitude || p.latitude.length === 0){
+logMsg = "error, empty or undefined latitude", p.latitude;
+console.log(logMsg);
+		return false;
+	}
+
+	if( !p.longitude || p.longitude.length === 0){
+logMsg = "error, empty or undefined longitude", p.longitude;
+console.log(logMsg);
+		return false;
+	}
+
+	var dataUrl = _vars["dataUrl"]
+.replace("{{latitude}}", p["latitude"] )
+.replace("{{longitude}}", p["longitude"] );
+console.log( dataUrl );		
+*/	
+	var dataUrl = p["dataUrl"];
+	try{
+		var xhr = new XMLHttpRequest();
+		xhr.open("GET", dataUrl, true);
+		xhr.setRequestHeader("X-Yandex-API-Key", _vars["apiKey"] );
+		//xhr.setRequestHeader("Access-Control-Allow-Credentials", "true");
+		
+		xhr.onload = function(e) {
+console.log(arguments);
+// console.log("event type:" + e.type);
+console.log("time: " + e.timeStamp);
+console.log("total: " + e.total);
+console.log("loaded: " + e.loaded);	
+//console.log( this.responseText );
+//func.log( this.responseText, "response");
+			
+			var _response = false;
+			if( this.responseText.length > 0 ){
+				_response = this.responseText;
+				_vars["contentType"] = xhr.getResponseHeader('content-type');
+			}
+			
+			if( typeof p.callback === "function"){
+				p.callback(_response);
+			}
+		}//end onload
+		
+		xhr.onerror = function(e) {
+console.log(arguments);		
+console.log(e);		
+//for(var key in xhr){
+//console.log( key +" : "+xhr[key] );
+//}
+
+_vars["logMsg"] = "error, ajax load failed...";
+//_message( _vars["logMsg"], "error");
+func.logAlert( _vars["logMsg"], "danger");
+			p.callback(false);
+		}
+		
+		xhr.onloadend = function(e){
+//console.log(xhr.getResponseHeader('X-Powered-By') );
+console.log( xhr.getAllResponseHeaders() );
+		}//end onloadend
+		
+		xhr.send();
+		
+	} catch(e){
+console.log(e);	
+	}	
+	
+}//end sendRequest()
+
+
+
+function _parseAjax( data ){
+	
+	//if( _vars["contentType"].indexOf("application/xml") !== -1){
+		//_parseXML( data );
+	//}
+	
+	if( _vars["contentType"].indexOf("application/json") !== -1){
+		_parseJSON( data );
+	}
+	
+}//_parseAjax()
+
+
+function _parseJSON( jsonStr ){
+	try{
+		var jsonObj = JSON.parse( jsonStr, function(key, value) {
+//console.log( key, value );
+			return value;
+		});
+//console.log( jsonObj );
+		
+		_vars["data"] = jsonObj;
+		
+	} catch(error) {
+_vars["logMsg"] = "error, error JSON.parse server response data...." ;
+console.log( error );
+func.logAlert(_vars["logMsg"], "error");
+		return;
+	}//end catch
+
+}//end _parseJSON()
+
+function _drawResponse(){
+	var html = document.querySelector("#response").innerHTML;
+	
+	html = html.replace("%now%", _vars["data"]["now"])
+.replace("%now_dt%", _vars["data"]["now_dt"]);	
+
+//info
+	html = html
+.replace("%lat%", _vars["data"]["info"]["lat"])
+.replace("%lon%", _vars["data"]["info"]["lon"])
+.replace("%url%", _vars["data"]["info"]["url"]);	
+
+//fact
+	html = html
+.replace("%temp%", _vars["data"]["fact"]["temp"])
+.replace("%feels_like%", _vars["data"]["fact"]["feels_like"])
+.replace("%temp_water%", _vars["data"]["fact"]["temp_water"])
+.replace("%icon%", _vars["data"]["fact"]["icon"])
+.replace("%condition%", _vars["data"]["fact"]["condition"])
+.replace("%wind_speed%", _vars["data"]["fact"]["wind_speed"])
+.replace("%wind_gust%", _vars["data"]["fact"]["wind_gust"])
+.replace("%wind_dir%", _vars["data"]["fact"]["wind_dir"])
+.replace("%pressure_mm%", _vars["data"]["fact"]["pressure_mm"])
+.replace("%pressure_pa%", _vars["data"]["fact"]["pressure_pa"])
+.replace("%humidity%", _vars["data"]["fact"]["humidity"])
+.replace("%daytime%", _vars["data"]["fact"]["daytime"])
+.replace("%polar%", _vars["data"]["fact"]["polar"])
+.replace("%season%", _vars["data"]["fact"]["season"])
+.replace("%obs_time%", _vars["data"]["fact"]["obs_time"]);
+
+//forecast
+	html = html
+.replace("%date%", _vars["data"]["forecast"]["date"])
+.replace("%date_ts%", _vars["data"]["forecast"]["date_ts"])
+.replace("%week%", _vars["data"]["forecast"]["week"])
+.replace("%sunrise%", _vars["data"]["forecast"]["sunrise"])
+.replace("%week%", _vars["data"]["forecast"]["week"])
+.replace("%moon_code%", _vars["data"]["forecast"]["moon_code"])
+.replace("%moon_text%", _vars["data"]["forecast"]["moon_text"]);
+
+//forecast parts
+	var html_parts=document.querySelector("#forecast-parts-0").innerHTML;
+	
+	var eveningObj = _vars["data"]["forecast"]["parts"][0];
+	html_parts = html_parts
+.replace("%part_name%", eveningObj["part_name"])
+.replace("%temp_min%", eveningObj["temp_min"])
+.replace("%temp_max%", eveningObj["temp_max"])
+.replace("%temp_avg%", eveningObj["temp_avg"])
+.replace("%feels_like%", eveningObj["feels_like"])
+.replace("%icon%", eveningObj["icon"])
+.replace("%condition%", eveningObj["condition"])
+.replace("%daytime%", eveningObj["daytime"])
+.replace("%polar%", eveningObj["polar"])
+.replace("%wind_speed%", eveningObj["wind_speed"])
+.replace("%wind_gust%", eveningObj["wind_gust"])
+.replace("%wind_dir%", eveningObj["wind_dir"])
+.replace("%pressure_mm%", eveningObj["pressure_mm"])
+.replace("%pressure_pa%", eveningObj["pressure_pa"])
+.replace("%humidity%", eveningObj["humidity"])
+.replace("%prec_mm%", eveningObj["prec_mm"])
+.replace("%prec_period%", eveningObj["prec_period"])
+.replace("%prec_prob%", eveningObj["prec_prob"]);
+
+	html = html.replace("%forecast_part0%", html_parts);
+
+
+	document.querySelector("#response").innerHTML = html;
+}//end _drawResponse()
+
+</script>
+
+
+</head>
+
+<body class="bg-darkblue-sea">
+	
+<div class="lr-container bg-white">
+	<div class="lr-panel">
+		<div class="panel-heading">
+			<h3>test openweathermap API</h3>
+		</div>
+		<div class="lr-panel-body">
+			
+
+<input type="text" size="80" 
+id="inp-url" class=""  autocomplete="off" 
+value="http://api.openweathermap.org/data/2.5/weather"/>
+
+			<a href="#" 
+class="lr-btn bg-darkblue text-white" id="btn-request">Run ajax request</a>
+
+		</div>
+		
+		<div class="lr-panel-body lr-border-box lr-border-cyan" >
+			<div id="response">
+
+			</div>
+		</div>
+
+	
+<pre class="bg-snow lr-padding-small">
+https://openweathermap.org/
+Daily Forecast 7 days*
+https://home.openweathermap.org/
+
+api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=7440bb4eee1e2d8d92bd8ca4a926ddd6
+
+https://openweathermap.org/api
+API documentation 
+
+https://openweathermap.org/price
+Details of your plan 
+
+- Please, 
+note that 16-days daily forecast and History API are 
+not available for Free subscribers
+	
+</pre>
+
+</div><!-- end container -->
+
+	<div class="log-panel lr-panel bg-lightsteelblue5">
+		<div class="">
+			<div class="text-right lr-margin-small">
+				<a id="btn-toggle-log" href="#?q=toggle-log" title="Toggle log" class="btn btn-sm btn-default">-</a>
+				<a id="btn-clear-log" href="#?q=clear-log" title="Clear log" class="btn btn-sm btn-default">x</a>
+			</div>
+			<div id="log" class=""></div>
+		</div>
+	</div>
+
+</body>
+</html>
