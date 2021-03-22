@@ -29,11 +29,15 @@ _vars = {
 	}
 };
 
-_vars.weatherAPI["dataUrl"] = "https://api.openweathermap.org/data/2.5/weather?";
-_vars.weatherAPI["dataUrl"] += "lat={{latitude}}&";
-_vars.weatherAPI["dataUrl"] += "lon={{longitude}}&";
-_vars.weatherAPI["dataUrl"] += "units=metric&";
-_vars.weatherAPI["dataUrl"] += "appid={{apiKey}}";
+//_vars.weatherAPI["dataUrl"] = "https://api.openweathermap.org/data/2.5/weather?";
+//_vars.weatherAPI["dataUrl"] += "lat={{latitude}}&";
+//_vars.weatherAPI["dataUrl"] += "lon={{longitude}}&";
+//_vars.weatherAPI["dataUrl"] += "units=metric&";
+//_vars.weatherAPI["dataUrl"] += "appid={{apiKey}}";
+
+_vars.weatherAPI["dataUrl"] = "files_ignore/openweathermap_Novosibirsk.json";
+//_vars.weatherAPI["dataUrl"] = "files_ignore/openweathermap_Mochishche.json";
+//_vars.weatherAPI["dataUrl"] = "files_ignore/openweathermap_Novosibirsk_forecast.json";
 
 window.onload = function(){
 
