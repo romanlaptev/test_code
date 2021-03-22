@@ -15,23 +15,25 @@ var func = sharedFunc();
 func.vars["logOrderBy"] = "DESC";//sort log message by date
 
 _vars = {
-	"apiKey" : "7440bb4eee1e2d8d92bd8ca4a926ddd6",
-	"dataUrl" : "",
-	"requestParams" : {
-		"latitude": 55.038115899999994,
-		"longitude": 83.0094459,
-//Дачная улица, 38
-//посёлок Октябрьский, Мошковский район, Новосибирская область, Россия
-				//"latitude": 55.169005, 
-				//"longitude": 83.160846
-	},
+	"weatherAPI": {
+		"dataUrl" : "",
+		"requestParams" : {
+			"apiKey" : "7440bb4eee1e2d8d92bd8ca4a926ddd6",
+			"latitude": 55.038115899999994,
+			"longitude": 83.0094459,
+	//Дачная улица, 38
+	//посёлок Октябрьский, Мошковский район, Новосибирская область, Россия
+					//"latitude": 55.169005, 
+					//"longitude": 83.160846
+		}
+	}
 };
 
-_vars["dataUrl"] = "https://api.openweathermap.org/data/2.5/weather?";
-_vars["dataUrl"] += "lat={{latitude}}&";
-_vars["dataUrl"] += "lon={{longitude}}&";
-_vars["dataUrl"] += "units=metric&";
-_vars["dataUrl"] += "appid={{apiKey}}";
+_vars.weatherAPI["dataUrl"] = "https://api.openweathermap.org/data/2.5/weather?";
+_vars.weatherAPI["dataUrl"] += "lat={{latitude}}&";
+_vars.weatherAPI["dataUrl"] += "lon={{longitude}}&";
+_vars.weatherAPI["dataUrl"] += "units=metric&";
+_vars.weatherAPI["dataUrl"] += "appid={{apiKey}}";
 
 window.onload = function(){
 
@@ -39,27 +41,32 @@ window.onload = function(){
 //func.logAlert( logMsg, "danger");
 //func.log( "000", "response");
 
-	var btn_request = document.querySelector("#btn-request");
+	var btn_request = func.getById("btn-request");
 	btn_request.addEventListener("click", function(event){
-		var url = document.querySelector("#inp-url").value;
-		if( !url || url.length === 0){
-logMsg = "error, empty or undefined url", url;
-console.log(logMsg);
-			return false;
-		}
+		
+		//var url = func.getById("#inp-url").value;
+		//if( !url || url.length === 0){
+//logMsg = "error, empty or undefined url", url;
+//console.log(logMsg);
+			//return false;
+		//}
+		
 		sendRequest({
-			"dataUrl": url,
-			//"latitude": 55.75396,
-			//"longitude": 37.620393,
+			"dataUrl": _vars.weatherAPI["dataUrl"],
+			"requestParams": _vars.weatherAPI["requestParams"],
 			"callback" : function( response ){
 //console.log(arguments);
+				var data = null;
 				if(response){
-					_parseAjax( response );
+					responseData = _parseAjax( response );
 var logMsg = "end parse ajax response";
 func.logAlert( logMsg, "info");
 				}
-				if( _vars["data"] ){
-					_drawResponse();
+				if( responseData ){
+					_drawResponse({
+						data: responseData,
+						templates: func.getById("templates").innerHTML
+					});
 				}
 			}//end callback
 		});
@@ -71,8 +78,7 @@ console.log(_vars);
 function sendRequest( opt ){
 	var p = {
 		"dataUrl" : false,
-		"latitude": false,
-		"longitude": false,
+		"requestParams": false,
 		"callback" : function(){
 //console.log(arguments);
 		}//end callback
@@ -83,29 +89,37 @@ function sendRequest( opt ){
 		p[key] = opt[key];
 	}
 //console.log(p);
-/*
-	if( !p.latitude || p.latitude.length === 0){
-logMsg = "error, empty or undefined latitude", p.latitude;
-console.log(logMsg);
+
+
+	if( !p.requestParams){
+logMsg = "error, wrong requestParams...", p.requestParams;
+func.logAlert( logMsg, "error");
 		return false;
 	}
 
-	if( !p.longitude || p.longitude.length === 0){
-logMsg = "error, empty or undefined longitude", p.longitude;
-console.log(logMsg);
-		return false;
-	}
-
-	var dataUrl = _vars["dataUrl"]
-.replace("{{latitude}}", p["latitude"] )
-.replace("{{longitude}}", p["longitude"] );
-console.log( dataUrl );		
-*/	
 	var dataUrl = p["dataUrl"];
+	for(var key in p.requestParams){
+		dataUrl = dataUrl.replace( new RegExp("{{"+key+"}}", "g"), p.requestParams[key] );
+	}//next
+console.log( dataUrl );		
+
 	try{
 		var xhr = new XMLHttpRequest();
-		xhr.open("GET", dataUrl, true);
-		xhr.setRequestHeader("X-Yandex-API-Key", _vars["apiKey"] );
+		
+		try{
+			xhr.open( "GET", dataUrl, true );
+		} catch(e){
+logMsg = "ajax request error, not open";
+func.logAlert( logMsg, "error");
+
+for( var key in e){
+console.log(key +" : "+ e[key]);
+}//next
+			return false;
+		}//end catch
+		
+		
+		//xhr.setRequestHeader("X-Yandex-API-Key", _vars["apiKey"] );
 		//xhr.setRequestHeader("Access-Control-Allow-Credentials", "true");
 		
 		xhr.onload = function(e) {
@@ -129,11 +143,11 @@ console.log("loaded: " + e.loaded);
 		}//end onload
 		
 		xhr.onerror = function(e) {
-console.log(arguments);		
+//console.log(arguments);		
 console.log(e);		
-//for(var key in xhr){
-//console.log( key +" : "+xhr[key] );
-//}
+for(var key in e){
+console.log( key +" : "+e[key] );
+}
 
 _vars["logMsg"] = "error, ajax load failed...";
 //_message( _vars["logMsg"], "error");
@@ -163,7 +177,7 @@ function _parseAjax( data ){
 	//}
 	
 	if( _vars["contentType"].indexOf("application/json") !== -1){
-		_parseJSON( data );
+		return _parseJSON( data );
 	}
 	
 }//_parseAjax()
@@ -177,18 +191,29 @@ function _parseJSON( jsonStr ){
 		});
 //console.log( jsonObj );
 		
-		_vars["data"] = jsonObj;
+		return jsonObj;
 		
 	} catch(error) {
 _vars["logMsg"] = "error, error JSON.parse server response data...." ;
 console.log( error );
 func.logAlert(_vars["logMsg"], "error");
-		return;
+		return false;
 	}//end catch
 
 }//end _parseJSON()
 
-function _drawResponse(){
+function _drawResponse(opt){
+	var p = {
+		data: null,
+		templates: null
+	}
+//console.log(opt);
+	//extend p object
+	for(var key in opt ){
+		p[key] = opt[key];
+	}
+console.log(p);
+/*	
 	var html = document.querySelector("#response").innerHTML;
 	
 	html = html.replace("%now%", _vars["data"]["now"])
@@ -256,6 +281,7 @@ function _drawResponse(){
 
 
 	document.querySelector("#response").innerHTML = html;
+*/	
 }//end _drawResponse()
 
 </script>
@@ -273,9 +299,11 @@ function _drawResponse(){
 		<div class="lr-panel-body">
 			
 
+<!--
 <input type="text" size="80" 
 id="inp-url" class=""  autocomplete="off" 
 value="http://api.openweathermap.org/data/2.5/weather"/>
+-->
 
 			<a href="#" 
 class="lr-btn bg-darkblue text-white" id="btn-request">Run ajax request</a>
@@ -283,9 +311,7 @@ class="lr-btn bg-darkblue text-white" id="btn-request">Run ajax request</a>
 		</div>
 		
 		<div class="lr-panel-body lr-border-box lr-border-cyan" >
-			<div id="response">
-
-			</div>
+			<div id="response">	</div>
 		</div>
 
 	
@@ -318,6 +344,15 @@ not available for Free subscribers
 			</div>
 			<div id="log" class=""></div>
 		</div>
+	</div>
+
+	<div id="templates">
+<ul>		
+	<li>name: <b>%name%</b></li>
+	<li>cod: <b>%cod%</b></li>
+	<li>dt: <b>%dt%</b></li>
+	<li>base: <b>%base%</b></li>
+</ul>
 	</div>
 
 </body>

@@ -5,6 +5,11 @@ protected/runtime/*
 protected/data/*.db
 themes/classic/views/
 
+files_ignore/*
+*/files_ignore/*
+*/*/files_ignore/*
+*/*/*/files_ignore/*
+
 */mybd.xml
 */*/mybd.xml
 */*/*/mybd.xml
