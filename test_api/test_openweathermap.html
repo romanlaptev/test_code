@@ -6,7 +6,7 @@
 	<meta charset="utf-8"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<link type="text/css" rel="stylesheet" href="../code_templates/lr.css">
+<link type="text/css" rel="stylesheet" href="../css/lr.css">
 <script src="../js/lib/shared_functions.js"></script>
 
 <script>
@@ -17,6 +17,7 @@ func.vars["logOrderBy"] = "DESC";//sort log message by date
 _vars = {
 	"weatherAPI": {
 		"dataUrl" : "",
+		"forecastUrl" : "http://api.openweathermap.org/data/2.5/forecast",
 		"requestParams" : {
 			"apiKey" : "7440bb4eee1e2d8d92bd8ca4a926ddd6",
 			"latitude": 55.038115899999994,
@@ -29,15 +30,23 @@ _vars = {
 	}
 };
 
-//_vars.weatherAPI["dataUrl"] = "https://api.openweathermap.org/data/2.5/weather?";
-//_vars.weatherAPI["dataUrl"] += "lat={{latitude}}&";
-//_vars.weatherAPI["dataUrl"] += "lon={{longitude}}&";
-//_vars.weatherAPI["dataUrl"] += "units=metric&";
-//_vars.weatherAPI["dataUrl"] += "appid={{apiKey}}";
+//_vars.weatherAPI["weatherUrl"] = "https://api.openweathermap.org/data/2.5/weather?";
+//_vars.weatherAPI["weatherUrl"] += "lat={{latitude}}&";
+//_vars.weatherAPI["weatherUrl"] += "lon={{longitude}}&";
+//_vars.weatherAPI["weatherUrl"] += "units=metric&";
+//_vars.weatherAPI["weatherUrl"] += "appid={{apiKey}}";
 
-_vars.weatherAPI["dataUrl"] = "files_ignore/openweathermap_Novosibirsk.json";
-//_vars.weatherAPI["dataUrl"] = "files_ignore/openweathermap_Mochishche.json";
-//_vars.weatherAPI["dataUrl"] = "files_ignore/openweathermap_Novosibirsk_forecast.json";
+_vars.weatherAPI["weatherUrl"] = "files_ignore/openweathermap_Novosibirsk.json";
+//_vars.weatherAPI["weatherUrl"] = "files_ignore/openweathermap_Mochishche.json";
+
+/*
+_vars.weatherAPI["forecastUrl"] += "?";
+_vars.weatherAPI["forecastUrl"] += "lat={{latitude}}&";
+_vars.weatherAPI["forecastUrl"] += "lon={{longitude}}&";
+_vars.weatherAPI["forecastUrl"] += "units=metric&";
+_vars.weatherAPI["forecastUrl"] += "appid={{apiKey}}";
+*/
+_vars.weatherAPI["forecastUrl"] = "files_ignore/openweathermap_Novosibirsk_forecast.json";
 
 window.onload = function(){
 
@@ -45,39 +54,151 @@ window.onload = function(){
 //func.logAlert( logMsg, "danger");
 //func.log( "000", "response");
 
-	var btn_request = func.getById("btn-request");
-	btn_request.addEventListener("click", function(event){
-		
-		//var url = func.getById("#inp-url").value;
-		//if( !url || url.length === 0){
-//logMsg = "error, empty or undefined url", url;
-//console.log(logMsg);
-			//return false;
-		//}
-		
-		sendRequest({
-			"dataUrl": _vars.weatherAPI["dataUrl"],
-			"requestParams": _vars.weatherAPI["requestParams"],
-			"callback" : function( response ){
-//console.log(arguments);
-				var data = null;
-				if(response){
-					responseData = _parseAjax( response );
-var logMsg = "end parse ajax response";
-func.logAlert( logMsg, "info");
+	_vars["log"] = func.getById("log");
+
+	var App_container = func.getById("App");
+	App_container.addEventListener("click", function(e){
+//console.log(e.type);
+		event = e || window.e;
+		var target = event.target || event.srcElement;
+//console.log( target);
+//console.log( event.eventPhase );
+//console.log( "preventDefault: " + event.preventDefault );
+		if( target.tagName === "A"){
+			if ( target.href.indexOf("?q=") !== -1){
+				
+				if (event.preventDefault) { 
+					event.preventDefault();
+				} else {
+					event.returnValue = false;				
 				}
-				if( responseData ){
-					_drawResponse({
-						data: responseData,
-						templates: func.getById("templates").innerHTML
-					});
-				}
-			}//end callback
-		});
+
+				var parseStr = target.href; 
+//console.log( parseStr );
+					if( parseStr.length > 0 ){
+						_vars["GET"] = func.parseGetParams( parseStr ); 
+						_urlManager( target );
+					} else {
+console.log( "Warn! error parse url in " + target.href );
+					}
+
+			}
+		}
+
 	});//end event
+
+
+	//var btn_forecast = func.getById("btn-get-forecast");
+	//btn_forecast.addEventListener("click", function(e){
+		//getWeatherForecast();
+	//});//end event
+
+	//var btn_request = func.getById("btn-request");
+	//btn_request.addEventListener("click", function(event){
+	//});//end event
 
 };//end window.load
 console.log(_vars);
+
+
+function _urlManager( target ){
+//console.log(target);
+		
+		switch( _vars["GET"]["q"] ) {
+
+			case "toggle-log":
+//console.log(log.style.display);
+				if( _vars["log"].style.display==="none"){
+					_vars["log"].style.display="block";
+				} else {
+					_vars["log"].style.display="none";
+				}
+			break;
+			
+			case "clear-log":
+				_vars["log"].innerHTML="";
+			break;
+			
+			case "send-request":
+				if( !_vars["GET"]["req-type"] || 
+					_vars["GET"]["req-type"].length === 0
+				){
+logMsg = "error, empty or undefined API req-type";
+func.logAlert(logMsg, "error");
+					return false;
+				}
+
+				var requestTpl = "";
+				
+				if( _vars["GET"]["req-type"] === "weather"){
+					_vars.weatherAPI["dataUrl"] = _vars.weatherAPI["weatherUrl"];
+					requestTpl = func.getById("template-main").innerHTML;
+				}
+		
+				if( _vars["GET"]["req-type"] === "forecast"){
+					_vars.weatherAPI["dataUrl"] = _vars.weatherAPI["forecastUrl"];
+					requestTpl = func.getById("template-forecast").innerHTML;
+				}
+		
+				sendRequest({
+					"dataUrl": _vars.weatherAPI["dataUrl"],
+					"requestParams": _vars.weatherAPI["requestParams"],
+					"callback" : function( response ){
+		//console.log(arguments);
+						var data = null;
+						if(response){
+							responseData = _parseAjax( response );
+		var logMsg = "end parse ajax response";
+		func.logAlert( logMsg, "info");
+						}
+						if( responseData ){
+							_drawResponse({
+								data: responseData,
+								templates: {
+									"tplMain": requestTpl
+								}
+							});
+						}
+					}//end callback
+				});
+			
+			break;
+			
+			default:
+console.log("function _urlManager(),  GET query string: ", _vars["GET"]);
+			break;
+		}//end switch
+		
+}//end _urlManager()
+
+/*
+function getWeatherForecast(){
+	sendRequest({
+		"dataUrl": _vars.weatherAPI["forecastUrl"],
+		"requestParams": _vars.weatherAPI["requestParams"],
+		"callback" : function( response ){
+//console.log(arguments);
+
+			var data = null;
+			if(response){
+				responseData = _parseAjax( response );
+var logMsg = "end parse ajax response";
+func.logAlert( logMsg, "info");
+			}
+			if( responseData ){
+				_drawResponse({
+					data: responseData,
+					templates: {
+						"tplMain": func.getById("template-forecast").innerHTML
+					}
+				});
+			}
+
+		}//end callback
+	});
+
+}//end getWeatherForecast
+*/
 
 function sendRequest( opt ){
 	var p = {
@@ -127,13 +248,14 @@ console.log(key +" : "+ e[key]);
 		//xhr.setRequestHeader("Access-Control-Allow-Credentials", "true");
 		
 		xhr.onload = function(e) {
-console.log(arguments);
+//console.log(arguments);
 // console.log("event type:" + e.type);
-console.log("time: " + e.timeStamp);
-console.log("total: " + e.total);
-console.log("loaded: " + e.loaded);	
+logMsg = "time: " + e.timeStamp +"ms, ";
+logMsg += "total: " + e.total +"bytes , ";
+logMsg += "loaded: " + e.loaded +"bytes";
+//console.log(logMsg);	
 //console.log( this.responseText );
-//func.log( this.responseText, "response");
+func.logAlert( logMsg, "info");
 			
 			var _response = false;
 			if( this.responseText.length > 0 ){
@@ -161,7 +283,9 @@ func.logAlert( _vars["logMsg"], "danger");
 		
 		xhr.onloadend = function(e){
 //console.log(xhr.getResponseHeader('X-Powered-By') );
-console.log( xhr.getAllResponseHeaders() );
+logMsg = "Request headers: " + xhr.getAllResponseHeaders();
+console.log( logMsg );
+func.logAlert( logMsg, "info");
 		}//end onloadend
 		
 		xhr.send();
@@ -217,76 +341,33 @@ function _drawResponse(opt){
 		p[key] = opt[key];
 	}
 console.log(p);
-/*	
-	var html = document.querySelector("#response").innerHTML;
+
+	var html = p.templates["tplMain"];
+	html = html
+.replace("%id%", p.data["id"])
+.replace("%name%", p.data["name"])
+.replace("%base%", p.data["base"])
+.replace("%cod%", p.data["cod"])
+.replace("%clouds.all%", p.data["clouds"]["all"])
+.replace("%coord.lat%", p.data["coord"]["lat"])
+.replace("%coord.lon%", p.data["coord"]["lon"])
+.replace("%main.feels_like%", p.data["main"]["feels_like"])
+.replace("%sys.country%", p.data["sys"]["country"])
+.replace("%wind.speed%", p.data["wind"]["speed"])
+.replace("%wind.deg%", p.data["wind"]["deg"]);
+
+	var responseDate = func.timeStampToDateStr({
+		"timestamp": p.data["dt"],
+		"format": "yyyy-mm-dd hh:min:sec"
+	});
+	html = html.replace("%dt%", responseDate);
+
+	html = html.replace("%timezone%", p.data["timezone"]);
+	html = html.replace("%visibility%", p.data["visibility"]);
 	
-	html = html.replace("%now%", _vars["data"]["now"])
-.replace("%now_dt%", _vars["data"]["now_dt"]);	
-
-//info
-	html = html
-.replace("%lat%", _vars["data"]["info"]["lat"])
-.replace("%lon%", _vars["data"]["info"]["lon"])
-.replace("%url%", _vars["data"]["info"]["url"]);	
-
-//fact
-	html = html
-.replace("%temp%", _vars["data"]["fact"]["temp"])
-.replace("%feels_like%", _vars["data"]["fact"]["feels_like"])
-.replace("%temp_water%", _vars["data"]["fact"]["temp_water"])
-.replace("%icon%", _vars["data"]["fact"]["icon"])
-.replace("%condition%", _vars["data"]["fact"]["condition"])
-.replace("%wind_speed%", _vars["data"]["fact"]["wind_speed"])
-.replace("%wind_gust%", _vars["data"]["fact"]["wind_gust"])
-.replace("%wind_dir%", _vars["data"]["fact"]["wind_dir"])
-.replace("%pressure_mm%", _vars["data"]["fact"]["pressure_mm"])
-.replace("%pressure_pa%", _vars["data"]["fact"]["pressure_pa"])
-.replace("%humidity%", _vars["data"]["fact"]["humidity"])
-.replace("%daytime%", _vars["data"]["fact"]["daytime"])
-.replace("%polar%", _vars["data"]["fact"]["polar"])
-.replace("%season%", _vars["data"]["fact"]["season"])
-.replace("%obs_time%", _vars["data"]["fact"]["obs_time"]);
-
-//forecast
-	html = html
-.replace("%date%", _vars["data"]["forecast"]["date"])
-.replace("%date_ts%", _vars["data"]["forecast"]["date_ts"])
-.replace("%week%", _vars["data"]["forecast"]["week"])
-.replace("%sunrise%", _vars["data"]["forecast"]["sunrise"])
-.replace("%week%", _vars["data"]["forecast"]["week"])
-.replace("%moon_code%", _vars["data"]["forecast"]["moon_code"])
-.replace("%moon_text%", _vars["data"]["forecast"]["moon_text"]);
-
-//forecast parts
-	var html_parts=document.querySelector("#forecast-parts-0").innerHTML;
-	
-	var eveningObj = _vars["data"]["forecast"]["parts"][0];
-	html_parts = html_parts
-.replace("%part_name%", eveningObj["part_name"])
-.replace("%temp_min%", eveningObj["temp_min"])
-.replace("%temp_max%", eveningObj["temp_max"])
-.replace("%temp_avg%", eveningObj["temp_avg"])
-.replace("%feels_like%", eveningObj["feels_like"])
-.replace("%icon%", eveningObj["icon"])
-.replace("%condition%", eveningObj["condition"])
-.replace("%daytime%", eveningObj["daytime"])
-.replace("%polar%", eveningObj["polar"])
-.replace("%wind_speed%", eveningObj["wind_speed"])
-.replace("%wind_gust%", eveningObj["wind_gust"])
-.replace("%wind_dir%", eveningObj["wind_dir"])
-.replace("%pressure_mm%", eveningObj["pressure_mm"])
-.replace("%pressure_pa%", eveningObj["pressure_pa"])
-.replace("%humidity%", eveningObj["humidity"])
-.replace("%prec_mm%", eveningObj["prec_mm"])
-.replace("%prec_period%", eveningObj["prec_period"])
-.replace("%prec_prob%", eveningObj["prec_prob"]);
-
-	html = html.replace("%forecast_part0%", html_parts);
-
-
 	document.querySelector("#response").innerHTML = html;
-*/	
 }//end _drawResponse()
+
 
 </script>
 
@@ -296,29 +377,70 @@ console.log(p);
 <body class="bg-darkblue-sea">
 	
 <div class="lr-container bg-white">
-	<div class="lr-panel">
-		<div class="panel-heading">
-			<h3>test openweathermap API</h3>
-		</div>
-		<div class="lr-panel-body">
-			
+	<div class="lr-page-header">
+		<h1>test API: openweathermap.org </h1>
+	</div>
+</div>
 
+<div class="lr-container bg-white" id="App">
+	
+	<div class="lr-row text-center lr-margin-20-top">
+
+		<div class="lr-panel-inline lr-border-box lr-border-red text-left">
+<form name="form_request_params">
+			<div class="lr-panel-body">
 <!--
 <input type="text" size="80" 
 id="inp-url" class=""  autocomplete="off" 
 value="http://api.openweathermap.org/data/2.5/weather"/>
 -->
+<a href="#?q=send-request&req-type=weather" class="lr-btn bg-darkblue text-white" id="btn-request">get weather</a>
+<a href="#?q=send-request&req-type=forecast" class="lr-btn bg-blue text-white" id="btn-get-forecast">get weather forecast</a>
+			</div>
 
-			<a href="#" 
-class="lr-btn bg-darkblue text-white" id="btn-request">Run ajax request</a>
+			<div class="lr-panel-body">
+				<div class="row panel">
+						<div class="">
+							<small>Latitude <mark>(широта), 90...-90 deg./град.</mark>:</small> 
+						</div>
+					<div class="">
+<input id="latitude-input" type="text"
+name="coord_lat" 
+value="0" autocomplete="off" placeholder="">
+<input id="latitude-range" type="range" 
+class="range" min="-90" max="90" step="0.05" value="" autocomplete="off">
+					</div>
+				</div>
+					
+				<div class="">
+					<div class="">
+						<small>Longitude <mark>(долгота), -180...180 deg./град.</mark>:</small> 
+					</div>
+					<div class="">
+<input id="longitude-input" 
+name="coord_long" 
+type="text" value="-60" autocomplete="off" placeholder="">
+<input id="longitude-range" 
+type="range" class="range" min="-180" max="180" step="0.05" value="" autocomplete="off">
+					</div>
+				</div>
+				
+			</div>
+			
+			<div class="lr-panel-body">
+select address for get coordinates:
+<select name="address">
+	<option value="addr1">address1</option>
+	<option value="addr2">address2</option>
+	<option value="addr3">address3</option>
+</select>
+			</div>
+</form><!-- end form_request_params -->
+			
+		</div><!-- end panel -->
 
-		</div>
-		
-		<div class="lr-panel-body lr-border-box lr-border-cyan" >
-			<div id="response">	</div>
-		</div>
-
-	
+		<div class="lr-panel-inline text-left">
+			<div class="lr-panel-body">
 <pre class="bg-snow lr-padding-small">
 https://openweathermap.org/
 Daily Forecast 7 days*
@@ -337,26 +459,72 @@ note that 16-days daily forecast and History API are
 not available for Free subscribers
 	
 </pre>
-
-</div><!-- end container -->
+			</div>
+		</div><!-- end panel -->
+		
+		<div class="lr-panel text-left">
+			<div class="lr-panel-heading bg-blue color-white">
+				<h4>response</h4>
+			</div>
+			<div class="lr-panel-body lr-border-box lr-border-cyan" >
+				<div id="response">	</div>
+			</div>
+				
+		</div><!-- end panel -->
+		
+	</div><!-- end center lr-row -->
 
 	<div class="log-panel lr-panel bg-lightsteelblue5">
 		<div class="">
 			<div class="text-right lr-margin-small">
-				<a id="btn-toggle-log" href="#?q=toggle-log" title="Toggle log" class="btn btn-sm btn-default">-</a>
-				<a id="btn-clear-log" href="#?q=clear-log" title="Clear log" class="btn btn-sm btn-default">x</a>
+				<a id="btn-toggle-log" href="#?q=toggle-log" title="Toggle log" class="lr-btn bg-white">-</a>
+				<a id="btn-clear-log" href="#?q=clear-log" title="Clear log" class="lr-btn bg-orange">x</a>
 			</div>
 			<div id="log" class=""></div>
 		</div>
 	</div>
+	
+</div><!-- end container -->
 
-	<div id="templates">
+	<div id="template-main">
 <ul>		
+	<li>id: <b>%id%</b></li>
 	<li>name: <b>%name%</b></li>
 	<li>cod: <b>%cod%</b></li>
-	<li>dt: <b>%dt%</b></li>
 	<li>base: <b>%base%</b></li>
+	<li>dt: <b>%dt%</b></li>
+	<li>timezone: <b>%timezone%</b></li>
+	<li>visibility: <b>%visibility%</b></li>
+	
+	<li>clouds.all: <b>%clouds.all%</b></li>
+
+	<li>coord.lat: <b>%coord.lat%</b></li>
+	<li>coord.lon: <b>%coord.lon%</b></li>
+
+	<li>main.feels_like: <b>%main.feels_like%</b></li>
+....
+	<li>sys.country: <b>%sys.country%</b></li>
+....	
+	<li>wind.speed: <b>%wind.speed%</b></li>
+	<li>wind.deg: <b>%wind.deg%</b></li>
+
 </ul>
+
+<pre>
+​​weather: Array [ {…} ]
+​​</pre>
+	</div>
+
+	<div id="template-forecast">
+<ul>		
+	<li>cod: <b>%cod%</b></li>
+	<li>message: <b>%message%</b></li>
+</ul>
+
+<pre>
+city: Object {}
+list: Object {}
+​​</pre>
 	</div>
 
 </body>
