@@ -1,0 +1,282 @@
+https://test.kraski-avangard.ru/
+
+.home #menu-slider{}
+
+.menu-slides {
+	position: relative;
+}
+								.home #menu-slider .slide{
+									height: 0;
+									background-position: left center;
+									background-repeat: no-repeat;
+									background-color: #fff;
+									background-size: contain;
+								/*
+									display:none;
+								*/
+									overflow: hidden;	
+									opacity: 0;
+									transition: visibility 0s 1s, opacity 1s linear;	
+									/*transition: opacity 0.3s, visibility 0s linear 0.3s;*/
+								}
+.home #menu-slider #slide-paint-metal{
+	background-image: url('/wp-content/themes/kraski-avangard/img/bg-menu-slider_paint-metal.png');
+}
+.home #menu-slider #slide-paint-wood{
+	background-image: url('/wp-content/themes/kraski-avangard/img/bg-menu-slider_paint-wood.png');
+}
+.home #menu-slider #slide-paint-beton{
+	background-image: url('/wp-content/themes/kraski-avangard/img/bg-menu-slider_paint-beton.png');
+}
+.home #menu-slider #slide-paint-service{
+	background-image: url('/wp-content/themes/kraski-avangard/img/bg-menu-slider_paint-service.png');
+}
+
+								.home #menu-slider .active-slide{
+								/*
+								display:block;
+								*/
+									height: 425px;
+									position: absolute;
+									top: 0;
+									left: 0;
+	
+									visibility: visible;
+									opacity: 1;
+									transition: opacity 1s linear;
+									/*transition-delay: 0s;*/
+								}
+
+.home #menu-slider .slide .slide-wrap{}
+.home #menu-slider .slide .slide-text{
+	padding: 40px;
+	width: 60%;
+}
+.home #menu-slider .slide .menu-slide-title{
+	font-family: Rubik;
+	font-size: 40px;
+	font-style: normal;
+	font-weight: 900;
+	line-height: 52px;
+	letter-spacing: 0em;
+}
+.home #menu-slider .slide .menu-slide-description {
+	padding: 20px 0;
+}
+.home #menu-slider .slide .menu-slider-btn-more {
+	text-align: center;
+	padding: 10px;
+	width: 30%;
+	background-color: #FABA61;
+	-webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+	-moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+	box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+}
+.home #menu-slider .slide .menu-slider-btn-more a{
+	color: #fff;
+	text-transform:uppercase;
+}
+.home #menu-slider .slide .menu-image {
+	border: 1;
+	/*background-color: red;*/
+	width: 40%;
+	/* height: 400px; */
+	padding-top: 60px;
+	text-align: center;
+}
+
+.home #menu-slider .menu-slider-active {
+	background-color: #FABA61;
+}
+
+.home #menu-slider .menu-slider-item-title {
+font-family: Rubik;
+font-size: 14px;
+font-style: normal;
+font-weight: 700;
+line-height: 17px;
+letter-spacing: 0em;
+text-align: left;
+}
+.home #menu-slider .menu-slider-active .menu-slider-item-title {
+	color: #ffffff;
+}
+
+.home #menu-slider .menu-slider-nav ul li {
+	padding: 10px;
+}
+
+.home #menu-slider .menu-slider-active .menu-slider-item-desc {
+	color: #ffffff;
+}
+
+=================================
+window.onload=function(){
+//console.log("onload page...");	
+	var menuSlider = document.querySelector("#menu-slider");
+	if(menuSlider){
+		
+		var slides = menuSlider.querySelectorAll(".slide");
+		var sliderNavItems = menuSlider.querySelectorAll(".menu-slider-nav ul li");
+		sliderNavItems[0].classList.add("menu-slider-active");
+		
+		for( var n = 0; n < sliderNavItems.length; n++){
+			sliderNavItems[n].addEventListener("mouseenter", function(e){
+//console.log(e.type, e.target);
+//console.log(e.target.dataset["slideId"]);
+				event_menuSliderNavItems({
+					"target": e.target,
+					"slides": slides,
+					"slidesItems": sliderNavItems
+				});
+
+			});
+		}//next
+	}
+}//end load page
+
+function event_menuSliderNavItems(opt){
+	var slideId = opt.target.dataset["slideId"];
+
+	for( var n2 = 0; n2 < opt.slides.length; n2++){
+		
+		if(opt.slidesItems[n2].classList.contains("menu-slider-active")){
+			opt.slidesItems[n2].classList.remove("menu-slider-active");
+		}
+		
+		if(opt.slides[n2].classList.contains("active-slide")){
+			opt.slides[n2].classList.remove("active-slide");
+			//opt.slides[n2].style.display="none";
+		}
+		
+		if( slideId === opt.slides[n2].id ){
+			//opt.slides[n2].style.display="block";
+			opt.slides[n2].classList.add("active-slide");
+			opt.target.classList.add("menu-slider-active");
+		}
+	}//next
+
+}//end event
+
+=========================
+
+<div id="menu-slider" class="lr-flex">
+	
+	<div class="menu-slides w80">
+	  <div id="slide-paint-metal" class="slide active-slide">
+		<div class="slide-wrap lr-flex">
+			<div class="slide-text">
+				<div class="menu-slide-title lr-head1">Огнезащитные краски<br> 
+					<span class="lr-color-orange">АВАНГАРД</span>
+				</div>
+				<p class="menu-slide-description">
+				Огнезащитные краски и прочие огнезащитные покрытия своего изготовления 
+				используются для долгого предохранения от действия огня конструкций 
+				из различных материалов
+				</p>
+				<div class="menu-slider-btn-more">
+	<a href="/ognezashitnye-sostavy-kraska-po-metally" class="">подробнее</a>
+				</div>
+			</div>
+		
+			<div class="menu-image">
+				<img src="<?php echo get_template_directory_uri() ?>/img/menu-slider-item_paint-metal.png" alt="">
+			</div>	
+		</div>	
+	  </div><!-- end menu slide -->
+
+	  <div id="slide-paint-wood" class="slide">
+		<div class="slide-wrap lr-flex">
+			<div class="slide-text">
+				<div class="menu-slide-title lr-head1">Огнезащитная краска <br> 
+					<span class="lr-color-orange">для древесины</span>
+				</div>
+				<p class="menu-slide-description">
+		Сухой концентрат пропитки «Авангард-СК» поставляется в форме порошка. Он
+		предназначен для огнебиозащиты внутренних деревянных конструкций
+				</p>
+				<div class="menu-slider-btn-more">
+	<a href="/propitki-ognezashhitnye-biozashhitnye-gidrozashhitnye-dlya-drevesiny" class="">подробнее</a>
+				</div>
+			</div>
+			
+			<div class="menu-image">
+				<img src="<?php echo get_template_directory_uri() ?>/img/menu-slider-item_paint-wood.png" alt="">
+			</div>	
+		</div>	
+	  </div><!-- end menu slide -->
+
+	  <div id="slide-paint-beton" class="slide">
+		<div class="slide-wrap lr-flex">
+			<div class="slide-text">
+				<div class="menu-slide-title lr-head1">Огнезащитная краска <br> 
+					<span class="lr-color-orange">для кабеля и бетона</span>
+				</div>
+				<p class="menu-slide-description">
+	Огнезащитное покрытие “UnitFire Lux” рекомендован в случаях, 
+	когда нужна противопожарная защита систем электричества и связи, 
+	кабель-канала, проводки
+				</p>
+				<div class="menu-slider-btn-more">
+	<a href="/pokrytiya-ognezashhitnye-dlya-kabelya-betona" class="">подробнее</a>
+				</div>
+			</div>
+			
+			<div class="menu-image">
+				<img src="<?php echo get_template_directory_uri() ?>/img/menu-slider-item_paint-beton.png" alt="">
+			</div>	
+		</div>	
+	  </div><!-- end menu slide -->
+	  
+	  <div id="slide-paint-service" class="slide">
+		<div class="slide-wrap lr-flex">
+			<div class="slide-text">
+				<div class="menu-slide-title lr-head1">Услуги по нанесению <br> 
+					<span class="lr-color-orange">огнезащитных материалов</span>
+				</div>
+				<p class="menu-slide-description">
+	Наша компания имеет огромный опыт в выполнении работ в области огнезащиты металлоконструкций, 
+	обработки зданий и сооружений огнезащитной краской и пропиткой
+				</p>
+				<div class="menu-slider-btn-more">
+	<a href="/uslugi-po-naneseniyu-kraski" class="">подробнее</a>
+				</div>
+			</div>
+			
+			<div class="menu-image">
+				<img src="<?php echo get_template_directory_uri() ?>/img/menu-slider-item_paint-service.png" alt="">
+			</div>	
+		</div>	
+	  </div><!-- end menu slide -->
+	  
+	  
+	</div><!-- end menu-slides -->
+  
+	<div class="menu-slider-nav w20">
+		<ul class="lr-list-unstyled">
+		  <li class="" data-slide-id="slide-paint-metal">
+			<div class='menu-slider-item-title'>Огнезащитная краска для металла</div>
+			<p class='menu-slider-item-desc'>предназначена для защиты стальных констукций</p>
+		  </li>
+		  
+		  <li class="menu-slider-paint-wood" data-slide-id="slide-paint-wood">
+			<div class='menu-slider-item-title'>Огнезащитная краска для древесины</div>
+			<p class='menu-slider-item-desc'>предназначена для защиты деревянных поверхностей</p>
+		  </li>
+		  
+		  <li class="menu-slider-paint-beton" data-slide-id="slide-paint-beton">
+			<div class='menu-slider-item-title'>Огнезащитная краска для для кабеля и бетона</div>
+			<p class='menu-slider-item-desc'>предназначена для защиты бетонных поверхностей</p>
+		  </li>
+		  
+		  <li class="menu-slider-paint-service" data-slide-id="slide-paint-service">
+			<div class='menu-slider-item-title'>Услуги по нанесению огнезащитных материалов</div>
+			<p class='menu-slider-item-desc'>комплекс услуг по огнезащитной обработке</p>
+		  </li>
+		  
+		</ul>
+	</div>
+  
+</div><!-- end menu-slider block -->
+
+
