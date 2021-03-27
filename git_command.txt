@@ -1,3 +1,5 @@
+test1 commit from vbox-w7
+
 =======================
 git clone ssh://roman@i5/mnt/d2/www/test_code
 
