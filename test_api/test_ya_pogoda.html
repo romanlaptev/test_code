@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<title>test API: yandex weather</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+	<meta charset="utf-8"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link type="text/css" rel="stylesheet" href="../css/lr.css">
+<script src="../js/lib/shared_functions.js"></script>
+
+<script>
+var func = sharedFunc();
+//console.log("func:", func);
+func.vars["logOrderBy"] = "DESC";//sort log message by date
+
+_vars = {
+	"apiKey" : "dab03f2c-c76d-4fb6-9445-faa84fa80973",
+	"dataUrl" : ""
+};
+
+_vars["dataUrl"] = "https://romanlaptev-cors.herokuapp.com/";
+_vars["dataUrl"] += "https://api.weather.yandex.ru/v2/informers?";
+_vars["dataUrl"] += "lat={{latitude}}&";
+_vars["dataUrl"] += "lon={{longitude}}&";
+_vars["dataUrl"] += "lang=ru_RU";
+
+window.onload = function(){
+
+//var logMsg = "Test";
+//func.logAlert( logMsg, "danger");
+//func.log( "000", "response");
+
+	var btn_request = document.querySelector("#btn-request");
+	btn_request.addEventListener("click", function(event){
+		var url = document.querySelector("#inp-url").value;
+		if( !url || url.length === 0){
+logMsg = "error, empty or undefined url", url;
+console.log(logMsg);
+			return false;
+		}
+		sendRequest({
+			"dataUrl": url,
+			//"latitude": 55.75396,
+			//"longitude": 37.620393,
+			"callback" : function( response ){
+//console.log(arguments);
+				if(response){
+					_parseAjax( response );
+var logMsg = "end parse ajax response";
+func.logAlert( logMsg, "info");
+				}
+				if( _vars["data"] ){
+					_drawResponse();
+				}
+			}//end callback
+		});
+	});//end event
+
+};//end window.load
+console.log(_vars);
+
+function sendRequest( opt ){
+	var p = {
+		"dataUrl" : false,
+		"latitude": false,
+		"longitude": false,
+		"callback" : function(){
+//console.log(arguments);
+		}//end callback
+	};
+//console.log(opt);
+	//extend p object
+	for(var key in opt ){
+		p[key] = opt[key];
+	}
+//console.log(p);
+/*
+	if( !p.latitude || p.latitude.length === 0){
+logMsg = "error, empty or undefined latitude", p.latitude;
+console.log(logMsg);
+		return false;
+	}
+
+	if( !p.longitude || p.longitude.length === 0){
+logMsg = "error, empty or undefined longitude", p.longitude;
+console.log(logMsg);
+		return false;
+	}
+
+	var dataUrl = _vars["dataUrl"]
+.replace("{{latitude}}", p["latitude"] )
+.replace("{{longitude}}", p["longitude"] );
+console.log( dataUrl );		
+*/	
+	var dataUrl = p["dataUrl"];
+	try{
+		var xhr = new XMLHttpRequest();
+		xhr.open("GET", dataUrl, true);
+		xhr.setRequestHeader("X-Yandex-API-Key", _vars["apiKey"] );
+		//xhr.setRequestHeader("Access-Control-Allow-Credentials", "true");
+		
+		xhr.onload = function(e) {
+console.log(arguments);
+// console.log("event type:" + e.type);
+console.log("time: " + e.timeStamp);
+console.log("total: " + e.total);
+console.log("loaded: " + e.loaded);	
+//console.log( this.responseText );
+//func.log( this.responseText, "response");
+			
+			var _response = false;
+			if( this.responseText.length > 0 ){
+				_response = this.responseText;
+				_vars["contentType"] = xhr.getResponseHeader('content-type');
+			}
+			
+			if( typeof p.callback === "function"){
+				p.callback(_response);
+			}
+		}//end onload
+		
+		xhr.onerror = function(e) {
+console.log(arguments);		
+console.log(e);		
+//for(var key in xhr){
+//console.log( key +" : "+xhr[key] );
+//}
+
+_vars["logMsg"] = "error, ajax load failed...";
+//_message( _vars["logMsg"], "error");
+func.logAlert( _vars["logMsg"], "danger");
+			p.callback(false);
+		}
+		
+		xhr.onloadend = function(e){
+//console.log(xhr.getResponseHeader('X-Powered-By') );
+console.log( xhr.getAllResponseHeaders() );
+		}//end onloadend
+		
+		xhr.send();
+		
+	} catch(e){
+console.log(e);	
+	}	
+	
+}//end sendRequest()
+
+
+
+function _parseAjax( data ){
+	
+	//if( _vars["contentType"].indexOf("application/xml") !== -1){
+		//_parseXML( data );
+	//}
+	
+	if( _vars["contentType"].indexOf("application/json") !== -1){
+		_parseJSON( data );
+	}
+	
+}//_parseAjax()
+
+
+function _parseJSON( jsonStr ){
+	try{
+		var jsonObj = JSON.parse( jsonStr, function(key, value) {
+//console.log( key, value );
+			return value;
+		});
+//console.log( jsonObj );
+		
+		_vars["data"] = jsonObj;
+		
+	} catch(error) {
+_vars["logMsg"] = "error, error JSON.parse server response data...." ;
+console.log( error );
+func.logAlert(_vars["logMsg"], "error");
+		return;
+	}//end catch
+
+}//end _parseJSON()
+
+function _drawResponse(){
+	var html = document.querySelector("#response").innerHTML;
+	
+	html = html.replace("%now%", _vars["data"]["now"])
+.replace("%now_dt%", _vars["data"]["now_dt"]);	
+
+//info
+	html = html
+.replace("%lat%", _vars["data"]["info"]["lat"])
+.replace("%lon%", _vars["data"]["info"]["lon"])
+.replace("%url%", _vars["data"]["info"]["url"]);	
+
+//fact
+	html = html
+.replace("%temp%", _vars["data"]["fact"]["temp"])
+.replace("%feels_like%", _vars["data"]["fact"]["feels_like"])
+.replace("%temp_water%", _vars["data"]["fact"]["temp_water"])
+.replace("%icon%", _vars["data"]["fact"]["icon"])
+.replace("%condition%", _vars["data"]["fact"]["condition"])
+.replace("%wind_speed%", _vars["data"]["fact"]["wind_speed"])
+.replace("%wind_gust%", _vars["data"]["fact"]["wind_gust"])
+.replace("%wind_dir%", _vars["data"]["fact"]["wind_dir"])
+.replace("%pressure_mm%", _vars["data"]["fact"]["pressure_mm"])
+.replace("%pressure_pa%", _vars["data"]["fact"]["pressure_pa"])
+.replace("%humidity%", _vars["data"]["fact"]["humidity"])
+.replace("%daytime%", _vars["data"]["fact"]["daytime"])
+.replace("%polar%", _vars["data"]["fact"]["polar"])
+.replace("%season%", _vars["data"]["fact"]["season"])
+.replace("%obs_time%", _vars["data"]["fact"]["obs_time"]);
+
+//forecast
+	html = html
+.replace("%date%", _vars["data"]["forecast"]["date"])
+.replace("%date_ts%", _vars["data"]["forecast"]["date_ts"])
+.replace("%week%", _vars["data"]["forecast"]["week"])
+.replace("%sunrise%", _vars["data"]["forecast"]["sunrise"])
+.replace("%week%", _vars["data"]["forecast"]["week"])
+.replace("%moon_code%", _vars["data"]["forecast"]["moon_code"])
+.replace("%moon_text%", _vars["data"]["forecast"]["moon_text"]);
+
+//forecast parts
+	var html_parts=document.querySelector("#forecast-parts-0").innerHTML;
+	
+	var eveningObj = _vars["data"]["forecast"]["parts"][0];
+	html_parts = html_parts
+.replace("%part_name%", eveningObj["part_name"])
+.replace("%temp_min%", eveningObj["temp_min"])
+.replace("%temp_max%", eveningObj["temp_max"])
+.replace("%temp_avg%", eveningObj["temp_avg"])
+.replace("%feels_like%", eveningObj["feels_like"])
+.replace("%icon%", eveningObj["icon"])
+.replace("%condition%", eveningObj["condition"])
+.replace("%daytime%", eveningObj["daytime"])
+.replace("%polar%", eveningObj["polar"])
+.replace("%wind_speed%", eveningObj["wind_speed"])
+.replace("%wind_gust%", eveningObj["wind_gust"])
+.replace("%wind_dir%", eveningObj["wind_dir"])
+.replace("%pressure_mm%", eveningObj["pressure_mm"])
+.replace("%pressure_pa%", eveningObj["pressure_pa"])
+.replace("%humidity%", eveningObj["humidity"])
+.replace("%prec_mm%", eveningObj["prec_mm"])
+.replace("%prec_period%", eveningObj["prec_period"])
+.replace("%prec_prob%", eveningObj["prec_prob"]);
+
+	html = html.replace("%forecast_part0%", html_parts);
+
+
+	document.querySelector("#response").innerHTML = html;
+}//end _drawResponse()
+
+</script>
+
+
+</head>
+
+<body class="bg-silver-f1">
+	
+<div class="lr-container bg-white">
+	<div class="lr-panel">
+		<div class="panel-heading">
+			<h3>test Yandex APi, weather</h3>
+		</div>
+		<div class="lr-panel-body">
+			
+
+<input type="text" size="80" 
+id="inp-url" class=""  autocomplete="off" 
+value="https://romanlaptev-cors.herokuapp.com/https://api.weather.yandex.ru/v2/informers?lat=55.75396&lon=37.620393&lang=ru_RU"/>
+
+			<a href="#" 
+class="lr-btn bg-darkblue text-white" id="btn-request">Run ajax request</a>
+
+		</div>
+		
+		<div class="lr-panel-body lr-border-box lr-border-cyan" >
+			<div id="response">
+<div class="bg-lightsalmon lr-padding-20">
+	<ul class="lr-list-unstyled">
+		<li>now: <b>%now%</b>	<small>Время сервера в формате Unixtime. 	Число</small></li>
+		<li>now_dt: <b>%now_dt%</b>	<small>Время сервера в UTC. 	Строка</small></li>
+	</ul>
+</div>
+
+<div class="bg-grey-green lr-padding-20">
+	<h3>info, Объект информации о населенном пункте.</h3>
+	<ul class="lr-list-unstyled lr-padding-small">
+		<li>lat: <b>%lat%</b>	<small>Широта (в градусах). 	Число</small></li>
+		<li>lon: <b>%lon%</b>	<small>Долгота (в градусах). 	Число</small></li>
+		<li>url: <b>%url%</b>	<small>Страница населенного пункта на сайте Яндекс.Погода. 	Строка</small></li>
+	</ul>
+</div>
+
+<div class="bg-lavender lr-padding-20">
+	<h3>fact, Объект фактической информации о погоде.</h3>
+	<p>Объект содержит информацию о погоде на данный момент.</p>
+	
+<ul class="lr-list-group ">
+	<li>temp: <b>%temp%</b>	<small>Температура (°C). 	Число</small></li>
+	<li>feels_like: <b>%feels_like%</b>	<small>Ощущаемая температура (°C). 	Число</small></li>
+	<li>temp_water: <b>%temp_water%</b>	<small>Температура воды (°C). Параметр возвращается для населенных пунктов, где данная информация актуальна. 	Число</small></li>
+
+	<li>icon: <b>%icon%</b>	<small>Код иконки погоды. Иконка доступна по адресу https://yastatic.net/weather/i/icons/blueye/color/svg/значение из поля icon.svg. 	Строка</small></li>
+	<li>condition: <b>%condition%</b>	
+<small>Код расшифровки погодного описания. Возможные значения:</small>
+<pre>
+    clear — ясно.
+    partly-cloudy — малооблачно.
+    cloudy — облачно с прояснениями.
+    overcast — пасмурно.
+    drizzle — морось.
+    light-rain — небольшой дождь.
+    rain — дождь.
+    moderate-rain — умеренно сильный дождь.
+    heavy-rain — сильный дождь.
+    continuous-heavy-rain — длительный сильный дождь.
+    showers — ливень.
+    wet-snow — дождь со снегом.
+    light-snow — небольшой снег.
+    snow — снег.
+    snow-showers — снегопад.
+    hail — град.
+    thunderstorm — гроза.
+    thunderstorm-with-rain — дождь с грозой.
+    thunderstorm-with-hail — гроза с градом.
+</pre>
+	</li>
+
+	<li>wind_speed: <b>%wind_speed%</b>	<small>Скорость ветра (в м/с). 	Число</small></li>
+	<li>wind_gust: <b>%wind_gust%</b>	<small>Скорость порывов ветра (в м/с). 	Число</small></li>
+	<li>wind_dir: <b>%wind_dir%</b>	
+<small>Направление ветра. Возможные значения:</small>
+<pre>
+    «nw» — северо-западное.
+    «n» — северное.
+    «ne» — северо-восточное.
+    «e» — восточное.
+    «se» — юго-восточное.
+    «s» — южное.
+    «sw» — юго-западное.
+    «w» — западное.
+    «с» — штиль.
+</pre>
+	</li>
+	
+	<li>pressure_mm: <b>%pressure_mm%</b>	<small>Давление (в мм рт. ст.). 	Число</small></li>
+	<li>pressure_pa: <b>%pressure_pa%</b>	<small>Давление (в гектопаскалях). 	Число</small></li>
+	<li>humidity: <b>%humidity%</b>	<small>Влажность воздуха (в процентах). 	Число</small></li>
+
+	<li>daytime: <b>%daytime%</b>	
+<small>Светлое или темное время суток. Возможные значения:</small>
+<pre>
+    «d» — светлое время суток.
+    «n» — темное время суток.
+</pre>
+	</li>
+	
+	<li>polar: <b>%polar%</b>	<small>Признак того, что время суток, указанное в поле daytime, является полярным. 	Логический</small></li>
+	<li>season: <b>%season%</b>	
+<small>Время года в данном населенном пункте. Возможные значения:</small>
+<pre>
+    «summer» — лето.
+    «autumn» — осень.
+    «winter» — зима.
+    «spring» — весна.
+</pre>
+	</li>
+	
+	<li>obs_time: <b>%obs_time%</b>	<small>Время замера погодных данных в формате Unixtime. 	Число</small></li>
+	
+</ul>
+</div>
+
+
+<div class="bg-lavenderblush lr-padding-20">
+	
+	<h3>forecast, Объект прогнозной информации о погоде.</h3>
+	<p>Объект содержит данные прогноза погоды.</p>
+	
+	<ul class="lr-list-unstyled color-black">
+		<li>date: <b>%date%</b>	<small>Дата прогноза в формате ГГГГ-ММ-ДД. 	Строка</small></li>
+		<li>date_ts: <b>%date_ts%</b>	<small>Дата прогноза в формате Unixtime. 	Число</small></li>
+		<li>week: <b>%week%</b>	<small>Порядковый номер недели. 	Число</small></li>
+
+		<li>sunrise: <b>%sunrise%</b>	<small>Время восхода Солнца, локальное время (может отсутствовать для полярных регионов). 	Строка</small></li>
+		<li>sunset: <b>%week%</b>	<small>Время заката Солнца, локальное время (может отсутствовать для полярных регионов). 	Строка</small></li>
+		<li>moon_code: <b>%moon_code%</b>	
+<small>Код фазы Луны. Возможные значения:</small>
+<pre>
+    0 — полнолуние.
+    1-3 — убывающая Луна.
+    4 — последняя четверть.
+    5-7 — убывающая Луна.
+    8 — новолуние.
+    9-11 — растущая Луна.
+    12 — первая четверть.
+    13-15 — растущая Луна.
+</pre>
+		</li>
+		
+		<li>moon_text: <b>%moon_text%</b>	
+<small>Текстовый код для фазы Луны. Возможные значения:</small>
+<pre>
+    moon-code-0 — полнолуние.
+    moon-code-1 — убывающая луна.
+    moon-code-2 — убывающая луна.
+    moon-code-3 — убывающая луна.
+    moon-code-4 — последняя четверть.
+    moon-code-5 — убывающая луна.
+    moon-code-6 — убывающая луна.
+    moon-code-7 — убывающая луна.
+    moon-code-8 — новолуние.
+    moon-code-9 — растущая луна.
+    moon-code-10 — растущая луна.
+    moon-code-11 — растущая луна.
+    moon-code-12 — первая четверть.
+    moon-code-13 — растущая луна.
+    moon-code-14 — растущая луна.
+    moon-code-15 — растущая луна.
+</pre>
+		</li>
+		
+		<li>
+<div class="lr-padding-20 bg-maroon lr-border-box lr-border-red">
+%forecast_part0%
+</div>			
+		</li><!-- end parts info -->
+		
+	</ul><!-- end forecast info -->
+	
+</div>
+			</div><!-- end response block -->
+
+<div id="forecast-parts-0">
+	<ul  class="lr-list-group bg-indianred color-white">
+<h4>parts 	Прогнозы по времени суток.</h4>
+<p>Все прогнозы погоды на время суток имеют одинаковый набор полей.
+Ответ содержит прогноз на 2 ближайших периода.</p>
+
+		<li>part_name: <b>%part_name%</b>	
+			<small>Название времени суток. Возможные значения:</small>
+<pre>
+night — ночь.
+morning — утро.
+day — день.
+evening — вечер.
+</pre>
+		</li>
+		<li>temp_min: <b>%temp_min%</b>	<small>Минимальная температура для времени суток (°C). 	Число</small></li>
+		<li>temp_max: <b>%temp_max%</b>	<small>Максимальная температура для времени суток (°C). 	Число</small></li>
+		<li>temp_avg: <b>%temp_avg%</b>	<small>Средняя температура для времени суток (°C). 	Число</small></li>
+		<li>feels_like: <b>%feels_like%</b>	<small>Ощущаемая температура (°C). 	Число</small></li>
+
+		<li>icon: <b>%icon%</b>	<small>Код иконки погоды. Иконка доступна по адресу https://yastatic.net/weather/i/icons/blueye/color/svg/<значение из поля icon>.svg. 	Строка</small></li>
+		<li>condition: <b>%condition%</b>	
+<small>Код расшифровки погодного описания. Возможные значения:</small>
+<pre>
+clear — ясно.
+partly-cloudy — малооблачно.
+cloudy — облачно с прояснениями.
+overcast — пасмурно.
+drizzle — морось.
+light-rain — небольшой дождь.
+rain — дождь.
+moderate-rain — умеренно сильный дождь.
+heavy-rain — сильный дождь.
+continuous-heavy-rain — длительный сильный дождь.
+showers — ливень.
+wet-snow — дождь со снегом.
+light-snow — небольшой снег.
+snow — снег.
+snow-showers — снегопад.
+hail — град.
+thunderstorm — гроза.
+thunderstorm-with-rain — дождь с грозой.
+thunderstorm-with-hail — гроза с градом.
+</pre>
+		</li>
+		<li>daytime: <b>%daytime%</b>	
+<small>Светлое или темное время суток. Возможные значения:</small>
+<pre>
+    «d» — светлое время суток.
+    «n» — темное время суток.
+</pre>
+</li>
+		<li>polar: <b>%polar%</b>	<small>Признак того, что время суток, указанное в поле daytime, является полярным. 	Логический</small></li>
+
+		<li>wind_speed: <b>%wind_speed%</b>	<small>Скорость ветра (в м/с). 	Число</small></li>
+		<li>wind_gust: <b>%wind_gust%</b>	<small>Скорость порывов ветра (в м/с). 	Число</small></li>
+		<li>wind_dir: <b>%wind_dir%</b>	
+<small>Направление ветра. Возможные значения:</small>
+<pre>
+«nw» — северо-западное.
+«n» — северное.
+«ne» — северо-восточное.
+«e» — восточное.
+«se» — юго-восточное.
+«s» — южное.
+«sw» — юго-западное.
+«w» — западное.
+«с» — штиль.
+</pre>
+</li>
+		<li>pressure_mm: <b>%pressure_mm%</b>	<small>Давление (в мм рт. ст.). 	Число</small></li>
+		<li>pressure_pa: <b>%pressure_pa%</b>	<small>Давление (в гектопаскалях). 	Число</small></li>
+		<li>humidity: <b>%humidity%</b>	<small>Влажность воздуха (в процентах). 	Число</small></li>
+		<li>prec_mm: <b>%prec_mm%</b>	<small>Прогнозируемое количество осадков (в мм). 	Число</small></li>
+		<li>prec_period: <b>%prec_period%</b>	<small>Прогнозируемый период осадков (в минутах). 	Число</small></li>
+		<li>prec_prob: <b>%prec_prob%</b>	<small>Вероятность выпадения осадков. 	Число</small></li>
+	</ul>
+</div>			
+
+		</div>
+	</div>
+
+	
+<pre class="bg-snow lr-padding-small">
+http://yandex.ru/pogoda
+https://developer.tech.yandex.ru/services/18
+
+https://yandex.ru/dev/weather/doc/dg/concepts/about.html
+https://yandex.ru/dev/weather/doc/dg/concepts/pricing.html#about
+
+https://romanlaptev-cors.herokuapp.com/
+
+Погода на вашем сайте
+Тариф для отображения погодных данных на сайтах. 
+Позволяет получать фактические погодные значения и 
+прогноз на 2 ближайших периода (ночь, утро, день или вечер). 
+Лимит обращений — 50 запросов в сутки.
+
+Доступ к API предоставляется при соблюдении условий размещения:
+
+Рядом с погодными данными необходимо разместить логотип Яндекс.Погоды или 
+текст «Яндекс.Погода». Логотип или текст должны вести на 
+главную страницу Яндекс.Погоды вашего города 
+(например, https://yandex.ru/pogoda/moscow) и 
+располагаться на белой или черной непрозрачной подложке. 
+Рекомендуемый шрифт — Arial с размером 15 px и интерлиньяжем 2 px.
+
+Необходимо указывать источник данных — «Яндекс.Погода» или 
+«По данным Яндекс.Погоды». Рекомендуемый шрифт — Arial.
+
+
+https://yandex.ru/dev/weather/doc/dg/concepts/forecast-info.html
+
+send header X-Yandex-API-Key: dab03f2c-c76d-4fb6-9445-faa84fa80973
+
+https://api.weather.yandex.ru/v2/informers?
+lat=55.75396&
+lon=37.620393&
+lang=ru_RU
+
+Россия Москва и Московская область Москва
+
+--------------------
+- добавить тест возможностей браузера
+</pre>
+
+</div><!-- end container -->
+
+	<div class="log-panel lr-panel bg-lightsteelblue5">
+		<div class="">
+			<div class="text-right lr-margin-small">
+				<a id="btn-toggle-log" href="#?q=toggle-log" title="Toggle log" class="btn btn-sm btn-default">-</a>
+				<a id="btn-clear-log" href="#?q=clear-log" title="Clear log" class="btn btn-sm btn-default">x</a>
+			</div>
+			<div id="log" class=""></div>
+		</div>
+	</div>
+
+</body>
+</html>

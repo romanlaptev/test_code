@@ -1,0 +1,255 @@
+API 
+
+Интеграция с API:
+  Yandex
+  Mail
+  Vk
+  Flickr
+  YouTube, 
+  Google, 
+  Wikipedia, 
+  SoundCloud, 
+  Spotify, 
+  Geonames, 
+  Foursquare, 
+  Momondo, 
+  Agoda, 
+  NomadList, 
+  Numbeo и т. д. 
+
+ 
+=========================== Яндекс 
+https://tech.yandex.ru/
+https://yandex.ru/dev/
+https://yandex.ru/blog/yatechnologies
+
+https://developer.tech.yandex.ru/services/
+Яндекс.Кабинет разработчика
+
+  Видео
+  Заметки
+  API Переводчика, 
+  API Словаря, 
+  Яндекс.Спеллер, 
+  API Диска, 
+  YandexAudio API,  
+  Яндекс.XML (поиск),  
+  Локатор (определяет местоположение пользователя мобильного устройства), 
+  API Яндекс.Карт, API Расписаний, Диалоги Алисы????,  
+  API Яндекс.Погоды, https://tech.yandex.ru/weather/doc/dg/concepts/pricing-docpage/ 
+  SDK Яндекс.Паспорта для мобильных приложений 
+
+
+--- API 
+Яндекс.Погода
+http://yandex.ru/pogoda
+https://developer.tech.yandex.ru/services/18
+
+https://yandex.ru/dev/weather/doc/dg/concepts/about.html
+https://yandex.ru/dev/weather/doc/dg/concepts/pricing.html#about
+
+
+
+Погода на вашем сайте
+Тариф для отображения погодных данных на сайтах. 
+Позволяет получать фактические погодные значения и 
+прогноз на 2 ближайших периода (ночь, утро, день или вечер). 
+Лимит обращений — 50 запросов в сутки.
+
+Доступ к API предоставляется при соблюдении условий размещения:
+
+Рядом с погодными данными необходимо разместить логотип Яндекс.Погоды или 
+текст «Яндекс.Погода». Логотип или текст должны вести на 
+главную страницу Яндекс.Погоды вашего города 
+(например, https://yandex.ru/pogoda/moscow) и 
+располагаться на белой или черной непрозрачной подложке. 
+Рекомендуемый шрифт — Arial с размером 15 px и интерлиньяжем 2 px.
+
+Необходимо указывать источник данных — «Яндекс.Погода» или 
+«По данным Яндекс.Погоды». Рекомендуемый шрифт — Arial.
+
+
+https://yandex.ru/dev/weather/doc/dg/concepts/forecast-info.html
+
+send header X-Yandex-API-Key: dab03f2c-c76d-4fb6-9445-faa84fa80973
+
+https://api.weather.yandex.ru/v2/informers?
+lat=55.75396&
+lon=37.620393&
+lang=ru_RU
+ 
+---------
+https://gridforecast.com/ru/api
+API интерфейс для автоматического доступа к прогнозам погоды
+
+
+https://openweathermap.org/
+Daily Forecast 7 days*
+https://home.openweathermap.org/
+
+
+Dear Customer!
+
+
+Thank you for subscribing to Free OpenWeatherMap!
+
+API key:
+- Your API key is 7440bb4eee1e2d8d92bd8ca4a926ddd6
+- Within the next couple of hours, it will be activated and ready to use
+- You can later create more API keys on your account page
+- Please, always use your API key in each API call
+
+Endpoint:
+- Please, use the endpoint api.openweathermap.org for your API calls
+- Example of API call:
+api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=7440bb4eee1e2d8d92bd8ca4a926ddd6
+
+Useful links:
+- API documentation https://openweathermap.org/api
+- Details of your plan https://openweathermap.org/price
+- Please, note that 16-days daily forecast and History API are not available for Free subscribers
+
+http://api.openweathermap.org/data/2.5/weather?lat=55.038115899999994&lon=83.0094459&units=metric&appid=7440bb4eee1e2d8d92bd8ca4a926ddd6
+http://api.openweathermap.org/data/2.5/weather?lat=55.169005&lon=83.160846&units=metric&appid=7440bb4eee1e2d8d92bd8ca4a926ddd6
+
+http://api.openweathermap.org/data/2.5/forecast?lat=55.038115899999994&lon=83.0094459&units=metric&appid=7440bb4eee1e2d8d92bd8ca4a926ddd6
+
+use JavaScript code you can transfer callback functionName to JSONP callback.
+api.openweathermap.org/data/2.5/weather?q=London,uk&callback=test&appid={API key}
+
+--------------
+https://developer.yahoo.com/weather/
+https://www.worldweatheronline.com/developer/
+ 
+ 
+
+--- API Яндекс.Расписаний
+https://developer.tech.yandex.ru/services/4
+https://romanlaptev.herokuapp.com/projects/schedule_app/
+https://romanlaptev.github.io/projects/schedule/app.html
+
+--- JavaScript API и HTTP Геокодер
+https://developer.tech.yandex.ru/services/3
+http://romanlaptev.github.io/webapps/geolocation/app.html
+
+--- API Паспорта
+https://yandex.ru/dev/passport/
+
+
+--- API Диска
+https://yandex.ru/dev/disk/
+
+REST API Диска
+WebDAV API Диска
+
+--- API Переводчика
+https://yandex.ru/dev/translate/
+
+----Спеллер
+Яндекс.Спеллер помогает находить и исправлять орфографические ошибки в русском, 
+украинском или английском тексте. 
+Языковые модели Спеллера включают сотни миллионов слов и словосочетаний.
+https://yandex.ru/dev/speller/
+
+----  API Видеохостинга
+https://yandex.ru/support/video-hosting/index.html
+https://yandex.ru/dev/videohosting/doc/concepts/about.html
+
+
+------- YandexAudio API
+https://yandex.ru/dev/audio/jsapi/doc/intro/index.html
+YandexAudio API — это JavaScript-библиотека для воспроизведения аудио в браузере. 
+С ее помощью на странице можно проигрывать музыку, аудиокниги и прочие звуковые файлы. 
+С примером использования данной библиотеки можно ознакомиться на данной странице.
+
+https://yandex.ru/dev/audio/jsapi/doc/dg/concepts/webaudio-usage.html
+
+https://music.yandex.ru/api/v2.1/
+
+https://habr.com/ru/post/462607/
+Как я библиотеку для сервиса «Яндекс.Музыка» писал
+
+
+========================== Google
+
+Google Drive APIs, https://developers.google.com/drive/api/v2/reference/ 
+
+YouTube API Services, https://developers.google.com/youtube/terms/branding-guidelines 
+
+----------- 
+
+https://api.mail.ru/docs/ 
+
+Авторизация для сайтов, Авторизация для мобильных сайтов, cloud mail ru api, 
+mailru.common.photos.getAlbums 
+
+ 
+
+https://apiok.ru/ 
+
+ 
+
+----------- 
+
+Api.flickr.com 
+https://www.flickr.com/services/api/ 
+
+api.flickr.com/services/feeds/photos_public.gne 
+
+--------------------- 
+
+https://developer.microsoft.com/ru-ru/onedrive 
+
+Центр разработчиков OneDrive 
+
+------------- 
+
+http://rutube.ru/api/metainfo/tv/28/video/?format=xml 
+
+https://yadi.sk/d/KSB7UuJtTaPgYQ 
+
+---------------- 
+
+https://www.dropbox.com/developers/documentation/http/documentation 
+
+Dropbox for HTTP Developers 
+
+ 
+
+ 
+
+GearHost API 
+
+https://gearhost.docs.apiary.io/# 
+
+
+====================== JSONP
+<pre>
+https://coderoad.ru/22780430/JavaScript-XMLHttpRequest-%D0%B8%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5-JsonP
+
+JSONP не использует XMLHttpRequests.
+
+Причина JSONP используется для преодоления ограничений перекрестного происхождения XHRs.
+
+Вместо этого данные извлекаются с помощью скрипта.
+
+function jsonp(url, callback) {
+    var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+    window[callbackName] = function(data) {
+        delete window[callbackName];
+        document.body.removeChild(script);
+        callback(data);
+    };
+
+    var script = document.createElement('script');
+    script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+    document.body.appendChild(script);
+}
+
+jsonp('http://www.helloword.com', function(data) {
+   alert(data);
+});
+
+В интересах простоты это не включает обработку ошибок в случае сбоя запроса. Используйте script.onerror , если вам это нужно.
+	
+</pre>
