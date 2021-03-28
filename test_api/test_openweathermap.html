@@ -147,7 +147,7 @@ func.logAlert(logMsg, "error");
 		//console.log(arguments);
 						var data = null;
 						if(response){
-							responseData = _parseAjax( response );
+							responseData = parseServerResponse( response );
 		var logMsg = "end parse ajax response";
 		func.logAlert( logMsg, "info");
 						}
@@ -181,7 +181,7 @@ function getWeatherForecast(){
 
 			var data = null;
 			if(response){
-				responseData = _parseAjax( response );
+				responseData = parseServerResponse( response );
 var logMsg = "end parse ajax response";
 func.logAlert( logMsg, "info");
 			}
@@ -226,7 +226,7 @@ func.logAlert( logMsg, "error");
 	for(var key in p.requestParams){
 		dataUrl = dataUrl.replace( new RegExp("{{"+key+"}}", "g"), p.requestParams[key] );
 	}//next
-console.log( dataUrl );		
+//console.log( dataUrl );		
 
 	try{
 		var xhr = new XMLHttpRequest();
@@ -298,7 +298,7 @@ console.log(e);
 
 
 
-function _parseAjax( data ){
+function parseServerResponse( data ){
 	
 	//if( _vars["contentType"].indexOf("application/xml") !== -1){
 		//_parseXML( data );
@@ -308,7 +308,7 @@ function _parseAjax( data ){
 		return _parseJSON( data );
 	}
 	
-}//_parseAjax()
+}//parseServerResponse()
 
 
 function _parseJSON( jsonStr ){
@@ -333,15 +333,22 @@ func.logAlert(_vars["logMsg"], "error");
 function _drawResponse(opt){
 	var p = {
 		data: null,
-		templates: null
+		templates: null,
+		targetContainer: document.querySelector("#response")
 	}
 //console.log(opt);
 	//extend p object
 	for(var key in opt ){
 		p[key] = opt[key];
 	}
-console.log(p);
+//console.log(p);
 
+	var html = wrapData( {
+		"data": p.data,
+		"template" : p.templates["tplMain"]
+	});
+
+/*
 	var html = p.templates["tplMain"];
 	html = html
 .replace("%id%", p.data["id"])
@@ -364,11 +371,78 @@ console.log(p);
 
 	html = html.replace("%timezone%", p.data["timezone"]);
 	html = html.replace("%visibility%", p.data["visibility"]);
+*/
+	if( html && html.length > 0){
+		p.targetContainer.innerHTML = html;
+	}
 	
-	document.querySelector("#response").innerHTML = html;
 }//end _drawResponse()
 
 
+function wrapData( opt ){
+	var p = {
+		"data": null,
+		"template" : "",
+		"markerLeft":"%",
+		"markerRight":"%"
+	};
+	//extend options object
+	for(var key in opt ){
+		p[key] = opt[key];
+	}
+console.log(p);
+//console.log( p["data"].length );
+
+	if( !p["data"] || p["data"].length === 0){
+console.log("-- _wrapData(), error, incorrect data ...");
+		return false;
+	}
+	if( !p["template"].length === 0 ){
+console.log("-- wrapData(), error, empty template ...");
+		return false;
+	}
+
+	var html = p.template;
+	var data = 	p.data;
+	
+	var markerLeft = p.markerLeft;
+	var markerRight = p.markerRight;
+	
+	for( var key in data ){
+//console.log(key, data[key], typeof  data[key]);
+//console.log(key, data[key], typeof  data[key], data[key] instanceof Object );
+
+		//test and replace simple keys
+		if( html.indexOf( markerLeft + key+ markerRight ) !== -1  ){
+//console.log(key, data[key]);
+			if( typeof data[key] === "string" ||
+					typeof data[key] === "number"){
+					html = html.replace( new RegExp( markerLeft + key + markerRight, "g"), data[key] );
+			}
+		}
+
+		//test and replace keys level2 (with dot)
+		if( html.indexOf( markerLeft + key+ "." ) !== -1  ){
+console.log(key, data[key]);
+		}
+
+		//if( data[key] instanceof Array ){
+//console.log(key, data[key], typeof  data[key], data[key] instanceof Array);
+		//}
+				
+		// if( data[key] instanceof Object ){
+			// if( !(data[key] instanceof Array)  ){
+// console.log(key, data[key], typeof  data[key] );
+			// }
+		// }
+			
+		
+	}//next
+//console.log(html);
+	return html;
+}//end wrapData()
+
+		
 </script>
 
 
