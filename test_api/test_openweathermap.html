@@ -402,44 +402,50 @@ console.log("-- wrapData(), error, empty template ...");
 		return false;
 	}
 
-	var html = p.template;
-	var data = 	p.data;
 	
 	var markerLeft = p.markerLeft;
 	var markerRight = p.markerRight;
 	
-	for( var key in data ){
-//console.log(key, data[key], typeof  data[key]);
-//console.log(key, data[key], typeof  data[key], data[key] instanceof Object );
-
-		//test and replace simple keys
-		if( html.indexOf( markerLeft + key+ markerRight ) !== -1  ){
-//console.log(key, data[key]);
-			if( typeof data[key] === "string" ||
-					typeof data[key] === "number"){
-					html = html.replace( new RegExp( markerLeft + key + markerRight, "g"), data[key] );
-			}
-		}
-
-		//test and replace keys level2 (with dot)
-		if( html.indexOf( markerLeft + key+ "." ) !== -1  ){
-console.log(key, data[key]);
-		}
-
-		//if( data[key] instanceof Array ){
-//console.log(key, data[key], typeof  data[key], data[key] instanceof Array);
-		//}
-				
-		// if( data[key] instanceof Object ){
-			// if( !(data[key] instanceof Array)  ){
-// console.log(key, data[key], typeof  data[key] );
-			// }
-		// }
-			
-		
-	}//next
+	var html = _formHtml( p.data, p.template, "" );
+	//var html = _formHtml( p.data["coord"], p.template, "coord." );
 //console.log(html);
 	return html;
+	
+	function _formHtml( data, tpl, keyPrefix ){
+		
+		var _html = tpl;
+		for( var key in data ){
+//console.log(key, data[key], typeof  data[key]);
+	//console.log(key, data[key], typeof  data[key], data[key] instanceof Object );
+
+			var tplKey = markerLeft + keyPrefix + key + markerRight;
+			//test and replace simple keys
+			if( _html.indexOf( tplKey ) !== -1  ){
+//console.log( markerLeft + keyPrefix + key + markerRight);
+//console.log( tplKey, data[key], typeof data[key]);
+				if( typeof data[key] === "string" ||
+						typeof data[key] === "number"){
+	_html = _html.replace( new RegExp( tplKey, "g"), data[key] );
+				}
+			}
+
+			//if( data[key] instanceof Array ){
+	//console.log(key, data[key], typeof  data[key], data[key] instanceof Array);
+			//}
+					
+			if( data[key] instanceof Object ){
+				if( !(data[key] instanceof Array)  ){
+console.log(key, data[key], typeof  data[key] );
+					_html = _formHtml( p.data[key], _html, key+"." );
+				}
+			}
+				
+			
+		}//next
+		
+		return _html
+	}//end _formHtml()
+	
 }//end wrapData()
 
 		
@@ -565,28 +571,40 @@ not available for Free subscribers
 </div><!-- end container -->
 
 	<div id="template-main">
-<ul>		
-	<li>id: <b>%id%</b></li>
-	<li>name: <b>%name%</b></li>
-	<li>cod: <b>%cod%</b></li>
-	<li>base: <b>%base%</b></li>
-	<li>dt: <b>%dt%</b></li>
-	<li>timezone: <b>%timezone%</b></li>
-	<li>visibility: <b>%visibility%</b></li>
-	
-	<li>clouds.all: <b>%clouds.all%</b></li>
+		
+		<ul>		
+			<li>id: <b>%id%</b></li>
+			<li>name: <b>%name%</b></li>
+			<li>cod: <b>%cod%</b></li>
+			<li>base: <b>%base%</b></li>
+			<li>dt: <b>%dt%</b></li>
+			<li>timezone: <b>%timezone%</b></li>
+			<li>visibility: <b>%visibility%</b></li>
+		</ul>
+			
+		<ul>		
+			<li>clouds.all: <b>%clouds.all%</b></li>
+		</ul>
 
-	<li>coord.lat: <b>%coord.lat%</b></li>
-	<li>coord.lon: <b>%coord.lon%</b></li>
+		<ul>		
+			<li>coord.lat: <b>%coord.lat%</b></li>
+			<li>coord.lon: <b>%coord.lon%</b></li>
+		</ul>
 
-	<li>main.feels_like: <b>%main.feels_like%</b></li>
-....
-	<li>sys.country: <b>%sys.country%</b></li>
-....	
-	<li>wind.speed: <b>%wind.speed%</b></li>
-	<li>wind.deg: <b>%wind.deg%</b></li>
+		<ul>		
+			<li>main.temp: <b>%main.temp%</b>%</li>
+			<li>main.feels_like: <b>%main.feels_like%</b></li>
+		</ul>
 
-</ul>
+		<ul>		
+			<li>sys.country: <b>%sys.country%</b></li>
+		</ul>
+
+		<ul>		
+			<li>wind.speed: <b>%wind.speed%</b></li>
+			<li>wind.deg: <b>%wind.deg%</b></li>
+		</ul>
+
 
 <pre>
 ​​weather: Array [ {…} ]
