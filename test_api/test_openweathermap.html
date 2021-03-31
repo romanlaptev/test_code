@@ -30,6 +30,18 @@ _vars = {
 	}
 };
 
+//https://openweathermap.org/current
+/*
+Parameters
+lat, lon 	required 	Geographical coordinates (latitude, longitude)
+appid 	required 	Your unique API key (you can always find it on your account page under the "API key" tab)
+
+mode 	optional 	Response format. Possible values are xml and html. 
+If you don't use the mode parameter format is JSON by default. Learn more
+
+units 	optional 	Units of measurement. standard, metric and imperial units are available. If you do not use the units parameter, standard units will be applied by default. Learn more
+lang 	optional 	You can use this parameter to get the output in your language. Learn more
+*/
 //_vars.weatherAPI["weatherUrl"] = "https://api.openweathermap.org/data/2.5/weather?";
 //_vars.weatherAPI["weatherUrl"] += "lat={{latitude}}&";
 //_vars.weatherAPI["weatherUrl"] += "lon={{longitude}}&";
@@ -117,6 +129,11 @@ function _urlManager( target ){
 			
 			case "clear-log":
 				_vars["log"].innerHTML="";
+			break;
+			
+			case "test":
+				var funcName = _vars["GET"]["func"];
+				window[funcName]();
 			break;
 			
 			case "send-request":
@@ -343,6 +360,20 @@ function _drawResponse(opt){
 	}
 //console.log(p);
 
+	var sunriseDate = func.timeStampToDateStr({
+		"timestamp": p.data["sys"]["sunrise"],
+		"format": "dd-mm-yyyy hh:min"
+	});
+//console.log(sunriseDate);	
+	p.data["sys"]["sunrise"] = sunriseDate;
+	
+	var sunsetDate = func.timeStampToDateStr({
+		"timestamp": p.data["sys"]["sunset"],
+		"format": "dd-mm-yyyy hh:min"
+	});
+//console.log(sunsetDate);	
+	p.data["sys"]["sunset"] = sunsetDate;
+
 	var html = wrapData( {
 		"data": p.data,
 		"template" : p.templates["tplMain"]
@@ -419,27 +450,32 @@ console.log("-- wrapData(), error, empty template ...");
 	//console.log(key, data[key], typeof  data[key], data[key] instanceof Object );
 
 			var tplKey = markerLeft + keyPrefix + key + markerRight;
+console.log(tplKey, _html.indexOf( tplKey ) !== -1);
 			//test and replace simple keys
 			if( _html.indexOf( tplKey ) !== -1  ){
 //console.log( markerLeft + keyPrefix + key + markerRight);
 //console.log( tplKey, data[key], typeof data[key]);
 				if( typeof data[key] === "string" ||
 						typeof data[key] === "number"){
+console.log( tplKey, data[key], typeof data[key], new RegExp( tplKey, "g") );
 	_html = _html.replace( new RegExp( tplKey, "g"), data[key] );
+	//_html = _html.replace( tplKey, data[key] );
 				}
 			}
 
-			//if( data[key] instanceof Array ){
-	//console.log(key, data[key], typeof  data[key], data[key] instanceof Array);
-			//}
-					
 			if( data[key] instanceof Object ){
 				if( !(data[key] instanceof Array)  ){
-console.log(key, data[key], typeof  data[key] );
+//console.log(key, data[key], typeof  data[key] );
 					_html = _formHtml( p.data[key], _html, key+"." );
 				}
 			}
 				
+			if( data[key] instanceof Array ){
+//console.log(key, data[key], typeof  data[key], data[key] instanceof Array);
+//console.log(key, p.data[key][0], typeof p.data[key][0], p.data[key][0] instanceof Array);
+//console.log(_html);
+				_html = _formHtml( p.data[key][0], _html, key+".0." );
+			}
 			
 		}//next
 		
@@ -448,6 +484,32 @@ console.log(key, data[key], typeof  data[key] );
 	
 }//end wrapData()
 
+
+function testWrapDate(){
+console.log("testWrapDate()");
+	var p = {
+		"data":{
+			"node": [
+				{
+					"id": 1,
+					"title" : "First"
+				},
+				{
+					"id": 2,
+					"title" : "Second"
+				},
+				{
+					"id": 3,
+					"title" : "Third"
+				},
+			]
+		},
+		"template" : func.getById("template-test").innerHTML,
+		"markerLeft":"%",
+		"markerRight":"%"
+	};
+	
+}//end testWrapDate()
 		
 </script>
 
@@ -476,6 +538,7 @@ value="http://api.openweathermap.org/data/2.5/weather"/>
 -->
 <a href="#?q=send-request&req-type=weather" class="lr-btn bg-darkblue text-white" id="btn-request">get weather</a>
 <a href="#?q=send-request&req-type=forecast" class="lr-btn bg-blue text-white" id="btn-get-forecast">get weather forecast</a>
+<a href="#?q=test&func=testWrapDate" class="lr-btn bg-orange text-black">testWrapDate</a>
 			</div>
 
 			<div class="lr-panel-body">
@@ -541,6 +604,20 @@ Details of your plan
 - Please, 
 note that 16-days daily forecast and History API are 
 not available for Free subscribers
+-------------
+//https://openweathermap.org/current
+Parameters
+lat, lon 	required 	Geographical coordinates (latitude, longitude)
+appid 	required 	Your unique API key (you can always find it on your account page under the "API key" tab)
+
+mode 	optional 	Response format. Possible values are xml and html. 
+If you don't use the mode parameter format is JSON by default. Learn more
+
+units 	optional 	Units of measurement. 
+standard, metric and imperial units are available. 
+If you do not use the units parameter, standard units will be applied by default. Learn more
+
+lang 	optional 	You can use this parameter to get the output in your language. Learn more
 	
 </pre>
 			</div>
@@ -583,7 +660,7 @@ not available for Free subscribers
 		</ul>
 			
 		<ul>		
-			<li>clouds.all: <b>%clouds.all%</b></li>
+			<li>Облачность, clouds.all: <b>%clouds.all%</b>%</li>
 		</ul>
 
 		<ul>		
@@ -592,23 +669,32 @@ not available for Free subscribers
 		</ul>
 
 		<ul>		
-			<li>main.temp: <b>%main.temp%</b>%</li>
-			<li>main.feels_like: <b>%main.feels_like%</b></li>
+			<li>main.temp: <b>%main.temp%</b>&deg;</li>
+			<li>main.feels_like: <b>%main.feels_like%</b>&deg;</li>
+			<li>main.temp_max: <b>%main.temp_max%</b>&deg;</li>
+			<li>main.temp_min: <b>%main.temp_min%</b>&deg;</li>
+			<li>main.pressure: <b>%main.pressure%</b> hPa</li>
+			<li>влажность (main.humidity): <b>%main.humidity%</b>%</li>
 		</ul>
 
 		<ul>		
 			<li>sys.country: <b>%sys.country%</b></li>
+			<li>sys.sunrise: <b>%sys.sunrise%</b></li>
+			<li>sys.sunset: <b>%sys.sunset%</b></li>
 		</ul>
 
-		<ul>		
-			<li>wind.speed: <b>%wind.speed%</b></li>
-			<li>wind.deg: <b>%wind.deg%</b></li>
+		<ul>print record[0] of array
+			<li>weather.main: <b>%weather.0.main%</b></li>
+			<li>weather.description: <b>%weather.0.description%</b></li>
+			<li>weather.icon: <b>%weather.0.icon%</b></li>
 		</ul>
-
-
-<pre>
-​​weather: Array [ {…} ]
-​​</pre>
+		
+		<ul>print all array		
+			<li>weather.main: <b>%weather.*.main%</b></li>
+			<li>weather.description: <b>%weather.*.description%</b></li>
+			<li>weather.icon: <b>%weather.*.icon%</b></li>
+		</ul>
+		
 	</div>
 
 	<div id="template-forecast">
@@ -621,6 +707,13 @@ not available for Free subscribers
 city: Object {}
 list: Object {}
 ​​</pre>
+	</div>
+
+	<div id="template-test">
+		<ul>print array		
+			<li>node.id: <b>%node.0.id%</b></li>
+			<li>node.title: <b>%node.0.title%</b></li>
+		</ul>
 	</div>
 
 </body>
