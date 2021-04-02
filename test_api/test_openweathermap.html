@@ -432,83 +432,100 @@ console.log("-- _wrapData(), error, incorrect data ...");
 console.log("-- wrapData(), error, empty template ...");
 		return false;
 	}
-
 	
-	var markerLeft = p.markerLeft;
-	var markerRight = p.markerRight;
-	
-	var html = _formHtml( p.data, p.template, "" );
+	var html = _formHtml({
+			"data": p.data, 
+			"tpl": p.template, 
+			"markerLeft": p.markerLeft,
+			"markerRight": p.markerRight
+		});
 	//var html = _formHtml( p.data["coord"], p.template, "coord." );
 //console.log(html);
 	return html;
 	
-	function _formHtml( data, tpl, keyPrefix ){
+}//end wrapData()
+
+function _formHtml(opt){
+	var p = {
+		data: null,
+		tpl:"", 
+		keyPrefix:"",
+		markerLeft:"%",
+		markerRight:"%"
+	};
+	//extend options object
+	for(var key in opt ){
+		p[key] = opt[key];
+	}
+//console.log(p);
 		
-		var _html = tpl;
-		for( var key in data ){
-//console.log(key, data[key], typeof  data[key]);
-	//console.log(key, data[key], typeof  data[key], data[key] instanceof Object );
+	var _html = p.tpl;
+	for( var key in p.data ){
+//console.log(key, p.data[key], typeof  p.data[key]);
+//console.log(key, p.data[key], typeof  p.data[key], p.data[key] instanceof Object );
 
-			var tplKey = markerLeft + keyPrefix + key + markerRight;
-console.log(tplKey, _html.indexOf( tplKey ) !== -1);
-			//test and replace simple keys
-			if( _html.indexOf( tplKey ) !== -1  ){
-//console.log( markerLeft + keyPrefix + key + markerRight);
-//console.log( tplKey, data[key], typeof data[key]);
-				if( typeof data[key] === "string" ||
-						typeof data[key] === "number"){
-console.log( tplKey, data[key], typeof data[key], new RegExp( tplKey, "g") );
-	_html = _html.replace( new RegExp( tplKey, "g"), data[key] );
-	//_html = _html.replace( tplKey, data[key] );
-				}
-			}
+		var tplKey = p.markerLeft + p.keyPrefix + key + p.markerRight;
+	console.log(tplKey, _html.indexOf( tplKey ) !== -1);
 
-			if( data[key] instanceof Object ){
-				if( !(data[key] instanceof Array)  ){
-//console.log(key, data[key], typeof  data[key] );
-					_html = _formHtml( p.data[key], _html, key+"." );
-				}
+		//test and replace simple keys
+		if( _html.indexOf( tplKey ) !== -1  ){
+	//console.log( markerLeft + keyPrefix + key + markerRight);
+	//console.log( tplKey, p.data[key], typeof p.data[key]);
+			if( typeof p.data[key] === "string" ||
+					typeof p.data[key] === "number"){
+	console.log( tplKey, p.data[key], typeof p.data[key], new RegExp( tplKey, "g") );
+	_html = _html.replace( new RegExp( tplKey, "g"), p.data[key] );
+	//_html = _html.replace( tplKey, p.data[key] );
 			}
-				
-			if( data[key] instanceof Array ){
+		}
+	
+
+		if( p.data[key] instanceof Object ){
+			if( !(p.data[key] instanceof Array)  ){
+	//console.log(key, data[key], typeof  data[key] );
+				_html = _formHtml({
+					"data": p.data[key],
+					"tpl": _html,
+					"keyPrefix": key+"."
+				});
+			}
+		}
+
+		
+		if( p.data[key] instanceof Array ){
 //console.log(key, data[key], typeof  data[key], data[key] instanceof Array);
 //console.log(key, p.data[key][0], typeof p.data[key][0], p.data[key][0] instanceof Array);
 //console.log(_html);
-				_html = _formHtml( p.data[key][0], _html, key+".0." );
-			}
-			
-		}//next
-		
-		return _html
-	}//end _formHtml()
-	
-}//end wrapData()
+			_html = _formHtml({
+					"data": p.data[key][0],
+					"tpl": _html,
+					"keyPrefix": key+".0."
+				});
+		}
 
+	}//next
+		
+	return _html
+}//end _formHtml()
 
 function testWrapDate(){
 console.log("testWrapDate()");
 	var p = {
 		"data":{
-			"node": [
-				{
-					"id": 1,
-					"title" : "First"
-				},
-				{
-					"id": 2,
-					"title" : "Second"
-				},
-				{
-					"id": 3,
-					"title" : "Third"
-				},
-			]
+"node": [
+	{"id": 1,"title" : "First"},{"id": 2,"title" : "Second"},{"id": 3,"title" : "Third"	},
+	{"id": 4,"title" : "Four"},{"id": 5,"title" : "Fives"},{"id": 6,"title" : "Six"	},
+]
 		},
 		"template" : func.getById("template-test").innerHTML,
 		"markerLeft":"%",
 		"markerRight":"%"
 	};
-	
+
+	var html = wrapData(p);
+	if( html && html.length > 0){
+		document.querySelector("#response").innerHTML = html;
+	}
 }//end testWrapDate()
 		
 </script>
@@ -714,6 +731,12 @@ list: Object {}
 			<li>node.id: <b>%node.0.id%</b></li>
 			<li>node.title: <b>%node.0.title%</b></li>
 		</ul>
+		
+		<ul>print array		
+			<li>node.id: <b>%node.5.id%</b></li>
+			<li>node.title: <b>%node.5.title%</b></li>
+		</ul>
+		
 	</div>
 
 </body>
