@@ -68,6 +68,7 @@ window.onload = function(){
 
 	_vars["log"] = func.getById("log");
 
+
 	var App_container = func.getById("App");
 	App_container.addEventListener("click", function(e){
 //console.log(e.type);
@@ -173,7 +174,8 @@ func.logAlert(logMsg, "error");
 								data: responseData,
 								templates: {
 									"tplMain": requestTpl
-								}
+								},
+								"req-type": _vars["GET"]["req-type"]
 							});
 						}
 					}//end callback
@@ -188,34 +190,6 @@ console.log("function _urlManager(),  GET query string: ", _vars["GET"]);
 		
 }//end _urlManager()
 
-/*
-function getWeatherForecast(){
-	sendRequest({
-		"dataUrl": _vars.weatherAPI["forecastUrl"],
-		"requestParams": _vars.weatherAPI["requestParams"],
-		"callback" : function( response ){
-//console.log(arguments);
-
-			var data = null;
-			if(response){
-				responseData = parseServerResponse( response );
-var logMsg = "end parse ajax response";
-func.logAlert( logMsg, "info");
-			}
-			if( responseData ){
-				_drawResponse({
-					data: responseData,
-					templates: {
-						"tplMain": func.getById("template-forecast").innerHTML
-					}
-				});
-			}
-
-		}//end callback
-	});
-
-}//end getWeatherForecast
-*/
 
 function sendRequest( opt ){
 	var p = {
@@ -351,58 +325,76 @@ function _drawResponse(opt){
 	var p = {
 		data: null,
 		templates: null,
-		targetContainer: document.querySelector("#response")
+		targetContainer: document.querySelector("#response"),
+		"req-type": null
 	}
 //console.log(opt);
 	//extend p object
 	for(var key in opt ){
 		p[key] = opt[key];
 	}
-//console.log(p);
-
-	var sunriseDate = func.timeStampToDateStr({
-		"timestamp": p.data["sys"]["sunrise"],
-		"format": "dd-mm-yyyy hh:min"
-	});
-//console.log(sunriseDate);	
-	p.data["sys"]["sunrise"] = sunriseDate;
+console.log(p);
 	
-	var sunsetDate = func.timeStampToDateStr({
-		"timestamp": p.data["sys"]["sunset"],
-		"format": "dd-mm-yyyy hh:min"
-	});
-//console.log(sunsetDate);	
-	p.data["sys"]["sunset"] = sunsetDate;
+	if( p["req-type"] === "weather"){
+		var sunriseDate = func.timeStampToDateStr({
+			"timestamp": p.data["sys"]["sunrise"],
+			"format": "dd-mm-yyyy hh:min"
+		});
+	//console.log(sunriseDate);	
+		p.data["sys"]["sunrise"] = sunriseDate;
+		
+		var sunsetDate = func.timeStampToDateStr({
+			"timestamp": p.data["sys"]["sunset"],
+			"format": "dd-mm-yyyy hh:min"
+		});
+	//console.log(sunsetDate);	
+		p.data["sys"]["sunset"] = sunsetDate;
+		
+		//define template keys info
+		p.data["templates"] = {
+			"tplKeys": {
+				"weather": {
+					"dataType": "array",
+					"listTpl": func.getById("weather-list-tpl").innerHTML
+				} 
+			}
+		};
+	}
+
+
+	if( p["req-type"] === "forecast"){
+		
+		var sunriseDate = func.timeStampToDateStr({
+			"timestamp": p.data["city"]["sunrise"],
+			"format": "dd-mm-yyyy hh:min"
+		});
+	//console.log(sunriseDate);	
+		p.data["city"]["sunrise"] = sunriseDate;
+		
+		var sunsetDate = func.timeStampToDateStr({
+			"timestamp": p.data["city"]["sunset"],
+			"format": "dd-mm-yyyy hh:min"
+		});
+	//console.log(sunsetDate);	
+		p.data["city"]["sunset"] = sunsetDate;
+
+		//define template keys info
+		p.data["templates"] = {
+			"tplKeys": {
+				"list": {
+					"dataType": "array",
+					"listTpl": func.getById("template-forecast-list-tpl").innerHTML
+				}
+			}
+		};
+	}
+
 
 	var html = wrapData( {
 		"data": p.data,
 		"template" : p.templates["tplMain"]
 	});
 
-/*
-	var html = p.templates["tplMain"];
-	html = html
-.replace("%id%", p.data["id"])
-.replace("%name%", p.data["name"])
-.replace("%base%", p.data["base"])
-.replace("%cod%", p.data["cod"])
-.replace("%clouds.all%", p.data["clouds"]["all"])
-.replace("%coord.lat%", p.data["coord"]["lat"])
-.replace("%coord.lon%", p.data["coord"]["lon"])
-.replace("%main.feels_like%", p.data["main"]["feels_like"])
-.replace("%sys.country%", p.data["sys"]["country"])
-.replace("%wind.speed%", p.data["wind"]["speed"])
-.replace("%wind.deg%", p.data["wind"]["deg"]);
-
-	var responseDate = func.timeStampToDateStr({
-		"timestamp": p.data["dt"],
-		"format": "yyyy-mm-dd hh:min:sec"
-	});
-	html = html.replace("%dt%", responseDate);
-
-	html = html.replace("%timezone%", p.data["timezone"]);
-	html = html.replace("%visibility%", p.data["visibility"]);
-*/
 	if( html && html.length > 0){
 		p.targetContainer.innerHTML = html;
 	}
@@ -421,7 +413,7 @@ function wrapData( opt ){
 	for(var key in opt ){
 		p[key] = opt[key];
 	}
-console.log(p);
+//console.log(p);
 //console.log( p["data"].length );
 
 	if( !p["data"] || p["data"].length === 0){
@@ -432,7 +424,7 @@ console.log("-- _wrapData(), error, incorrect data ...");
 console.log("-- wrapData(), error, empty template ...");
 		return false;
 	}
-	
+
 	var html = _formHtml({
 			"data": p.data, 
 			"tpl": p.template, 
@@ -442,7 +434,7 @@ console.log("-- wrapData(), error, empty template ...");
 	//var html = _formHtml( p.data["coord"], p.template, "coord." );
 //console.log(html);
 	return html;
-	
+
 }//end wrapData()
 
 function _formHtml(opt){
@@ -458,68 +450,143 @@ function _formHtml(opt){
 		p[key] = opt[key];
 	}
 //console.log(p);
-		
+
 	var _html = p.tpl;
+	//__processOnTplKeys();
+	
 	for( var key in p.data ){
 //console.log(key, p.data[key], typeof  p.data[key]);
 //console.log(key, p.data[key], typeof  p.data[key], p.data[key] instanceof Object );
 
 		var tplKey = p.markerLeft + p.keyPrefix + key + p.markerRight;
-	console.log(tplKey, _html.indexOf( tplKey ) !== -1);
+//console.log(tplKey);
 
-		//test and replace simple keys
+		//data type String or Number
 		if( _html.indexOf( tplKey ) !== -1  ){
 	//console.log( markerLeft + keyPrefix + key + markerRight);
 	//console.log( tplKey, p.data[key], typeof p.data[key]);
 			if( typeof p.data[key] === "string" ||
 					typeof p.data[key] === "number"){
-	console.log( tplKey, p.data[key], typeof p.data[key], new RegExp( tplKey, "g") );
-	_html = _html.replace( new RegExp( tplKey, "g"), p.data[key] );
-	//_html = _html.replace( tplKey, p.data[key] );
+//console.log( tplKey, p.data[key], typeof p.data[key], new RegExp( tplKey, "g") );
+_html = _html.replace( new RegExp( tplKey, "g"), p.data[key] );
+//_html = _html.replace( tplKey, p.data[key] );
 			}
 		}
-	
 
+		//data type Object
 		if( p.data[key] instanceof Object ){
 			if( !(p.data[key] instanceof Array)  ){
-	//console.log(key, data[key], typeof  data[key] );
+//console.log(key, p.data[key], typeof  p.data[key] );
+				
+				var objectKeyPrefix = p.keyPrefix+key+".";
+//console.log("objectKeyPrefix: ", objectKeyPrefix );
+				
 				_html = _formHtml({
 					"data": p.data[key],
 					"tpl": _html,
-					"keyPrefix": key+"."
+					"keyPrefix": objectKeyPrefix
 				});
 			}
 		}
 
-		
+		//data type Array
 		if( p.data[key] instanceof Array ){
-//console.log(key, data[key], typeof  data[key], data[key] instanceof Array);
+console.log(key, p.data[key], typeof  p.data[key], p.data[key] instanceof Array);
 //console.log(key, p.data[key][0], typeof p.data[key][0], p.data[key][0] instanceof Array);
-//console.log(_html);
-			_html = _formHtml({
-					"data": p.data[key][0],
-					"tpl": _html,
-					"keyPrefix": key+".0."
-				});
+			
+			if ( !p.data["templates"] ){
+_vars["logMsg"] = "error, not define template keys info, skip array " + key;
+func.logAlert(_vars["logMsg"], "warning");
+				continue;
+			}
+			if ( !p.data["templates"]["tplKeys"][key] ){
+_vars["logMsg"] = "error, not define template keys info, skip array "+ key ;
+func.logAlert(_vars["logMsg"], "warning");
+				continue;
+			}
+			if ( p.data["templates"]["tplKeys"][key]["listTpl"].length === 0 ){
+_vars["logMsg"] = "error, empty listTpl for array " +key;
+func.logAlert(_vars["logMsg"], "warning");
+				continue;
+			}
+			
+var _htmlRecords = "";
+for( var n = 0; n < p["data"][key].length; n++){
+	_htmlRecords += _formHtml({
+		"data": p.data[key][n],
+		"tpl": p.data["templates"]["tplKeys"][key]["listTpl"],
+		"keyPrefix": key+"."
+	});
+			
+}//next
+//console.log(_htmlRecords);
+			_html = _html.replace(p.markerLeft + key + p.markerRight, _htmlRecords);
 		}
 
 	}//next
+
+	return _html;
+	
+	
+/*	
+	function __processOnTplKeys(){
+	
+//--------------- get keys from template (text between %...% )
+	var tplKeys = p.tpl.match( new RegExp( p.markerLeft+"(.*?)"+p.markerRight, "g") );
+	//for(var n1 = 0; n1 < tplKeys.length; n1++){
+		//tplKeys[n1] = tplKeys[n1].replace("{{","").replace("}}","");
+	//}//next
+console.log( tplKeys );
+	
+		for( var n = 0; n < p["data"].length; n++){
+			
+		for( var n1 = 0; n1 < tplKeys.length; n1++){
+			var tplKey = p.markerLeft + p.keyPrefix + key + p.markerRight;
+		console.log(tplKey, _html.indexOf( tplKey ) !== -1);
+		}//next
 		
-	return _html
+	}//end __processOnTplKeys()
+*/
+	
 }//end _formHtml()
+
+
+
 
 function testWrapDate(){
 console.log("testWrapDate()");
 	var p = {
-		"data":{
-"node": [
-	{"id": 1,"title" : "First"},{"id": 2,"title" : "Second"},{"id": 3,"title" : "Third"	},
-	{"id": 4,"title" : "Four"},{"id": 5,"title" : "Fives"},{"id": 6,"title" : "Six"	},
-]
+		
+		"data": {
+			"node": [
+				{"id": 1,"title" : "First"},
+				{"id": 2,"title" : "Second"},
+				{"id": 3,"title" : "Thirther"},
+				{"id": 4,"title" : "Fourth"},
+				{"id": 5,"title" : "Fifth"},
+				{"id": 6,"title" : "Sixth"},
+			],
+			"key1": "test-key1",
+			"key2": "test-key2",
+			obj1: {
+				title: "object title!",
+				key1: "object key"
+			}
 		},
+		
 		"template" : func.getById("template-test").innerHTML,
 		"markerLeft":"%",
 		"markerRight":"%"
+	};
+
+	//define template keys info
+	p.data["templates"] = {
+		"tplKeys": {
+			"node": {
+				"dataType": "array",
+				"listTpl": func.getById("template-test-list-tpl").innerHTML
+			} 
+		}
 	};
 
 	var html = wrapData(p);
@@ -666,6 +733,7 @@ lang 	optional 	You can use this parameter to get the output in your language. L
 
 	<div id="template-main">
 		
+		<h2>Weather</h2>
 		<ul>		
 			<li>id: <b>%id%</b></li>
 			<li>name: <b>%name%</b></li>
@@ -700,44 +768,87 @@ lang 	optional 	You can use this parameter to get the output in your language. L
 			<li>sys.sunset: <b>%sys.sunset%</b></li>
 		</ul>
 
-		<ul>print record[0] of array
-			<li>weather.main: <b>%weather.0.main%</b></li>
-			<li>weather.description: <b>%weather.0.description%</b></li>
-			<li>weather.icon: <b>%weather.0.icon%</b></li>
-		</ul>
-		
-		<ul>print all array		
-			<li>weather.main: <b>%weather.*.main%</b></li>
-			<li>weather.description: <b>%weather.*.description%</b></li>
-			<li>weather.icon: <b>%weather.*.icon%</b></li>
-		</ul>
+		<div>print array
+		%weather%
+		</div>
 		
 	</div>
+
+
+	<div id="weather-list-tpl">
+		<ul>
+			<li>weather.main: <b>%weather.main%</b></li>
+			<li>weather.description: <b>%weather.description%</b></li>
+			<li>weather.icon: <b>%weather.icon%</b></li>
+		</ul>
+	</div>
+
 
 	<div id="template-forecast">
-<ul>		
-	<li>cod: <b>%cod%</b></li>
-	<li>message: <b>%message%</b></li>
-</ul>
+		<h2>Forecast</h2>
+		<ul>		
+			<li>cod: <b>%cod%</b></li>
+			<li>message: <b>%message%</b></li>
+		</ul>
+		
+		<ul>
+					
+			<li>city.coord:
+				<ul>		
+					<li>lat: <b>%city.coord.lat%</b></li>
+					<li>lon: <b>%city.coord.lon%</b></li>
+				</ul>
+			</li>
+			
+			<li>city.country: <b>%city.country%</b></li>
+			<li>city.name: <b>%city.name%</b></li>
+			<li>city.population: <b>%city.population%</b></li>
+			<li>city.timezone: <b>%city.timezone%</b></li>
+			<li>city.sunrise: <b>%city.sunrise%</b></li>
+			<li>city.sunset: <b>%city.sunset%</b></li>
+		</ul>
+		
+		<div>
+%list%
+		</div>
 
-<pre>
-city: Object {}
-list: Object {}
-​​</pre>
 	</div>
+	
+	<span id="template-forecast-list-tpl" class="">
+		<ul class="bg-lavender">
+			<li class="lr-padding-small">list.dt_txt: <b>%list.dt_txt%</b></li>
+			<li class="lr-padding-small">list.visibility: <b>%list.visibility%</b></li>
+			<li class="bg-lime">list.clouds.all: <b>%list.clouds.all%</b></li>
+			
+			<ul class="bg-floralwhite">
+				<li class="">list.main.temp: <b>%list.main.temp%</b>&#8451;</li>
+				<li class="">list.main.temp_kf: <b>%list.main.temp_kf%</b>&#8451;</li>
+			</ul>
+			
+		</ul>
+	</span>
+
 
 	<div id="template-test">
-		<ul>print array		
-			<li>node.id: <b>%node.0.id%</b></li>
-			<li>node.title: <b>%node.0.title%</b></li>
-		</ul>
+		<p>key1: %key1%</p>
+		<p>key2: %key2%</p>
 		
-		<ul>print array		
-			<li>node.id: <b>%node.5.id%</b></li>
-			<li>node.title: <b>%node.5.title%</b></li>
-		</ul>
+		<div>object:
+			<p>title: %obj1.title%</p>
+			<p>key1: %obj1.key1%</p>
+		</div>
 		
+		<div class="lr-flex">
+print array: %node%
+		</div>
 	</div>
+	
+<span id="template-test-list-tpl" class="hidden">
+	<ul class="lr-margin-20 lr-list-unstyled">
+		<li class="lr-padding-20 bg-cornsilk">node.id: <b>%node.id%</b></li>
+		<li class="lr-padding-20 bg-cornsilk">node.title: <b>%node.title%</b></li>
+	</ul>
+</span>
 
 </body>
 </html>
