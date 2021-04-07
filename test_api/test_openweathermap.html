@@ -15,6 +15,7 @@ var func = sharedFunc();
 func.vars["logOrderBy"] = "DESC";//sort log message by date
 
 _vars = {
+	
 	"weatherAPI": {
 		"dataUrl" : "",
 		"forecastUrl" : "http://api.openweathermap.org/data/2.5/forecast",
@@ -26,9 +27,33 @@ _vars = {
 	//посёлок Октябрьский, Мошковский район, Новосибирская область, Россия
 					//"latitude": 55.169005, 
 					//"longitude": 83.160846
+		},
+	},
+	
+	//define template keys info
+	"templates": {
+		"tplKeys": {
+			"weather": {
+				"dataType": "array",
+				"listTpl": null
+			},
+			"list": {
+				"dataType": "array",
+				"listTpl": null
+			},
+			"list.weather": {
+				"dataType": "array",
+				"listTpl": null
+			},
+			"node": {
+				"dataType": "array",
+				"listTpl": null
+			} 
 		}
 	}
-};
+
+	
+};// end app vars
 
 //https://openweathermap.org/current
 /*
@@ -68,6 +93,12 @@ window.onload = function(){
 
 	_vars["log"] = func.getById("log");
 
+
+	_vars["templates"]["tplKeys"]["weather"]["listTpl"] = func.getById("weather-list-tpl").innerHTML;
+	_vars["templates"]["tplKeys"]["list"]["listTpl"] = func.getById("template-forecast-list-tpl").innerHTML;
+	_vars["templates"]["tplKeys"]["list.weather"]["listTpl"] = func.getById("template-forecast-list-weather-tpl").innerHTML;
+	
+	_vars["templates"]["tplKeys"]["node"]["listTpl"] = func.getById("template-test-list-tpl").innerHTML;
 
 	var App_container = func.getById("App");
 	App_container.addEventListener("click", function(e){
@@ -351,6 +382,7 @@ console.log(p);
 		p.data["sys"]["sunset"] = sunsetDate;
 		
 		//define template keys info
+/*		
 		p.data["templates"] = {
 			"tplKeys": {
 				"weather": {
@@ -359,6 +391,7 @@ console.log(p);
 				} 
 			}
 		};
+*/		
 	}
 
 
@@ -378,17 +411,22 @@ console.log(p);
 	//console.log(sunsetDate);	
 		p.data["city"]["sunset"] = sunsetDate;
 
+/*
 		//define template keys info
 		p.data["templates"] = {
 			"tplKeys": {
 				"list": {
 					"dataType": "array",
 					"listTpl": func.getById("template-forecast-list-tpl").innerHTML
+				},
+				"list.weather": {
+					"dataType": "array",
+					"listTpl": func.getById("template-forecast-list-weather-tpl").innerHTML
 				}
 			}
 		};
+*/
 	}
-
 
 	var html = wrapData( {
 		"data": p.data,
@@ -491,31 +529,39 @@ _html = _html.replace( new RegExp( tplKey, "g"), p.data[key] );
 
 		//data type Array
 		if( p.data[key] instanceof Array ){
-console.log(key, p.data[key], typeof  p.data[key], p.data[key] instanceof Array);
+//console.log(key, p.data[key], typeof  p.data[key], p.data[key] instanceof Array);
 //console.log(key, p.data[key][0], typeof p.data[key][0], p.data[key][0] instanceof Array);
-			
-			if ( !p.data["templates"] ){
-_vars["logMsg"] = "error, not define template keys info, skip array " + key;
-func.logAlert(_vars["logMsg"], "warning");
-				continue;
-			}
-			if ( !p.data["templates"]["tplKeys"][key] ){
+
+			//if ( !p.data["templates"] ){
+//_vars["logMsg"] = "error, not define template keys info, skip array " + key;
+//func.logAlert(_vars["logMsg"], "warning");
+				//continue;
+			//}
+			//if ( !p.data["templates"]["tplKeys"][key] ){
+			if ( !_vars["templates"]["tplKeys"][key] ){
 _vars["logMsg"] = "error, not define template keys info, skip array "+ key ;
 func.logAlert(_vars["logMsg"], "warning");
 				continue;
 			}
-			if ( p.data["templates"]["tplKeys"][key]["listTpl"].length === 0 ){
+			//if ( p.data["templates"]["tplKeys"][key]["listTpl"].length === 0 ){
+			if ( _vars["templates"]["tplKeys"][key]["listTpl"].length === 0 ){
 _vars["logMsg"] = "error, empty listTpl for array " +key;
 func.logAlert(_vars["logMsg"], "warning");
 				continue;
 			}
-			
+	
 var _htmlRecords = "";
 for( var n = 0; n < p["data"][key].length; n++){
+	
+	var objectKeyPrefix = p.keyPrefix + key+".";
+//console.log("objectKeyPrefix: ", objectKeyPrefix, p.data[key][n], key );
+
 	_htmlRecords += _formHtml({
 		"data": p.data[key][n],
-		"tpl": p.data["templates"]["tplKeys"][key]["listTpl"],
+		//"tpl": p.data["templates"]["tplKeys"][key]["listTpl"],
+		"tpl": _vars["templates"]["tplKeys"][key]["listTpl"],
 		"keyPrefix": key+"."
+		//"keyPrefix": p.keyPrefix+key+"."
 	});
 			
 }//next
@@ -577,16 +623,6 @@ console.log("testWrapDate()");
 		"template" : func.getById("template-test").innerHTML,
 		"markerLeft":"%",
 		"markerRight":"%"
-	};
-
-	//define template keys info
-	p.data["templates"] = {
-		"tplKeys": {
-			"node": {
-				"dataType": "array",
-				"listTpl": func.getById("template-test-list-tpl").innerHTML
-			} 
-		}
 	};
 
 	var html = wrapData(p);
@@ -676,11 +712,13 @@ select address for get coordinates:
 https://openweathermap.org/
 Daily Forecast 7 days*
 https://home.openweathermap.org/
+http://bulk.openweathermap.org/sample/
 
 api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=7440bb4eee1e2d8d92bd8ca4a926ddd6
 
 https://openweathermap.org/api
 API documentation 
+https://openweathermap.org/forecast5#geo5
 
 https://openweathermap.org/price
 Details of your plan 
@@ -815,19 +853,100 @@ lang 	optional 	You can use this parameter to get the output in your language. L
 	</div>
 	
 	<span id="template-forecast-list-tpl" class="">
-		<ul class="bg-lavender">
-			<li class="lr-padding-small">list.dt_txt: <b>%list.dt_txt%</b></li>
-			<li class="lr-padding-small">list.visibility: <b>%list.visibility%</b></li>
-			<li class="bg-lime">list.clouds.all: <b>%list.clouds.all%</b></li>
+		<ul class="bg-lavender lr-padding-20">
+<li class="">dt_txt: 
+	<small>Time of data forecasted, ISO, UTC</small>
+	<b>%list.dt_txt%</b>
+</li>
+
+<li class="">visibility: 
+	<small>Average visibility</small>
+	<b>%list.visibility%</b> metres
+</li>
+
+<li class="">clouds.all: 
+	<small>Cloudiness</small>
+	<b>%list.clouds.all%</b>%
+</li>
+
 			
 			<ul class="bg-floralwhite">
-				<li class="">list.main.temp: <b>%list.main.temp%</b>&#8451;</li>
-				<li class="">list.main.temp_kf: <b>%list.main.temp_kf%</b>&#8451;</li>
+				<li class="">temp: <b>%list.main.temp%</b>&#8451;</li>
+				<li class="">feels_like: <b>%list.main.feels_like%</b>&#8451;</li>
+				<li class="">min: <b>%list.main.temp_min%</b>&#8451;</li>
+				<li class="">max: <b>%list.main.temp_max%</b>&#8451;</li>
+<li class="">pressure:
+	<small>Atmospheric pressure on the sea level by default</small>
+	<b>%list.main.pressure%</b> hPa
+</li>
+<li class="">sea_level:
+	<small>Atmospheric pressure on the sea level</small>
+	<b>%list.main.sea_level%</b> hPa
+</li>
+
+<li class="">grnd_level:
+	<small>Atmospheric pressure on the ground level</small>
+	<b>%list.main.grnd_level%</b> hPa
+</li>
+
+<li class="">humidity:
+	<small>Humidity</small>
+	<b>%list.main.humidity%</b>%
+</li>
 			</ul>
-			
+
+<li class="">pop: 
+	<small>Probability of precipitation (возможность осадков)</small>
+	<b>%list.pop%</b>
+</li>
+<!--
+<li class="">rain: 
+	<small>Rain volume for last 3 hours (Объем дождя за последние 3 часа )</small>
+	<b>%list.rain.3h%</b>mm
+</li>
+-->
+<li class="">pod: 
+	<small>Part of the day (n - night, d - day)</small>
+	<b>%list.sys.pod%</b>
+</li>
+
 		</ul>
+		
+<div class="bg-darkblue-gray color-white lr-padding-20">array
+	%weather%
+</div>
+
+		<ul class="bg-lightgreen lr-padding-20">
+<li class="">list.wind.deg: 
+	<small>Wind direction, degrees (meteorological)</small>
+	<b>%list.wind.deg%</b>&deg;
+</li>
+<li class="">list.wind.speed: 
+	<small>Wind speed:</small>
+	<b>%list.wind.speed%</b> meter/sec
+</li>
+
+		</ul>
+		
 	</span>
 
+
+	<span id="template-forecast-list-weather-tpl" class="">
+		<ul class="bg-powderblue lr-margin-small lr-padding-20">list.weather:
+			<li class="">main: 
+				<small>Group of weather parameters (Rain, Snow, Extreme etc.)</small>
+				<b>%list.weather.main%</b>
+			</li>
+			<li class="">description: 
+				<small>Weather condition within the group.</small>
+				<b>%list.weather.description%</b>
+			</li>
+			<li class="">icon: 
+				<small>Weather icon id</small>
+				<b>%list.weather.icon%</b>
+			</li>
+		</ul>
+	</span>
 
 	<div id="template-test">
 		<p>key1: %key1%</p>
