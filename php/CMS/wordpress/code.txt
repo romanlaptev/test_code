@@ -31,6 +31,8 @@ if( file_exists($logFile) ){
 error_log( $msg."\n", 3, $logFile );
 
 
+
+
 //================== SHORTCODE
 //https://wp-kama.ru/function/do_shortcode
 if($post->post_name == "lestnichnye-ograzhdeniya-iz-trub"){
@@ -273,6 +275,21 @@ function _change_menu_item_args( $args, $item ) {
 	return $args;
 }
 
+//----------- menu info
+$menu_object = wp_get_nav_menu_object( 'Производители' ); 
+echo "<pre>";
+print_r($menu_object);
+echo "</pre>";
+//$menu_slug = $menu_object->slug;
+
+wp_nav_menu(
+	array(
+		'menu' => 'Производители',
+		'menu_class'     => 'menu-brand',
+		'items_wrap'     => '<ul id="%1$s" class="%2$s">%3$s</ul>',
+	)
+);
+
 
 
 //================== //hook, get_terms, filter categories....
@@ -452,6 +469,17 @@ function pd_search_posts_per_page($query) {
 }
 add_filter( 'pre_get_posts','pd_search_posts_per_page' );
 
+-----
+https://wp-kama.ru/hook/pre_get_posts
+Событие срабатывает перед каждым запросом WP_Query. До того, как был сделан запрос в базу. 
 
+// Исключить категории
+function exclude_cat($query) {
+	if ($query->is_feed || ($query->is_search) || ($query->is_archive)) {
+		$query->set('cat','-2');
+	}
+	return $query;
+}
+add_filter('pre_get_posts','exclude_cat');
 
 

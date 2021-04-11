@@ -75,28 +75,29 @@ height:70px;
 .wrapper {
 	display: grid;
 	grid-template-columns: repeat(12, 1fr);
-	grid-template-rows: 40 px 100px 40 px;
+	grid-template-rows: 40px 100px 40px;
 }
 
+.border-box{
+    border: 1px solid;
+	text-align:center;
+}
 .header {
 	grid-column: span 12;
-    border: 1px solid;
 }
 
 .menu {
 	grid-column: span 4;
-    border: 1px solid;
 }
 
 .content {
 	grid-column: span 8;
-    border: 1px solid;
 }
 
 .footer {
 	grid-column: span 12;
-    border: 1px solid;
 }
+
 	</style>
 
 </head>
@@ -141,11 +142,41 @@ CSS Grid, подробное руководство по гридам с при�
 </pre>
 
 	<div class="wrapper">
-		<div class="header">HEADER</div>
-		<div class="menu">MENU</div>
-		<div class="content">CONTENT</div>
-		<div class="footer">FOOTER</div>
+		<div class="header border-box">HEADER</div>
+		<div class="menu border-box">MENU</div>
+		<div class="content border-box">CONTENT</div>
+		<div class="footer border-box">FOOTER</div>
 	</div><!-- end wrapper -->
+<br>
 
+<style>
+.stairway{
+	display:grid;
+	grid-template-rows:40px 40px 40px 40px 50px;
+}
+.a {
+	grid-column: 14;
+}
+.b {
+	grid-column: 11;
+}
+.c {
+	grid-column: 10;
+}
+.d {
+	grid-column: 9;
+}
+.e {
+	grid-column: 5;
+}
+</style>
+<div class="stairway">
+	<div class="a border-box">a</div>
+	<div class="b border-box">b</div>
+	<div class="c border-box">c</div>
+	<div class="d border-box">d</div>
+	<div class="e border-box">e</div>
+</div>
+	
 </body>
 </html>

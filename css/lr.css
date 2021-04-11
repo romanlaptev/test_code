@@ -1710,7 +1710,7 @@ https://www.omiod.com/colors/?rgb=d0ccd5
 .bg-violet {background-color: #ee82ee;}
 .bg-violetred {background-color: #d02090;}
 .bg-wheat {background-color: #f5deb3;}
-.bg-white {background-color: #ffffff;}
+.bg-white {background-color: #ffffff !important;}
 .bg-whitesmoke {background-color: #f5f5f5;}
 
 
