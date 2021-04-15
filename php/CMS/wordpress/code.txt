@@ -54,6 +54,36 @@ function _widgets_init(){
 ...
 }
 
+//---------------------- get theme url for post, widgets
+add_shortcode('theme_url', function(){
+	return get_template_directory_uri();
+});
+add_filter( 'widget_text', 'do_shortcode' );
+
+
+//------------
+//https://wp-kama.ru/function/get_the_privacy_policy_link
+//https://misha.agency/wordpress/shortcodes.html
+//https://wp-kama.ru/plugin/contact-form-7/sozdanie-tegov-formy
+//https://wp-kama.ru/hook/the_privacy_policy_link
+
+//add_shortcode('privacy_policy_link', function(){
+//	return get_the_privacy_policy_link();
+//});
+//
+
+add_filter( 'the_privacy_policy_link', '_filter_privacy_policy_link', 10, 2 );
+function _filter_privacy_policy_link( $link, $privacy_policy_url ){
+	$link = str_replace("Политика конфиденциальности", "Я согласен на обработку персональных данных", $link);
+	return $link;
+}
+
+add_filter( 'wpcf7_form_elements', 'do_shortcode' );
+add_shortcode('privacy_policy_link', function(){
+	return get_the_privacy_policy_link();
+});
+
+
 
 //================== WIDGETS
 https://wp-kama.ru/function/the_widget
