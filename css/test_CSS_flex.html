@@ -480,5 +480,48 @@ align-self: flex-end;
 
 	</div><!-- end container -->
 
+
+	<div class="container">
+<h1>Reorder menu items</h1>
+<style>
+.footer-menu {
+	display: flex;
+	flex-flow: wrap;
+	justify-content: end;
+	list-style: none;
+	width: 150px;
+	background-color: lavender;
+}
+.footer-menu li {
+	padding: 20px;
+	border: 1px solid;
+	margin: 5px;
+}
+.footer-menu .first {
+	order: 1;
+}
+.footer-menu .second {
+	order: 3;
+}
+.footer-menu .thirth {
+	order: 2;
+}
+.footer-menu .fourth {
+	order: 4;
+}
+.footer-menu .fifth {
+	order: 5;
+}
+</style>
+
+		<ul class="footer-menu">
+			<li class="first">1</li>
+			<li class="second">2</li>
+			<li class="thirth">3</li>
+			<li class="fourth">4</li>
+			<li class="fifth">5</li>
+		</ul>
+	</div><!-- end container -->
+			
 </body>
 </html>

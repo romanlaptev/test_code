@@ -70,6 +70,7 @@ https://yandex.ru/dev/weather/doc/dg/concepts/pricing.html#about
 
 
 https://yandex.ru/dev/weather/doc/dg/concepts/forecast-info.html
+https://yandex.ru/dev/weather/doc/dg/concepts/forecast-info.html#resp-format
 
 send header X-Yandex-API-Key: dab03f2c-c76d-4fb6-9445-faa84fa80973
 
