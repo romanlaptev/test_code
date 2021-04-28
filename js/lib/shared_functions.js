@@ -905,7 +905,7 @@ console.log( "xhr.onerror,", e);
 		function _convertDateToStr( opt ){
 			var p = {
 				"dateObj" : null,
-				"format" : "",
+				"format" : "dd-mm-yyyy hh:min",
 				"s_case": false//subjective_case, именительный падеж
 			};
 			for(var key in opt ){
@@ -941,8 +941,12 @@ console.log( "xhr.onerror,", e);
 				sSec = "0" + sSec;
 			}
 			
-			var dateStr =  sDate + "-" + sMonth + "-" + sYear + " " + sHours + ":" + sMinutes + ":" + sSec;
+			var dateStr = dateStr =  sDate + "-" + sMonth + "-" + sYear + " " + sHours + ":" + sMinutes + ":" + sSec;
 			switch( p.format ){
+				
+				case "dd-mm-yyyy hh:min":
+					dateStr =  sDate + "-" + sMonth + "-" + sYear + " " + sHours + ":" + sMinutes + ":" + sSec;
+				break;
 				
 				case "yyyy-mm-dd":
 					dateStr = sYear + "-" + sMonth + "-" + sDate;
@@ -981,6 +985,7 @@ console.log( "xhr.onerror,", e);
 			}//end switch
 			return dateStr;
 		}//end _convertDateToStr()
+
 	
 		
 //================================
