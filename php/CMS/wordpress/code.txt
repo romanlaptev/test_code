@@ -512,4 +512,30 @@ function exclude_cat($query) {
 }
 add_filter('pre_get_posts','exclude_cat');
 
+-----------
+https://wp-kama.ru/function/get_posts
+https://8-points.ru/wp-admin/theme-editor.php?file=page-portfolio.php&theme=8points
 
+		$args = array(
+			'post_type' => 'portfolio',
+			'numberposts' => -1,
+		);
+
+		if ($portfolio_category){
+			$args = array_merge($args, array(
+				'tax_query' => array(
+					array(
+						'taxonomy' => 'portfolio_category',
+						'field' => 'id',
+						//'terms' => $portfolio_category->term_id,
+						'terms' => 7,//sajty-pod-klyuch
+					)
+				)
+			));
+		}
+
+		$cases = get_posts($args);
+echo "test<pre>";
+print_r($cases);
+echo "</pre>";
+exit;
