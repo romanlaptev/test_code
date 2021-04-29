@@ -512,7 +512,7 @@ function exclude_cat($query) {
 }
 add_filter('pre_get_posts','exclude_cat');
 
------------
+----------- получить посты портфолио определенной категории
 https://wp-kama.ru/function/get_posts
 https://8-points.ru/wp-admin/theme-editor.php?file=page-portfolio.php&theme=8points
 
