@@ -2,6 +2,8 @@
 <html>
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Test html</title>
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
 <!--
 	<link rel="stylesheet" href="http://www.blueprintcss.org/blueprint/screen.css" type="text/css" media="screen, projection">
@@ -13,21 +15,18 @@
 -->
 	
 <style>
-body
-{
-background:#6aa6c0;
+body{
+background:#082844;
 }
-.content.container
-{
-background:#ffffff;
-margin-top:20px;
-padding:30px;
+.container{
+	background:#ffffff;
+	margin-top:20px;
+	padding:30px;
 }
-.row
-{
-padding:10px;
-border-bottom:1px solid #cccccc;
-margin-bottom:30px;
+.row{
+	padding:10px;
+	border-bottom:1px solid #cccccc;
+	margin-bottom:30px;
 }
 </style>
 
@@ -48,14 +47,65 @@ window.onload = function ready(){
 <body>
 <header>
 	<div class="page-header container">
-		<h1>test html5</h1>
+		<h1>Test html</h1>
 	</div>
 </header>
 
 <div class="content container">
-	<a href="http://htmlbook.ru/html/input/type">
-		<h2>Тег input, атрибут type</h2>
-	</a>
+
+	<div class="lr-panel panel">
+<pre>
+https://www.youtube.com/watch?v=iHHnhCsWrfI
+Верстка сайта - HTML,CSS нововведения	
+</pre>
+
+		<div class="panel-body">
+			<h3>&lt;DETAILS&gt;</h3>
+<details>
+	<summary class="btn btn-default">List1</summary>
+	<p>Item1</p>
+	<p>Item2</p>
+	<p>Item3</p>
+	<p>Item4</p>
+	<p>Item5</p>
+</details>		
+
+<details>
+	<summary class="btn btn-default">List2</summary>
+	<p>Item1</p>
+	<p>Item2</p>
+	<p>Item3</p>
+	<p>Item4</p>
+	<p>Item5</p>
+</details>		
+		</div>
+		
+		<div class="panel-body">
+			<h3>&lt;OUTPUT&gt;</h3>
+<form onInput="x.value=parseInt(a.value) * parseInt(b.value)">
+	<input id="a" type="number" value="0"> *
+	<input id="b" type="number" value="0"> = <output id="x" for="a b"></output>
+</form>
+		</div>
+		
+		<div class="panel-body">
+			<h3>&lt;DATALIST&gt;</h3>
+<form action="">
+	<label for="fruit_list">choose your fruit from the list:</label>
+	<input list="fruit_list" name="fruit" id="fruit">
+	<datalist id="fruit_list">
+		<option value="1">Apple</option>
+		<option value="2">Watermelon</option>
+		<option value="3">Melon</option>
+	</datalist>
+	<input type="submit">
+</form>
+		</div>
+		
+	</div><!-- end panel -->
+	
+	<h2>Тег input, атрибут type</h2>
+http://htmlbook.ru/html/input/type	
 	<section class="row">
 		<div class="col-md-2">color</div>
 		<div class="col-md-3">Виджет для выбора цвета.</div>
