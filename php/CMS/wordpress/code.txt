@@ -539,3 +539,46 @@ echo "test<pre>";
 print_r($cases);
 echo "</pre>";
 exit;
+
+
+----------------- вывести дочерние страницы в виде подменю
+https://wp-kama.ru/function/wp_list_pages
+https://wp-kama.ru/function/get_pages
+https://qna.habr.com/q/64186
+
+---
+$childPages = get_pages( 
+    array(
+        'title_li' => '',
+        'child_of' => $post->ID,
+        'depth' => 1,
+    ) 
+);
+echo "<pre>";
+print_r($childPages);
+echo "</pre>";
+
+---
+$args = array(
+	'depth'        => 0,
+	'show_date'    => 'created',
+	//'date_format'  => get_option('date_format'),
+	'child_of'     => $post->ID,
+	'exclude'      => '',
+	'exclude_tree' => '',
+	'include'      => '',
+	'title_li'     => __('Pages'),
+	'echo'         => 1,
+	'authors'      => '',
+	'sort_column'  => 'menu_order, post_title',
+	'sort_order'   => 'ASC',
+	'link_before'  => '',
+	'link_after'   => '',
+	'meta_key'     => '',
+	'meta_value'   => '',
+	'number'       => '',
+	'offset'       => '',
+	'walker'       => '',
+	'post_type'    => 'page', 
+); 
+wp_list_pages( $args );
