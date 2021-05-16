@@ -179,6 +179,66 @@ add_action("init", function () {
 });
 
 
+//------------------------------------------------------------------- agropit. custom H1
+//add meta field for page
+add_action('admin_init', '_page_custom_fields', 1);
+function _page_custom_fields() {
+	add_meta_box(
+		'extra_fields', 
+		'дополнительные параметры документа', 
+		'_page_custom_fields_func', 
+		'page'//,
+		//'normal', 
+		//'high'
+	);
+} 
+function _page_custom_fields_func( $page ){
+//echo "<pre>";	
+//print_r($page);
+//echo "</pre>";	
+	$custom_H1_value = get_post_meta( $page->ID, 'custom_H1', 1 );	
+	$html = "";
+	$html .= "<p>
+<label>заголовок H1:
+<input type='text' size='80' name='custom_H1' value='";
+	$html .= $custom_H1_value;
+	$html .= "'/></label></p>";
+	echo $html;
+}
+
+add_action('save_post', '_page_custom_fields_update', 1);
+function _page_custom_fields_update( $post_id ){
+//echo "<pre>";	
+//print_r($_POST);
+//echo "</pre>";
+//exit;
+	if ( !current_user_can( 'edit_post', $post_id ) ) {
+		return false; 
+	}
+	if ( defined( 'DOING_AUTOSAVE' ) 
+		&& DOING_AUTOSAVE ) {
+		return false;
+	}
+	
+	if( $_POST['post_type'] != "page"){
+		return;
+	}
+	
+	$fieldName = "custom_H1";
+	
+	if( !isset( $_POST[$fieldName] ) ) {
+		return false;
+	}
+	
+	if( empty( $_POST[$fieldName] ) ){
+		delete_post_meta( $post_id, $fieldName );
+		return;
+	}
+	
+	update_post_meta( $post_id, $fieldName, $_POST[$fieldName] );
+} 
+//--------------		
+
 
 //================== HOOKS
 //add_filter( 'get_search_form', 'keyhole_search_form' );
