@@ -5,6 +5,8 @@ use module:
 	var func = sharedFunc();
 //console.log("func:", func);
 
+	func.vars["logOrderBy"] = "DESC";
+
 	func.sortRecords({
 		"records" : terminNodes,
 		"sortOrder": "asc", //desc
@@ -16,24 +18,47 @@ use module:
 	var sharedFunc =  sharedFunc || function(){
 
 
-		if( typeof window.jQuery === "function"){
-var msg = 'You are running jQuery version: ' + jQuery.fn.jquery;
-_log(msg);
-
-			$(document).ready(function(){
-//....				
-			});//end ready	
-
-		}
-		
-		_defineEvents();
-		
 		// private variables and functions
 		var _vars = {
 			"logOrderBy": "ASC"
 		};//end _vars
 
-		function _defineEvents(){
+//---------------------- 
+		if( typeof window.jQuery === "function"){
+var msg = 'You are running jQuery version: ' + jQuery.fn.jquery;
+_log(msg);
+
+			//$(document).ready(function(){
+//....				
+			//});//end ready	
+		}
+
+		
+//---------------------- replace console.log for old IE
+//---------------------- replace console.log for mobile browsers
+		if ( (!window.console ) || 	
+			('ontouchstart' in window) ){ 
+
+			window.console = {"log" : function( msg ){
+					if( typeof msg === "string"){
+						msg = "<small>console.log </small>(&quot;"+ msg + "&quot;)";
+					} else {
+						msg = "console.log (  "+ typeof msg  + ")";
+					}
+
+					var log = _getById( "log" );
+					if( log ){
+						_alert( msg, "info" );
+					} else {
+						alert(msg);
+						//document.writeln(msg);
+					}
+				}
+			};
+		}
+		
+		//_defineEvents();
+		//function _defineEvents(){
 /*
 window.onload = function(){
 console.log("window event onload");
@@ -95,7 +120,7 @@ document.onreadystatechange = function () {
   }
 }
 */
-		}//end _defineEvents()
+		//}//end _defineEvents()
 
 		
 		function _getById(id){
@@ -1538,39 +1563,6 @@ ONLY second LEVEL !!!!!!!!!!!!
 //})();
 
 
-//console.log for old IE
-if (!window.console){ 
-	window.console = {
-		"log" : function( msg ){
-			
-			var id = "log";
-			var log = false;
-			if( document.querySelector ){
-				log = document.querySelector("#"+id);
-			}
-	
-			if( document.getElementById ){
-				log = document.getElementById(id);
-			}
-	
-			if( document.all ){
-				log = document.all[id];
-			}
-	
-			//if( document.layers ){
-				//var log = document.layers[id];
-			//}
-	
-
-			if(log){
-				log.innerHTML += msg +"<br>";
-			} else {
-				alert(msg);
-				//document.writeln(msg);
-			}
-		}
-	}
-};
 
 
 function runAjaxJQuery( params ) {
