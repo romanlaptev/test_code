@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<title>test API</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+	<meta charset="utf-8"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link type="text/css" rel="stylesheet" href="../css/lr.css">
+<script src="../js/lib/shared_functions.js"></script>
+
+<script>
+var func = sharedFunc();
+//console.log("func:", func);
+func.vars["logOrderBy"] = "DESC";//sort log message by date
+
+_vars = {
+	
+};// end app vars
+
+
+window.onload = function(){
+
+var logMsg = "Test";
+func.logAlert( logMsg, "danger");
+//func.log( "000", "response");
+
+	_vars["log"] = func.getById("log");
+
+
+
+	var App_container = func.getById("App");
+	App_container.addEventListener("click", function(e){
+//console.log(e.type);
+		event = e || window.e;
+		var target = event.target || event.srcElement;
+//console.log( target);
+//console.log( event.eventPhase );
+//console.log( "preventDefault: " + event.preventDefault );
+		if( target.tagName === "A"){
+			if ( target.href.indexOf("?q=") !== -1){
+				
+				if (event.preventDefault) { 
+					event.preventDefault();
+				} else {
+					event.returnValue = false;				
+				}
+
+				var parseStr = target.href; 
+//console.log( parseStr );
+					if( parseStr.length > 0 ){
+						_vars["GET"] = func.parseGetParams( parseStr ); 
+						_urlManager( target );
+					} else {
+console.log( "Warn! error parse url in " + target.href );
+					}
+
+			}
+		}
+
+	});//end event
+
+
+
+};//end window.load
+console.log(_vars);
+
+
+function _urlManager( target ){
+//console.log(target);
+		
+		switch( _vars["GET"]["q"] ) {
+
+			case "toggle-log":
+//console.log(log.style.display);
+				if( _vars["log"].style.display==="none"){
+					_vars["log"].style.display="block";
+				} else {
+					_vars["log"].style.display="none";
+				}
+			break;
+			
+			case "clear-log":
+				_vars["log"].innerHTML="";
+			break;
+			
+			case "test":
+				var funcName = _vars["GET"]["func"];
+				window[funcName]();
+			break;
+			
+			case "send-request":
+				if( !_vars["GET"]["req-type"] || 
+					_vars["GET"]["req-type"].length === 0
+				){
+logMsg = "error, empty or undefined API req-type";
+func.logAlert(logMsg, "error");
+					return false;
+				}
+
+		
+				sendRequest({
+					"dataUrl": _vars.weatherAPI["dataUrl"],
+					"requestParams": _vars.weatherAPI["requestParams"],
+					"callback" : function( response ){
+		//console.log(arguments);
+						var data = null;
+						if(response){
+							responseData = parseServerResponse( response );
+		var logMsg = "end parse ajax response";
+		func.logAlert( logMsg, "info");
+						}
+						if( responseData ){
+							_drawResponse({
+								data: responseData,
+								templates: {
+									"tplMain": requestTpl
+								},
+								"req-type": _vars["GET"]["req-type"]
+							});
+						}
+					}//end callback
+				});
+			
+			break;
+			
+			default:
+console.log("function _urlManager(),  GET query string: ", _vars["GET"]);
+			break;
+		}//end switch
+		
+}//end _urlManager()
+
+
+function sendRequest( opt ){
+	var p = {
+		"dataUrl" : false,
+		"requestParams": false,
+		"callback" : function(){
+//console.log(arguments);
+		}//end callback
+	};
+//console.log(opt);
+	//extend p object
+	for(var key in opt ){
+		p[key] = opt[key];
+	}
+//console.log(p);
+
+
+	if( !p.requestParams){
+logMsg = "error, wrong requestParams...", p.requestParams;
+func.logAlert( logMsg, "error");
+		return false;
+	}
+
+	var dataUrl = p["dataUrl"];
+	for(var key in p.requestParams){
+		dataUrl = dataUrl.replace( new RegExp("{{"+key+"}}", "g"), p.requestParams[key] );
+	}//next
+//console.log( dataUrl );		
+
+	try{
+		var xhr = new XMLHttpRequest();
+		
+		try{
+			xhr.open( "GET", dataUrl, true );
+		} catch(e){
+logMsg = "ajax request error, not open";
+func.logAlert( logMsg, "error");
+
+for( var key in e){
+console.log(key +" : "+ e[key]);
+}//next
+			return false;
+		}//end catch
+		
+		
+		//xhr.setRequestHeader("X-Yandex-API-Key", _vars["apiKey"] );
+		//xhr.setRequestHeader("Access-Control-Allow-Credentials", "true");
+		
+		xhr.onload = function(e) {
+//console.log(arguments);
+// console.log("event type:" + e.type);
+logMsg = "time: " + e.timeStamp +"ms, ";
+logMsg += "total: " + e.total +"bytes , ";
+logMsg += "loaded: " + e.loaded +"bytes";
+//console.log(logMsg);	
+//console.log( this.responseText );
+func.logAlert( logMsg, "info");
+			
+			var _response = false;
+			if( this.responseText.length > 0 ){
+				_response = this.responseText;
+				_vars["contentType"] = xhr.getResponseHeader('content-type');
+			}
+			
+			if( typeof p.callback === "function"){
+				p.callback(_response);
+			}
+		}//end onload
+		
+		xhr.onerror = function(e) {
+//console.log(arguments);		
+console.log(e);		
+for(var key in e){
+console.log( key +" : "+e[key] );
+}
+
+_vars["logMsg"] = "error, ajax load failed...";
+//_message( _vars["logMsg"], "error");
+func.logAlert( _vars["logMsg"], "danger");
+			p.callback(false);
+		}
+		
+		xhr.onloadend = function(e){
+//console.log(xhr.getResponseHeader('X-Powered-By') );
+logMsg = "Request headers: " + xhr.getAllResponseHeaders();
+console.log( logMsg );
+func.logAlert( logMsg, "info");
+		}//end onloadend
+		
+		xhr.send();
+		
+	} catch(e){
+console.log(e);	
+	}	
+	
+}//end sendRequest()
+
+
+
+function parseServerResponse( data ){
+	
+	//if( _vars["contentType"].indexOf("application/xml") !== -1){
+		//_parseXML( data );
+	//}
+	
+	if( _vars["contentType"].indexOf("application/json") !== -1){
+		return _parseJSON( data );
+	}
+	
+}//parseServerResponse()
+
+
+function _parseJSON( jsonStr ){
+	try{
+		var jsonObj = JSON.parse( jsonStr, function(key, value) {
+//console.log( key, value );
+			return value;
+		});
+//console.log( jsonObj );
+		
+		return jsonObj;
+		
+	} catch(error) {
+_vars["logMsg"] = "error, error JSON.parse server response data...." ;
+console.log( error );
+func.logAlert(_vars["logMsg"], "error");
+		return false;
+	}//end catch
+
+}//end _parseJSON()
+
+function _drawResponse(opt){
+	var p = {
+		data: null,
+		templates: null,
+		targetContainer: document.querySelector("#response"),
+		"req-type": null
+	}
+//console.log(opt);
+	//extend p object
+	for(var key in opt ){
+		p[key] = opt[key];
+	}
+console.log(p);
+	
+	if( p["req-type"] === "weather"){
+		var sunriseDate = func.timeStampToDateStr({
+			"timestamp": p.data["sys"]["sunrise"],
+			"format": "dd-mm-yyyy hh:min"
+		});
+	//console.log(sunriseDate);	
+		p.data["sys"]["sunrise"] = sunriseDate;
+		
+		var sunsetDate = func.timeStampToDateStr({
+			"timestamp": p.data["sys"]["sunset"],
+			"format": "dd-mm-yyyy hh:min"
+		});
+	//console.log(sunsetDate);	
+		p.data["sys"]["sunset"] = sunsetDate;
+		
+		//define template keys info
+/*		
+		p.data["templates"] = {
+			"tplKeys": {
+				"weather": {
+					"dataType": "array",
+					"listTpl": func.getById("weather-list-tpl").innerHTML
+				} 
+			}
+		};
+*/		
+	}
+
+
+	if( p["req-type"] === "forecast"){
+		
+		var sunriseDate = func.timeStampToDateStr({
+			"timestamp": p.data["city"]["sunrise"],
+			"format": "dd-mm-yyyy hh:min"
+		});
+	//console.log(sunriseDate);	
+		p.data["city"]["sunrise"] = sunriseDate;
+		
+		var sunsetDate = func.timeStampToDateStr({
+			"timestamp": p.data["city"]["sunset"],
+			"format": "dd-mm-yyyy hh:min"
+		});
+	//console.log(sunsetDate);	
+		p.data["city"]["sunset"] = sunsetDate;
+
+/*
+		//define template keys info
+		p.data["templates"] = {
+			"tplKeys": {
+				"list": {
+					"dataType": "array",
+					"listTpl": func.getById("template-forecast-list-tpl").innerHTML
+				},
+				"list.weather": {
+					"dataType": "array",
+					"listTpl": func.getById("template-forecast-list-weather-tpl").innerHTML
+				}
+			}
+		};
+*/
+	}
+
+	var html = wrapData( {
+		"data": p.data,
+		"template" : p.templates["tplMain"]
+	});
+
+	if( html && html.length > 0){
+		p.targetContainer.innerHTML = html;
+	}
+	
+}//end _drawResponse()
+
+
+function wrapData( opt ){
+	var p = {
+		"data": null,
+		"template" : "",
+		"markerLeft":"%",
+		"markerRight":"%"
+	};
+	//extend options object
+	for(var key in opt ){
+		p[key] = opt[key];
+	}
+//console.log(p);
+//console.log( p["data"].length );
+
+	if( !p["data"] || p["data"].length === 0){
+console.log("-- _wrapData(), error, incorrect data ...");
+		return false;
+	}
+	if( !p["template"].length === 0 ){
+console.log("-- wrapData(), error, empty template ...");
+		return false;
+	}
+
+	var html = _formHtml({
+			"data": p.data, 
+			"tpl": p.template, 
+			"markerLeft": p.markerLeft,
+			"markerRight": p.markerRight
+		});
+	//var html = _formHtml( p.data["coord"], p.template, "coord." );
+//console.log(html);
+	return html;
+
+}//end wrapData()
+
+function _formHtml(opt){
+	var p = {
+		data: null,
+		tpl:"", 
+		keyPrefix:"",
+		markerLeft:"%",
+		markerRight:"%"
+	};
+	//extend options object
+	for(var key in opt ){
+		p[key] = opt[key];
+	}
+//console.log(p);
+
+	var _html = p.tpl;
+	//__processOnTplKeys();
+	
+	for( var key in p.data ){
+//console.log(key, p.data[key], typeof  p.data[key]);
+//console.log(key, p.data[key], typeof  p.data[key], p.data[key] instanceof Object );
+
+		var tplKey = p.markerLeft + p.keyPrefix + key + p.markerRight;
+//console.log(tplKey);
+
+		//data type String or Number
+		if( _html.indexOf( tplKey ) !== -1  ){
+	//console.log( markerLeft + keyPrefix + key + markerRight);
+	//console.log( tplKey, p.data[key], typeof p.data[key]);
+			if( typeof p.data[key] === "string" ||
+					typeof p.data[key] === "number"){
+//console.log( tplKey, p.data[key], typeof p.data[key], new RegExp( tplKey, "g") );
+_html = _html.replace( new RegExp( tplKey, "g"), p.data[key] );
+//_html = _html.replace( tplKey, p.data[key] );
+			}
+		}
+
+		//data type Object
+		if( p.data[key] instanceof Object ){
+			if( !(p.data[key] instanceof Array)  ){
+//console.log(key, p.data[key], typeof  p.data[key] );
+				
+				var objectKeyPrefix = p.keyPrefix+key+".";
+//console.log("objectKeyPrefix: ", objectKeyPrefix );
+				
+				_html = _formHtml({
+					"data": p.data[key],
+					"tpl": _html,
+					"keyPrefix": objectKeyPrefix
+				});
+			}
+		}
+
+		//data type Array
+		if( p.data[key] instanceof Array ){
+//console.log(key, p.data[key], typeof  p.data[key], p.data[key] instanceof Array);
+//console.log(key, p.data[key][0], typeof p.data[key][0], p.data[key][0] instanceof Array);
+
+			//if ( !p.data["templates"] ){
+//_vars["logMsg"] = "error, not define template keys info, skip array " + key;
+//func.logAlert(_vars["logMsg"], "warning");
+				//continue;
+			//}
+			//if ( !p.data["templates"]["tplKeys"][key] ){
+			if ( !_vars["templates"]["tplKeys"][key] ){
+_vars["logMsg"] = "error, not define template keys info, skip array "+ key ;
+func.logAlert(_vars["logMsg"], "warning");
+				continue;
+			}
+			//if ( p.data["templates"]["tplKeys"][key]["listTpl"].length === 0 ){
+			if ( _vars["templates"]["tplKeys"][key]["listTpl"].length === 0 ){
+_vars["logMsg"] = "error, empty listTpl for array " +key;
+func.logAlert(_vars["logMsg"], "warning");
+				continue;
+			}
+	
+var _htmlRecords = "";
+for( var n = 0; n < p["data"][key].length; n++){
+	
+	var objectKeyPrefix = p.keyPrefix + key+".";
+//console.log("objectKeyPrefix: ", objectKeyPrefix, p.data[key][n], key );
+
+	_htmlRecords += _formHtml({
+		"data": p.data[key][n],
+		//"tpl": p.data["templates"]["tplKeys"][key]["listTpl"],
+		"tpl": _vars["templates"]["tplKeys"][key]["listTpl"],
+		"keyPrefix": key+"."
+		//"keyPrefix": p.keyPrefix+key+"."
+	});
+			
+}//next
+//console.log(_htmlRecords);
+			_html = _html.replace(p.markerLeft + key + p.markerRight, _htmlRecords);
+		}
+
+	}//next
+
+	return _html;
+	
+	
+	
+}//end _formHtml()
+
+
+		
+</script>
+
+
+</head>
+
+<body class="bg-darkblue-sea">
+	
+<div class="lr-container bg-ghostwhite w80 lr-margin-20-top">
+	<div class="">
+		<h1>test API: youtube.com </h1>
+	</div>
+</div>
+
+<div class="lr-container bg-white w80" id="App">
+		<div class="lr-panel lr-border-box lr-border-cyan">
+<form name="form_request_params">
+			<div class="lr-panel-body">
+<a href="#?q=send-request&req-type=weather" class="lr-btn bg-blue text-white" id="btn-request">get weather</a>
+<a href="#?q=test&func=testWrapDate" class="lr-btn bg-orange text-black">testWrapDate</a>
+			</div>
+
+</form><!-- end form_request_params -->
+			
+		</div><!-- end panel -->
+
+		<div class="lr-panel">
+			<div class="lr-panel-body">
+<pre class="bg-floralwhite lr-padding-small">
+https://console.developers.google.com/
+Your API key is available in the Developer Console's API Access pane for your project.
+
+https://console.cloud.google.com/apis/credentials?folder=&organizationId=&project=test-youtube-api-315302
+	
+https://developers.google.com/youtube/documentation
+https://developers.google.com/youtube/v3/docs/playlists
+https://developers.google.com/youtube/v3/docs/playlists/list#usage
+https://developers.google.com/youtube/v3/docs/channels/list
+https://developers.google.com/youtube/iframe_api_reference#Getting_Started 
+https://developers.google.com/youtube/iframe_api_reference#onError
+https://developers.google.com/youtube/iframe_api_reference#onStateChange	
+	
+</pre>
+			</div>
+		</div><!-- end panel -->
+		
+		<div class="lr-panel text-left">
+			<div class="lr-panel-heading bg-darkblue color-white">
+				<h4>response</h4>
+			</div>
+			<div class="lr-panel-body lr-border-box lr-border-cyan" >
+				<div id="response">	</div>
+			</div>
+				
+		</div><!-- end panel -->
+		
+
+	<div class="log-panel lr-panel bg-lightsteelblue5">
+		<div class="">
+			<div class="text-right lr-margin-small">
+				<a id="btn-toggle-log" href="#?q=toggle-log" title="Toggle log" class="lr-btn bg-white">-</a>
+				<a id="btn-clear-log" href="#?q=clear-log" title="Clear log" class="lr-btn bg-orange">x</a>
+			</div>
+			<div id="log" class=""></div>
+		</div>
+	</div>
+	
+</div><!-- end container -->
+
+</body>
+</html>
