@@ -15,8 +15,23 @@ var func = sharedFunc();
 func.vars["logOrderBy"] = "DESC";//sort log message by date
 
 _vars = {
+//https://developers.google.com/youtube/v3/docs/playlists/list#usage
+	youtube_playlists: {
+//www.googleapis.com/youtube/v3/playlists		
+		"dataUrl" : "https://youtube.googleapis.com/youtube/v3/playlists?part={{part}}&channelId={{channelId}}&maxResults={{maxResults}}&key={{apiKey}}",
+		"requestParams" : {
+			"apiKey" : "AIzaSyCQbtO3MfNPg-Z95irUNsZF236QMPm3ncM",
+			
+			//"part": "contentDetails", "id","player","localizations","snippet", "status"
+			"part": "snippet%2CcontentDetails",
+			
+			"channelId": "UCgp8hFrPYEx2F1SqEB8yUMg",
+			"maxResults": 25//  0 to 50
+		},
+	},
 	
 };// end app vars
+console.log(_vars);
 
 
 window.onload = function(){
@@ -60,10 +75,7 @@ console.log( "Warn! error parse url in " + target.href );
 
 	});//end event
 
-
-
 };//end window.load
-console.log(_vars);
 
 
 function _urlManager( target ){
@@ -90,38 +102,55 @@ function _urlManager( target ){
 			break;
 			
 			case "send-request":
-				if( !_vars["GET"]["req-type"] || 
-					_vars["GET"]["req-type"].length === 0
-				){
-logMsg = "error, empty or undefined API req-type";
-func.logAlert(logMsg, "error");
+				var apiObjectName = _vars["GET"]["api-object"];
+				if( !apiObjectName || apiObjectName.length === 0 ){
+_vars.logMsg = "warning, empty or undefined API source name";
+func.logAlert(_vars.logMsg, "warning");
+console.log( _vars.logMsg );
 					return false;
 				}
+				apiObj = _vars[apiObjectName];
+				
+				var dataUrl = apiObj["dataUrl"];
+				if( !dataUrl || dataUrl.length === 0 ){
+_vars.logMsg = "error, empty or undefined API parameter 'dataUrl'";
+func.logAlert(_vars.logMsg, "error");
+					return false;
+				}
+console.log("dataUrl: ", dataUrl);
 
-		
+console.log("-- start server request --");
+
 				sendRequest({
-					"dataUrl": _vars.weatherAPI["dataUrl"],
-					"requestParams": _vars.weatherAPI["requestParams"],
+					"dataUrl": dataUrl,
+					//"apiObjectName" : apiObjectName,
+					"requestParams": apiObj["requestParams"],
 					"callback" : function( response ){
-		//console.log(arguments);
-						var data = null;
+//console.log(arguments);
+console.log("-- end server request --");
+
+						var responseData = null;
 						if(response){
-							responseData = parseServerResponse( response );
-		var logMsg = "end parse ajax response";
-		func.logAlert( logMsg, "info");
+							responseData = parseServerResponse({
+								"responseType": _vars["responseType"],
+								"response": response
+							});
+//var logMsg = "end parse ajax response";
+//func.logAlert( logMsg, "info");
 						}
+console.log(responseData);
+/*
+						
 						if( responseData ){
-							_drawResponse({
+							drawResponse({
 								data: responseData,
-								templates: {
-									"tplMain": requestTpl
-								},
-								"req-type": _vars["GET"]["req-type"]
+								apiObj: apiObj
 							});
 						}
+*/						
 					}//end callback
 				});
-			
+
 			break;
 			
 			default:
@@ -135,12 +164,14 @@ console.log("function _urlManager(),  GET query string: ", _vars["GET"]);
 function sendRequest( opt ){
 	var p = {
 		"dataUrl" : false,
+		//"apiObjectName" : false,
 		"requestParams": false,
 		"callback" : function(){
 //console.log(arguments);
 		}//end callback
 	};
 //console.log(opt);
+
 	//extend p object
 	for(var key in opt ){
 		p[key] = opt[key];
@@ -178,13 +209,28 @@ console.log(key +" : "+ e[key]);
 		
 		//xhr.setRequestHeader("X-Yandex-API-Key", _vars["apiKey"] );
 		//xhr.setRequestHeader("Access-Control-Allow-Credentials", "true");
+
+		xhr.onprogress = function( e ){
+				var percentComplete = 0;
+				if(e.lengthComputable) {
+					percentComplete = Math.ceil(e.loaded / e.total * 100);
+				}
+console.log( "Loaded " + e.loaded + " bytes of total " + e.total, e.lengthComputable, percentComplete+"%" );
+				//_vars["numLoaded"].innerHTML = e.loaded;
+				//_vars["numTotal"].innerHTML = e.total;
+
+				if( _vars["loadProgressBar"] ){
+					_vars["loadProgressBar"].style.width = percentComplete+"%";
+					_vars["percentComplete"].innerHTML = percentComplete+"%";
+				}
+		},//end onprogress
 		
 		xhr.onload = function(e) {
 //console.log(arguments);
 // console.log("event type:" + e.type);
-logMsg = "time: " + e.timeStamp +"ms, ";
+var logMsg = "ajax load time: " + e.timeStamp + "ms, "+ (e.timeStamp / 1000)+" sec , ";
 logMsg += "total: " + e.total +"bytes , ";
-logMsg += "loaded: " + e.loaded +"bytes";
+logMsg += "loaded: " + e.loaded + " bytes, " + (e.loaded / 1024).toFixed(2)+" Kbytes";
 //console.log(logMsg);	
 //console.log( this.responseText );
 func.logAlert( logMsg, "info");
@@ -192,32 +238,39 @@ func.logAlert( logMsg, "info");
 			var _response = false;
 			if( this.responseText.length > 0 ){
 				_response = this.responseText;
-				_vars["contentType"] = xhr.getResponseHeader('content-type');
+				_vars["responseType"] = xhr.getResponseHeader('content-type');
 			}
 			
 			if( typeof p.callback === "function"){
 				p.callback(_response);
 			}
 		}//end onload
+
 		
 		xhr.onerror = function(e) {
 //console.log(arguments);		
 console.log(e);		
-for(var key in e){
-console.log( key +" : "+e[key] );
-}
 
-_vars["logMsg"] = "error, ajax load failed...";
-//_message( _vars["logMsg"], "error");
+_vars["logMsg"] = "<ul class='bg-orange color-black'>";
+_vars["logMsg"] += "error, ajax load failed...";
+//func.logAlert( _vars["logMsg"], "error");
+			for( var key in e){
+//console.log( key +" : "+e[key] );
+				_vars["logMsg"] += "<li class=''><b>"+key +"</b> : "+ e[key]+"</li>";
+			}//next
+_vars["logMsg"] += "</ul>";
 func.logAlert( _vars["logMsg"], "danger");
+
 			p.callback(false);
-		}
+		}//end error callback
+		
 		
 		xhr.onloadend = function(e){
 //console.log(xhr.getResponseHeader('X-Powered-By') );
-logMsg = "Request headers: " + xhr.getAllResponseHeaders();
-console.log( logMsg );
-func.logAlert( logMsg, "info");
+//console.log( xhr.getAllResponseHeaders() );
+_vars["logMsg"] = xhr.getAllResponseHeaders();
+_vars["logMsg"] = _vars["logMsg"].replace(/\r\n/g, "<br>");
+func.logAlert( _vars["logMsg"], "info");
 		}//end onloadend
 		
 		xhr.send();
@@ -230,17 +283,45 @@ console.log(e);
 
 
 
-function parseServerResponse( data ){
-	
-	//if( _vars["contentType"].indexOf("application/xml") !== -1){
-		//_parseXML( data );
-	//}
-	
-	if( _vars["contentType"].indexOf("application/json") !== -1){
-		return _parseJSON( data );
+function parseServerResponse( opt ){
+	var p = {
+		"responseType": null,
+		"response": false,
+	};
+	//extend options object
+	for(var key in opt ){
+		p[key] = opt[key];
+	}
+//console.log(p);
+
+	if( !p.response ||  p.response.length === 0){
+webApp.vars["logMsg"] = "error, empty or wrong response data...";
+func.logAlert( webApp.vars["logMsg"], "error");
+console.log( webApp.vars["logMsg"] );
+		if( typeof p["postFunc"] === "function"){
+			p["postFunc"]();
+		}
+		return false;
+	}
+
+	var parseData = false;
+	if( p.responseType.indexOf("application/xml") !== -1){
+		parseData = _parseXML( p.response );
 	}
 	
+	if( p.responseType.indexOf("application/json") !== -1){
+		parseData = _parseJSON( p.response );
+	}
+
+	return parseData;
 }//parseServerResponse()
+
+
+function _parseXML(xml){
+//console.log("function _parseXML()");
+	return false;
+}//end _parseXML()
+
 
 
 function _parseJSON( jsonStr ){
@@ -250,24 +331,24 @@ function _parseJSON( jsonStr ){
 			return value;
 		});
 //console.log( jsonObj );
-		
 		return jsonObj;
 		
 	} catch(error) {
-_vars["logMsg"] = "error, error JSON.parse server response data...." ;
+webApp.vars["logMsg"] = "error, error JSON.parse server response data...." ;
 console.log( error );
-func.logAlert(_vars["logMsg"], "error");
-		return false;
+func.logAlert( webApp.vars["logMsg"], "error");
+		return;
 	}//end catch
-
 }//end _parseJSON()
+
+
 
 function _drawResponse(opt){
 	var p = {
 		data: null,
 		templates: null,
 		targetContainer: document.querySelector("#response"),
-		"req-type": null
+		"api-type": null
 	}
 //console.log(opt);
 	//extend p object
@@ -276,7 +357,7 @@ function _drawResponse(opt){
 	}
 console.log(p);
 	
-	if( p["req-type"] === "weather"){
+	if( p["api-type"] === "weather"){
 		var sunriseDate = func.timeStampToDateStr({
 			"timestamp": p.data["sys"]["sunrise"],
 			"format": "dd-mm-yyyy hh:min"
@@ -305,7 +386,7 @@ console.log(p);
 	}
 
 
-	if( p["req-type"] === "forecast"){
+	if( p["api-type"] === "forecast"){
 		
 		var sunriseDate = func.timeStampToDateStr({
 			"timestamp": p.data["city"]["sunrise"],
@@ -503,11 +584,11 @@ for( var n = 0; n < p["data"][key].length; n++){
 </div>
 
 <div class="lr-container bg-white w80" id="App">
-		<div class="lr-panel lr-border-box lr-border-cyan">
+		<div class="lr-panel lr-border-box lr-border-blue">
 <form name="form_request_params">
 			<div class="lr-panel-body">
-<a href="#?q=send-request&req-type=weather" class="lr-btn bg-blue text-white" id="btn-request">get weather</a>
-<a href="#?q=test&func=testWrapDate" class="lr-btn bg-orange text-black">testWrapDate</a>
+<a href="#?q=send-request&api-object=youtube_playlists" class="lr-btn bg-blue text-white">get playlists</a>
+<a href="#?q=test&func=testWrapDate" class="lr-btn bg-orange text-black">test</a>
 			</div>
 
 </form><!-- end form_request_params -->
@@ -516,11 +597,13 @@ for( var n = 0; n < p["data"][key].length; n++){
 
 		<div class="lr-panel">
 			<div class="lr-panel-body">
-<pre class="bg-floralwhite lr-padding-small">
+<pre class="bg-floralwhite lr-padding-10">
 https://console.developers.google.com/
 Your API key is available in the Developer Console's API Access pane for your project.
 
 https://console.cloud.google.com/apis/credentials?folder=&organizationId=&project=test-youtube-api-315302
+https://console.cloud.google.com/iam-admin/settings?folder=&organizationId=&project=test-youtube-api-315302
+https://console.cloud.google.com/apis/api/youtube.googleapis.com/overview?project=test-youtube-api-315302&folder=&organizationId=
 	
 https://developers.google.com/youtube/documentation
 https://developers.google.com/youtube/v3/docs/playlists
@@ -529,6 +612,34 @@ https://developers.google.com/youtube/v3/docs/channels/list
 https://developers.google.com/youtube/iframe_api_reference#Getting_Started 
 https://developers.google.com/youtube/iframe_api_reference#onError
 https://developers.google.com/youtube/iframe_api_reference#onStateChange	
+
+---------
++https://gdata.youtube.com/feeds/api/users/UCgp8hFrPYEx2F1SqEB8yUMg/playlists?v=2
+Youtube RSS, ok - https://www.youtube.com/feeds/videos.xml?channel_id=UCgp8hFrPYEx2F1SqEB8yUMg
+ok - https://youtube.googleapis.com/youtube/v3/playlists?part=snippet%2CcontentDetails&channelId=UCgp8hFrPYEx2F1SqEB8yUMg&maxResults=25&key=AIzaSyCQbtO3MfNPg-Z95irUNsZF236QMPm3ncM
+
+- Get Playlist Videos: 
+?https://www.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails%2Cstatus&playlistId={YOUR_PLAYLIST_ID}&key={YOUR_API_KEY}
+  
+?https://www.googleapis.com/youtube/v3/channels?key=AIzaSyCQbtO3MfNPg-Z95irUNsZF236QMPm3ncM&part=contentDetails
+?https://www.googleapis.com/youtube/v3/channels?id={channel Id}&key={API key}&part=contentDetails
+
+---------
+https://developers.google.com/youtube/v3/docs/playlistItems/list
+GET https://www.googleapis.com/youtube/v3/playlistItems
+
+GET https://youtube.googleapis.com/youtube/v3/playlistItems?
+maxResults=25&
+playlistId=PLBCF2DAC6FFB574DE&
+key=[YOUR_API_KEY] 
+HTTP/1.1
+
+Authorization: Bearer [YOUR_ACCESS_TOKEN]
+Accept: application/json
+
+----------
+https://coderoad.ru/18953499/YouTube-API-%D1%87%D1%82%D0%BE%D0%B1%D1%8B-%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B8%D1%82%D1%8C-%D0%B2%D1%81%D0%B5-%D0%B2%D0%B8%D0%B4%D0%B5%D0%BE-%D0%BD%D0%B0-%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B5
+YouTube API чтобы получить все видео на канале
 	
 </pre>
 			</div>

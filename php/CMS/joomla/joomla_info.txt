@@ -1,0 +1,38 @@
+//https://api.joomla.org/cms-3/classes/Joomla.Input.Input.html
+//https://api.joomla.org/cms-3/classes/Joomla.CMS.Document.Document.html
+
+-------------------- get page id
+$jinput = JFactory::getApplication()->input;
+$foo = $jinput->get('id');
+echo $foo;
+
+------------------- get page url 
+
+$doc = JFactory::getDocument();
+echo "TEST3:<pre>";
+print_r($doc->getBase() );
+//print_r($this->item->jcfields);
+echo "</pre>";
+
+$doc->setTitle("99999999900000000");
+
+
+------------- db query
+$item_jcfields = array();
+$itemID = $this->item->id;
+$customFieldName = "page-header-product";
+
+$query = "SELECT #__fields_values.value as value 
+FROM #__fields_values
+WHERE #__fields_values.field_id IN (
+	SELECT #__fields.id as fid FROM #__fields WHERE #__fields.name='".$customFieldName."'
+) AND #__fields_values.item_id = ".$itemID.";";
+//echo $query;
+
+$db = JFactory::getDbo();
+$db->setQuery($query);
+$res = $db->loadObjectList();
+//echo "<pre>";
+//print_r($this->item);
+//print_r($res);
+//echo "</pre>";
