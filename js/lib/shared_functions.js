@@ -480,10 +480,13 @@ console.log( logMsg );
 				"url" : false, 
 				"params": null,//params object
 				"formData": null,
+				"headers": null,// { 'x-my-custom-header': 'some value'},					
 				"async" :  true,
 				"callback" : null,
 				"onProgress" : null,
-				"onError" : null,
+				"onError" : function(){
+console.log(arguments);			
+				},
 				"onLoadEnd" : null,
 				"noCache" : false
 			};
@@ -575,7 +578,13 @@ console.log( logMsg, xhr );
 			if( "responseType" in xhr && p["async"] ){
 				xhr.responseType = p["responseType"];
 			}
-				
+			
+			if(p.headers && p.headers.length > 0){
+				for(var key in p.headers){
+					xhr.setRequestHeader(key, p.headers[key] );
+				}//next
+			}
+			
 			xhr.onreadystatechange  = function() { 
 		//console.log("state:", xhr.readyState);
 				if( xhr.readyState == 4) {
@@ -861,139 +870,65 @@ console.log(e);
 				} 
 				
 			}
-
-			function _createRequestObject() {
-				var request = false;
-				
-				if (window.XMLHttpRequest) { // Mozilla, Safari, Opera ...
-		//console.log("try use XMLHttpRequest");		
-					request = new XMLHttpRequest();
-				} 
-
-				if(!request){ // IE
-		//console.log("try use Microsoft.XMLHTTP");		
-					request = new ActiveXObject("Microsoft.XMLHTTP");
-				}
-
-				if(!request){
-		//console.log("try use Msxml2.XMLHTTP");		
-					request=new ActiveXObject('Msxml2.XMLHTTP');
-				}
-
-				return request;
-			}//end _createRequestObject()
 			
 		}//end _runAjax()
 
 		
-		
-//test and remove!!!!!!
-		var _runAjaxCorrect = function( opt ){
-			
-			var p = {
-				"requestMethod" : "GET", 
-				"url" : false, 
-				"async" :  true,
-				"onProgress" : null,
-				"onSuccess" : null,
-				"onError" : null//,
-				//"onLoadEnd" : null
-			};
-			//extend options object
-			for(var key in opt ){
-				p[key] = opt[key];
-			}
-//console.log(p);
-			var requestMethod = p["requestMethod"]; 
-			var url = p["url"]; 
-			var async = p["async"]; 
-
-			try{
-				var xhr = new XMLHttpRequest();
-			} catch(e){
-console.log(e);
-			}		
-			
-			var timeStart = new Date();
-			
-			xhr.open( requestMethod, url, async );
-			xhr.onreadystatechange = function(){
-//console.log("state:", xhr.readyState);
-				if( xhr.readyState === 4){
-console.log("end request, state ", xhr.readyState, ", status: ", xhr.status);
-//console.log( "xhr.responseText: ", xhr.responseText );
-//console.log( "xhr.responseXML: ", xhr.responseXML );
-
-					if( xhr.status === 200){
-//console.log( xhr.responseText );
-
-						//if browser not define callback "onloadend"
-						//var test = "onloadend" in xhr;
-						//if( !test ){
-							//_loadEnd();
-						//}
-						if( typeof  p["onSuccess"] === "function"){
-							var timeEnd = new Date();
-							var runtime = (timeEnd.getTime() - timeStart.getTime()) / 1000;
-							var data = xhr.responseText;
-							p["onSuccess"](data, runtime, xhr);
+//test
+/*
+ 				sendRequest({
+					"dataUrl": dataUrl,
+					"requestParams": apiObj["requestParams"],
+					"callback" : function( response ){
+//console.log(arguments);
+console.log("-- end server request --");
+						var responseData = null;
+						if(response){
+							responseData = parseServerResponse({
+								"contentType": _vars["contentType"],
+								"response": response
+							});
+//var logMsg = "end parse ajax response";
+//func.logAlert( logMsg, "info");
 						}
+console.log(responseData);
+						if( responseData ){
+							drawResponse({
+								data: responseData,
+								apiObj: apiObj
+							});
+						}
+					}//end callback
+				});
+ */
+//-------------------------		
+		function sendRequest( opt ){
+		}//end sendRequest()
 
-					}
+//-------------------------		
+		function _createRequestObject() {
+			var request = false;
+			
+			if (window.XMLHttpRequest) { // Mozilla, Safari, Opera ...
+	//console.log("try use XMLHttpRequest");		
+				request = new XMLHttpRequest();
+			} 
 
-					if( xhr.status !== 200){
-console.log("Ajax load error, url: " + xhr.responseURL);
-//console.log("status: " + xhr.status);
-console.log("statusText:" + xhr.statusText);
-							if( typeof  p["onError"] === "function"){
-								p["onError"](xhr);
-							}
-					}
+			if(!request){ // IE
+	//console.log("try use Microsoft.XMLHTTP");		
+				request = new ActiveXObject("Microsoft.XMLHTTP");
+			}
 
-				}
-			};// end onreadystatechange
-			
-			if( "onerror" in xhr ){
-				xhr.onerror = function(e){
-console.log( "xhr.onerror,", e);
-//console.log("event type:" + e.type);
-//console.log("time: " + e.timeStamp);
-//console.log("total: " + e.total);
-//console.log("loaded: " + e.loaded);
-				}
-			};
-			
-			if( "onloadend" in xhr ){
-				xhr.onloadend = function(e){
-		//console.log(arguments);
-//console.log("event type:" + e.type);
-		// console.log("time: " + e.timeStamp);
-		// console.log("total: " + e.total);
-		// console.log("loaded: " + e.loaded);
-					//_loadEnd();
-				}//end event callback
-			};
-			
-			function _loadEnd(){
-				var timeEnd = new Date();
-				var runtime = (timeEnd.getTime() - timeStart.getTime()) / 1000;
-				
-				//if( typeof callback === "function"){
-					//var data = xhr.responseText;
-					//callback( data, runtime, xhr );
-				//}
-				// if( typeof  p["onLoadEnd"] === "function"){
-					// var data = xhr.responseText;
-					// p["onLoadEnd"]( data, runtime, xhr);
-				// }
-				
-			}//end _loadEnd()
-			
-			xhr.send();
-			
-		};//_runAjaxCorrect()
+			if(!request){
+	//console.log("try use Msxml2.XMLHTTP");		
+				request=new ActiveXObject('Msxml2.XMLHTTP');
+			}
+
+			return request;
+		}//end _createRequestObject()
 		
-		
+
+//-------------------------		
 		function _convertDateToStr( opt ){
 			var p = {
 				"dateObj" : null,
@@ -1538,7 +1473,7 @@ ONLY second LEVEL !!!!!!!!!!!!
 			parseHashParams: _parseHashParams,
 			
 			runAjax: _runAjax,
-			runAjaxCorrect: _runAjaxCorrect,
+			//sendRequest: _sendRequest,
 			
 			convertDateToStr: _convertDateToStr,
 			timeStampToDateStr: _timeStampToDateStr,
@@ -1563,8 +1498,53 @@ ONLY second LEVEL !!!!!!!!!!!!
 //})();
 
 
+//================
+function setCookie( name, value, expires, path, domain, secure ){
+	var cookie_string = name + "=" + escape ( value );
+	if (expires){
+		expires = new Date(expires);
+	} else {
+		expires = new Date();
+	}
+	cookie_string += "; expires=" + expires.toGMTString();
+    
+	if ( path ){
+		cookie_string += "; path=" + escape ( path );
+	}
 
+	if ( domain ){
+		cookie_string += "; domain=" + escape ( domain );
+	}
 
+	if ( secure ){
+        cookie_string += "; secure";
+	}
+
+	document.cookie = cookie_string;
+}//end
+
+function getCookie(name){
+	// cookies are separated by semicolons
+	var aCookie = document.cookie.split("; ");
+	for (var i=0; i < aCookie.length; i++){
+		// a name/value pair (a crumb) is separated by an equal sign
+		var aCrumb = aCookie[i].split("=");
+		if (name == aCrumb[0])
+			if(aCrumb[1]) {
+				return unescape(aCrumb[1]);
+			} else {
+				return null;
+			}
+	}
+	// a cookie with the requested name does not exist
+	return null;
+};//getCookie
+
+function delCookie(name){
+		document.cookie = name + "=; expires=Fri, 31 Dec 1999 23:59:59 GMT;";
+};
+
+//================
 function runAjaxJQuery( params ) {
 
 	var timeStart = new Date();

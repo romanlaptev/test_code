@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>test JS: replace text on page</title>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+	<link type="text/css" rel="stylesheet" href="../../css/lr.css">
+	<script src="../lib/shared_functions.js"></script>
+</head>
+
+
+<body class="bg-black-800 color-white">
+	
+<div class="lr-container color-white w80">
+	<div class="lr-lr-page-header text-right">
+		<h1 class="">test JS: replace text on page</h1>
+	</div>
+</div>
+	
+<div class="lr-container bg-saddlebrown w80">
+<div class="_lr-row _text-center lr-flex lr-flex-wrap lr-flex-hcenter lr-flex-vtop">
+
+		<div class="lr-panel w50 lr-margin-small">
+			<div class="lr-panel-heading bg-vivid-orange3 color-black">
+<h4>demo1</h4>
+recurse method, node.childNodes.forEach...
+			</div>
+
+			<div id="demo1" class="lr-panel-body bg-white color-black">
+<div>RandomText1
+	<div><p>RandomText2</p>
+		<ul>
+				<li>RandomText3</li>
+		</ul>
+	</div>
+</div>
+<button id="btn1">replace all</button>
+			</div>
+
+			<div class="lr-panel-heading bg-orange color-black">
+<h4>demo2</h4>
+			</div>
+
+			<div id="demo1" class="lr-panel-body bg-white color-black">
+<div>RandomText1
+	<div><p>RandomText2</p>
+		<ul>
+				<li>RandomText3</li>
+		</ul>
+	</div>
+</div>
+<button id="btn2">replace</button>
+			</div>
+
+		</div><!-- end panel -->
+
+		<div class="lr-panel lr-margin-small">
+			<div class="lr-panel-heading bg-vivid-orange5 color-black">
+<div class="lr-flex lr-flex-vcenter lr-flex-hbetween">				
+	<i class="dashicons dashicons-admin-network lr-margin-10"></i>
+	<h4>info</h4>
+</div>
+			</div>
+			
+			<div class="lr-panel-body bg-white color-black">
+<pre>
+---------------- Replace
+https://developer.mozilla.org/en-US/docs/Web/API/NodeIterator
+NodeIterator
+
+https://developer.mozilla.org/en-US/docs/Web/EXSLT/regexp/replace
+regexp:replace()
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace
+String.prototype.replace()
+
+http://code.mu/ru/javascript/book/supreme/regular/callback-in-replace-method/
+Коллбэк в методе replace в регулярках JavaScript
+
+---------------- TreeWalker
+https://developer.mozilla.org/en-US/docs/Web/API/TreeWalker
+TreeWalker
+
+http://javascriptkit.com/dhtmltutors/treewalker.shtml
+Introduction to the TreeWalker object of DOM
+
+https://techarks.ru/qa/javascript/zamena-teksta-s-pomoshyu-tree-NP/
+Замена текста с помощью Treewalker в расширении Chrome
+
+--------------
+https://question-it.com/questions/290767/bolee-bystryj-sposob-zameny-teksta-vo-vseh-elementah-dom
+быстрый способ замены текста во всех элементах dom
+
+https://coderlessons.com/articles/veb-razrabotka-articles/masterstvo-html5-obkhod-dereva
+Мастерство HTML5: обход дерева
+
+</pre>
+				
+			</div>
+		</div><!-- end panel -->
+
+	</div><!-- end center row -->
+	
+	<div class="log-panel panel">
+		<div class="float-right">
+<!--			<a href="?q=toggle-log" title="Toggle log" class="lr-btn lr-btn-default">-</a> -->
+			<a href="?q=clear-log" title="Clear log" id="btn-clear-log" class="lr-btn lr-btn-default">x</a>
+		</div>
+		<div id="log" class="lr-panel-body lr-row"></div>
+	</div>
+
+</div><!-- end container -->
+
+
+<script>
+var func = sharedFunc();
+//console.log("func:", func);
+
+var _testObj = {
+	"logMsg": ""
+};
+console.log( _testObj );
+
+document.addEventListener("DOMContentLoaded", function(e){
+	_testObj.logMsg = navigator.userAgent;
+	func.logAlert( _testObj.logMsg, "info");
+
+	//init test object
+	_testObj["log"] = func.getById("log");
+	_testObj["btn_clear_log"] = func.getById("btn-clear-log");
+
+	_testObj["btn_clear_log"].onclick = function( event ){
+//console.log("click...", e);
+		event = event || window.event;
+		var target = event.target || event.srcElement;
+		if (event.preventDefault) {
+			event.preventDefault();
+		} else {
+			event.returnValue = false;
+		}
+		_testObj.log.innerHTML = "";
+	};//end event
+
+//-------------- DEMO1
+//https://question-it.com/questions/290767/bolee-bystryj-sposob-zameny-teksta-vo-vseh-elementah-dom
+	var sourceText = "RandomText";
+	var replaceText = "Hello world";
+	function replaceTextNodes(node) {
+		node.childNodes.forEach( function(el) {
+
+			if (el.nodeType === 3) {  // If this is a text node, replace the text
+
+				if (el.nodeValue.trim() !== "") { // Ignore this node it it an empty text node
+//console.log(el.nodeValue);
+					var elementValue = el.nodeValue;
+					if( elementValue.indexOf( sourceText ) !== -1 ){
+_testObj.logMsg = "replace "+elementValue+" with replaceText";
+func.logAlert( _testObj.logMsg, "info");
+						el.nodeValue = replaceText;
+					}
+
+				}
+
+			} else { // Else recurse on this node
+				replaceTextNodes(el);
+			}
+
+		});
+	}//end
+
+	document.querySelector("#btn1").addEventListener("click", function(){
+		var rootElement = document.querySelector("#demo1");
+		replaceTextNodes( rootElement );
+	});//end event
+
+
+});//end load
+
+
+//window.onload = function(){}//end load()
+//===============================
+/*
+	func.addEvent( 
+		_testObj["btnSave"], 
+		"click", 
+		function(e){
+//console.log( e );
+			var dataURL = _testObj["canvas"].toDataURL();//PNG
+console.log(dataURL)	;
+			//_saveImage();
+			_testObj["btnSave"].href = dataURL;
+		}
+	);//end event
+*/
+
+
+</script>
+
+
+</body>
+</html>

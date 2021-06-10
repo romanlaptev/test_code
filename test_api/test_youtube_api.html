@@ -18,7 +18,8 @@ _vars = {
 //https://developers.google.com/youtube/v3/docs/playlists/list#usage
 	youtube_playlists: {
 //www.googleapis.com/youtube/v3/playlists		
-		"dataUrl" : "https://youtube.googleapis.com/youtube/v3/playlists?part={{part}}&channelId={{channelId}}&maxResults={{maxResults}}&key={{apiKey}}",
+		//"dataUrl" : "https://youtube.googleapis.com/youtube/v3/playlists?part={{part}}&channelId={{channelId}}&maxResults={{maxResults}}&key={{apiKey}}",
+		"dataUrl" : "files_ignore/yotube_playlists.json",
 		"requestParams" : {
 			"apiKey" : "AIzaSyCQbtO3MfNPg-Z95irUNsZF236QMPm3ncM",
 			
@@ -132,7 +133,7 @@ console.log("-- end server request --");
 						var responseData = null;
 						if(response){
 							responseData = parseServerResponse({
-								"responseType": _vars["responseType"],
+								"contentType": _vars["contentType"],
 								"response": response
 							});
 //var logMsg = "end parse ajax response";
@@ -163,11 +164,21 @@ console.log("function _urlManager(),  GET query string: ", _vars["GET"]);
 
 function sendRequest( opt ){
 	var p = {
+		"requestMethod" : "GET", 
+		"responseType" : "", //"", "arraybuffer", "blob", "document","json","text","moz-chunked-arraybuffer","ms-stream"
+		"async" :  true,
 		"dataUrl" : false,
-		//"apiObjectName" : false,
 		"requestParams": false,
+		"formData": null,
+		"headers": null,// { 'x-my-custom-header': 'some value'},					
+		"onProgress" : null,
+		"onSuccess" : null,
+		"onError" : function(){
+console.log(arguments);			
+		},
+		"onLoadEnd" : null,
 		"callback" : function(){
-//console.log(arguments);
+console.log(arguments);
 		}//end callback
 	};
 //console.log(opt);
@@ -185,71 +196,189 @@ func.logAlert( logMsg, "error");
 		return false;
 	}
 
+	if( !p["dataUrl"] || p["dataUrl"].lehgth === 0){
+logMsg = "error, empty dataUrl...", p["dataUrl"];
+func.logAlert( logMsg, "error");
+		return false;
+	}
 	var dataUrl = p["dataUrl"];
 	for(var key in p.requestParams){
 		dataUrl = dataUrl.replace( new RegExp("{{"+key+"}}", "g"), p.requestParams[key] );
 	}//next
 //console.log( dataUrl );		
 
-	try{
-		var xhr = new XMLHttpRequest();
-		
-		try{
-			xhr.open( "GET", dataUrl, true );
-		} catch(e){
-logMsg = "ajax request error, not open";
-func.logAlert( logMsg, "error");
+	var requestMethod = p["requestMethod"]; 
+	var async = p["async"]; 
 
+
+	//test support
+	if ( typeof window.fetch !== "undefined"){
+		logMsg = "Browser supports window.fetch";
+	} else {
+		logMsg = "window.fetch NOT supported...";
+	}
+console.log(logMsg);
+
+
+	var timeStart = new Date();
+
+		
+	var xhr = _createRequestObject();
+	if ( !xhr ) {
+logMsg = "XMLHttpRequest create error...";
+console.log(logMsg, xhr);
+func.logAlert( logMsg, "error");
+		if( typeof  p["onError"] === "function"){
+			p["onError"]({
+				"message" : "error creating XHR...."
+			});
+		}
+		return false;
+	}
+		
+	try{
+		xhr.open( requestMethod, dataUrl, async );
+	} catch(e){
+logMsg = "xhr.open error...";
+func.logAlert( logMsg, "error");
 for( var key in e){
 console.log(key +" : "+ e[key]);
 }//next
-			return false;
-		}//end catch
+		if( typeof  p["onError"] === "function"){
+			p["onError"](e);
+		}
+		return false;
+	}//end catch
 		
-		
-		//xhr.setRequestHeader("X-Yandex-API-Key", _vars["apiKey"] );
-		//xhr.setRequestHeader("Access-Control-Allow-Credentials", "true");
+//set responce type
+	//Check responseType support:
+//https://msdn.microsoft.com/ru-ru/library/hh872882(v=vs.85).aspx
+//https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType
+//Error, "The response type cannot be changed for synchronous requests made from a document."
+// Opera 12 crash!!!!
+	if( "responseType" in xhr && p["async"] ){
+		xhr.responseType = p["responseType"];
+	}
+//xhr.responseType = "json";
+//console.log(xhr.responseType);
 
+//set headers		
+	//xhr.setRequestHeader("authorization", "Token xxxxxx");
+	//xhr.setRequestHeader("Version", "1");
+	//xhr.setRequestHeader("Origin", "http://vbox5");
+	//xhr.setRequestHeader("Access-Control-Allow-Credentials", "true");
+	//xhr.setRequestHeader("X-Yandex-API-Key", _vars["apiKey"] );
+	//xhr.setRequestHeader("Access-Control-Allow-Credentials", "true");
+	if(p.headers && p.headers.length > 0){
+		for(var key in p.headers){
+			xhr.setRequestHeader(key, p.headers[key] );
+		}//next
+	}
+	
+	xhr.onreadystatechange = function(){
+//console.log("state:", xhr.readyState);
+		if( xhr.readyState === 4){
+//console.log("end request, state ", xhr.readyState, ", status: ", xhr.status);
+		
+			if( xhr.status === 200){
+				if( typeof  p["onSuccess"] === "function"){
+					var timeEnd = new Date();
+					var runtime = (timeEnd.getTime() - timeStart.getTime()) / 1000;
+					if( "response" in xhr){
+						var data = xhr.response;
+//https://developer.mozilla.org/ru/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest
+//xhr.responseXML
+
+					} else {
+						var data = xhr.responseText;
+					}
+					p["onSuccess"](data, runtime, xhr);
+				}
+			}
+
+			if( xhr.status !== 200){
+	//console.log(xhr);					
+	//console.log("Ajax load error, url: " + xhr.responseURL);
+	//console.log("status: " + xhr.status);
+	//console.log("statusText:" + xhr.statusText);
+				if( typeof  p["onError"] === "function"){
+					p["onError"]({
+						"message" : "ajax load request error.",
+						"url" : xhr.responseURL,
+						"xhr.status" : xhr.status,
+						"xhr.statusText" : xhr.statusText
+					});
+				}
+			}
+			
+		}
+	};// end onreadystatechange
+
+//console.log( "onprogress" in xhr  );
+//console.log( xhr.responseType, typeof xhr.responseType );
+//console.log( window.ProgressEvent, typeof  window.ProgressEvent);
+	if( "onprogress" in xhr ){
 		xhr.onprogress = function( e ){
-				var percentComplete = 0;
-				if(e.lengthComputable) {
-					percentComplete = Math.ceil(e.loaded / e.total * 100);
-				}
+			
+			if( typeof  p["onProgress"] === "function"){
+				p["onProgress"](e);
+				return;
+			}
+			
+			var percentComplete = 0;
+			if(e.lengthComputable) {
+				percentComplete = Math.ceil(e.loaded / e.total * 100);
+			}
 console.log( "Loaded " + e.loaded + " bytes of total " + e.total, e.lengthComputable, percentComplete+"%" );
-				//_vars["numLoaded"].innerHTML = e.loaded;
-				//_vars["numTotal"].innerHTML = e.total;
+			//_vars["numLoaded"].innerHTML = e.loaded;
+			//_vars["numTotal"].innerHTML = e.total;
 
-				if( _vars["loadProgressBar"] ){
-					_vars["loadProgressBar"].style.width = percentComplete+"%";
-					_vars["percentComplete"].innerHTML = percentComplete+"%";
-				}
-		},//end onprogress
-		
-		xhr.onload = function(e) {
+			if( _vars["loadProgressBar"] ){
+				_vars["loadProgressBar"].style.width = percentComplete+"%";
+				_vars["percentComplete"].innerHTML = percentComplete+"%";
+			}
+		}//end onprogress
+	};
+	
+	xhr.onload = function(e) {
 //console.log(arguments);
-// console.log("event type:" + e.type);
-var logMsg = "ajax load time: " + e.timeStamp + "ms, "+ (e.timeStamp / 1000)+" sec , ";
+//console.log(xhr);
+//console.log(this);
+//console.log("event type:" + e.type);
+//console.log("responseText" in xhr);	//true in IE6
+//console.log("response" in xhr);	//false in IE6
+//return;
+
+var logMsg = "ajax load time: " + e.timeStamp + " ms, "+ (e.timeStamp / 1000)+" sec , ";
 logMsg += "total: " + e.total +"bytes , ";
 logMsg += "loaded: " + e.loaded + " bytes, " + (e.loaded / 1024).toFixed(2)+" Kbytes";
 //console.log(logMsg);	
 //console.log( this.responseText );
 func.logAlert( logMsg, "info");
-			
-			var _response = false;
-			if( this.responseText.length > 0 ){
-				_response = this.responseText;
-				_vars["responseType"] = xhr.getResponseHeader('content-type');
-			}
-			
-			if( typeof p.callback === "function"){
-				p.callback(_response);
-			}
-		}//end onload
+
+		var timeEnd = new Date();
+		var runtime = (timeEnd.getTime() - timeStart.getTime());
+var logMsg = "sendRequest runtime: " + runtime + " ms, "+ (runtime / 1000)+" sec";
+func.logAlert( logMsg, "info");
+		
+		var _response = false;
+		if( "response" in xhr){
+			var _response = xhr.response;
+		} else {
+			var _response = xhr.responseText;
+		}
+		_vars["contentType"] = xhr.getResponseHeader('content-type');
+		
+		if( typeof p.callback === "function"){
+			p.callback(_response);
+		}
+	}//end onload
 
 		
+	if( "onerror" in xhr ){
 		xhr.onerror = function(e) {
 //console.log(arguments);		
-console.log(e);		
+//console.log("event type:" + e.type);
 
 _vars["logMsg"] = "<ul class='bg-orange color-black'>";
 _vars["logMsg"] += "error, ajax load failed...";
@@ -261,23 +390,65 @@ _vars["logMsg"] += "error, ajax load failed...";
 _vars["logMsg"] += "</ul>";
 func.logAlert( _vars["logMsg"], "danger");
 
+			if( typeof  p["onError"] === "function"){
+				p["onError"]({
+					"message" : "ajax load request error.",
+					"url" : xhr.responseURL,
+					"xhr.status" : xhr.status,
+					"xhr.statusText" : xhr.statusText
+				});
+			}
+
 			p.callback(false);
 		}//end error callback
-		
-		
+	}
+	
+
+	if( "onloadend" in xhr ){
 		xhr.onloadend = function(e){
 //console.log(xhr.getResponseHeader('X-Powered-By') );
 //console.log( xhr.getAllResponseHeaders() );
 _vars["logMsg"] = xhr.getAllResponseHeaders();
 _vars["logMsg"] = _vars["logMsg"].replace(/\r\n/g, "<br>");
 func.logAlert( _vars["logMsg"], "info");
+			//_loadEnd();
 		}//end onloadend
-		
+	}
+	
+	
+	try{
 		xhr.send();
+	}catch(e){
+console.log(e);
+		if( typeof  p["onError"] === "function"){
+			p["onError"]({
+				"message" : "error send XHR...."
+			});
+		}
+	}
 		
-	} catch(e){
-console.log(e);	
-	}	
+	
+		
+	function _createRequestObject() {
+		var request = false;
+		
+		if (window.XMLHttpRequest) { // Mozilla, Safari, Opera ...
+//console.log("try use XMLHttpRequest");		
+			request = new XMLHttpRequest();
+		} 
+
+		if(!request){ // IE
+//console.log("try use Microsoft.XMLHTTP");		
+			request = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		if(!request){
+//console.log("try use Msxml2.XMLHTTP");		
+			request=new ActiveXObject('Msxml2.XMLHTTP');
+		}
+
+		return request;
+	}//end _createRequestObject()
 	
 }//end sendRequest()
 
@@ -285,7 +456,7 @@ console.log(e);
 
 function parseServerResponse( opt ){
 	var p = {
-		"responseType": null,
+		"contentType": null,
 		"response": false,
 	};
 	//extend options object
@@ -305,11 +476,11 @@ console.log( webApp.vars["logMsg"] );
 	}
 
 	var parseData = false;
-	if( p.responseType.indexOf("application/xml") !== -1){
+	if( p.contentType.indexOf("application/xml") !== -1){
 		parseData = _parseXML( p.response );
 	}
 	
-	if( p.responseType.indexOf("application/json") !== -1){
+	if( p.contentType.indexOf("application/json") !== -1){
 		parseData = _parseJSON( p.response );
 	}
 

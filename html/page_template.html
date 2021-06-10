@@ -668,7 +668,9 @@ var _testObj = {
 };
 console.log( _testObj );
 
-window.onload = function(){
+//window.onload = function(){}//end load()
+
+document.addEventListener("DOMContentLoaded", function(e){
 	_testObj.logMsg = navigator.userAgent;
 	func.logAlert( _testObj.logMsg, "info");
 
@@ -702,15 +704,14 @@ console.log(dataURL)	;
 	);//end event
 */
 
-}//end load()
+});//end load
 
 </script>
 
 <!-- shared site styles, scripts -->
 <!--
-<link type="text/css" rel="stylesheet" href="../../css/shared.css">
-<link type="text/css" rel="stylesheet" href="../../css/colors.css">
-<link type="text/css" rel="stylesheet" href="../../css/style.css">
+<link type="text/css" rel="stylesheet" href="../../css/lr.css">
+<script src="../lib/shared_functions.js"></script>
 <script type="text/javascript" src="../../codebase/js/jquery/jquery.min.js"></script>
 <script src="../../js/main.js"></script>
 -->
