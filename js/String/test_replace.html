@@ -24,9 +24,11 @@
 <div class="_lr-row _text-center lr-flex lr-flex-wrap lr-flex-hcenter lr-flex-vtop">
 
 		<div class="lr-panel w50 lr-margin-small">
+
+
+
 			<div class="lr-panel-heading bg-vivid-orange3 color-black">
-<h4>demo1</h4>
-recurse method, node.childNodes.forEach...
+<h4>demo1, recurse method, node.childNodes.forEach...</h4>
 			</div>
 
 			<div id="demo1" class="lr-panel-body bg-white color-black">
@@ -40,20 +42,93 @@ recurse method, node.childNodes.forEach...
 <button id="btn1">replace all</button>
 			</div>
 
+
+
+
+
 			<div class="lr-panel-heading bg-orange color-black">
-<h4>demo2</h4>
+<h4>demo2, TreeWalker</h4>
 			</div>
 
-			<div id="demo1" class="lr-panel-body bg-white color-black">
-<div>RandomText1
-	<div><p>RandomText2</p>
-		<ul>
-				<li>RandomText3</li>
-		</ul>
-	</div>
-</div>
-<button id="btn2">replace</button>
+			<div id="demo2" class="lr-panel-body bg-white color-black">
+<ul>
+	<li>
+		<a id="ph1" href="tel:88007006951" class="color-blue header__phone" itemprop="telephone">8 800 700–69–51</a>
+		<h1>8 800 700–69–51</h1>
+	</li>
+	<li><a href="tel:88007006951" class="color-brown header__phone" itemprop="telephone">8 800 700–69–51</a></li>
+	<li><a href="tel:+78007006951" class="color-darkblue header__phone" itemprop="telephone">7 800 700-69-51</a></li>
+	<li><a href="tel:+73833800101" class="color-red header__phone" itemprop="telephone">8 383 380–01–01</a></li>
+	<li><a href="tel:+73833800101" class="color-darkred header__phone" itemprop="telephone">8 (383) 380-01-01</a></li>
+</ul>
+		<div>div.text: 8 383 380–01–01</div>
+<div class="front-page__top-slider__slide__title">ВЫЗОВ СПЕЦИАЛИСТА - 8 (383) 380-01-01</div>
+
+<button id="btn2">replace (regexp)</button>
+<button id="btn-replace-phone">replace-phone (filter number)</button>
 			</div>
+
+
+			<div class="lr-panel-heading bg-darkred color-gold">
+<h4>demo3, nodeIterator</h4>
+			</div>
+
+			<div id="demo3" class="lr-panel-body bg-white color-black">
+<div>
+  <div>
+    RandomText1
+    <div>
+      RandomText2
+    </div>
+  </div>
+</div>
+<div>
+  <div>
+    <div>
+      <div>
+        <div>
+          <div class='color-red'>
+            6 Deep!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    RandomText1
+    <div>
+      RandomText2
+    </div>
+  </div>
+</div>
+<div>
+  <div>
+    RandomText1
+    <div>
+      RandomText2
+    </div>
+  </div>
+</div>
+<div>
+  <div>
+    RandomText1
+    <div>
+      RandomText2
+    </div>
+  </div>
+</div>
+<div>
+  <div>
+    RandomText1
+    <div>
+      RandomText2
+    </div>
+  </div>
+</div>
+
+<button id="btn-iteraror">replace all</button>
+			</div>
+
 
 		</div><!-- end panel -->
 
@@ -178,6 +253,91 @@ func.logAlert( _testObj.logMsg, "info");
 
 
 });//end load
+
+
+//-------------- DEMO2
+//https://question-it.com/questions/290767/bolee-bystryj-sposob-zameny-teksta-vo-vseh-elementah-dom
+//https://developer.mozilla.org/en-US/docs/Web/API/TreeWalker
+//https://techarks.ru/qa/javascript/zamena-teksta-s-pomoshyu-tree-NP/
+	function testTreeWalker( rootElement ){
+
+		//var sourceText = /8 800 700–69–51/g;
+		//var sourceText = /8 800 700–69–51|8 383 380-01–01/gi;
+		var sourceText = /8 800 700–69–51|8 383 380-01-01/gi;
+		var replaceValue = "8 (383) 258-56-41";
+
+		var allTextNodes = document.createTreeWalker (
+			rootElement,  // root node
+			NodeFilter.SHOW_TEXT,  // filtering only text nodes
+			null,
+			false
+		);
+		var tmptxt, tmpnode;
+		
+		while ( allTextNodes.nextNode() ) {
+			tmpnode = allTextNodes.currentNode;
+			tmptxt = tmpnode.nodeValue;
+			tmpnode.nodeValue = tmptxt.replace( sourceText, replaceValue );
+/*
+			tmpnode.nodeValue = tmptxt.replace( sourceText,  function (match) {
+	console.log(arguments);		
+	//let result = str.replace(/\d+/g, );		
+				return replaceValue; 
+			});
+*/
+		}//next
+	}//end
+
+
+	function replacePhoneNumber( rootElement ){
+		var sourceText = "8 800 700–69–51";
+		var replaceValue = "8 (383) 258-56-41";
+
+		//filter search values, phone number, cut country code
+		sValue = sourceText.replace(/\D/g,'');
+		sValue = sValue.substring(1, sValue.length);
+
+		var allTextNodes = document.createTreeWalker (
+			rootElement,  // root node
+			NodeFilter.SHOW_TEXT,  // filtering only text nodes
+			null,
+			false
+		);
+		
+		while ( allTextNodes.nextNode() ) {
+
+			// if it's not empty(whitespaced) node
+			if ( allTextNodes.currentNode.nodeValue.trim() ){  
+				//replace all !!!
+				//allTextNodes.currentNode.nodeValue =replaceValue;
+
+				var elementValue = allTextNodes.currentNode.nodeValue;
+				//filter value
+				elementValue = elementValue.replace(/\D/g,'');
+				elementValue = elementValue.substring(1, elementValue.length);
+				var res = elementValue.indexOf(sValue) !== -1;
+				if(res){
+console.log(sValue, elementValue);
+					allTextNodes.currentNode.nodeValue =replaceValue;
+				}
+
+			}
+
+		}//next
+	}//end
+
+
+	document.querySelector("#btn2").addEventListener("click", function(){
+		//var rootElement = document.body;
+		var rootElement = document.querySelector("#demo2");
+		testTreeWalker( rootElement );
+	});//end event
+
+	document.querySelector("#btn-replace-phone").addEventListener("click", function(){
+		//var rootElement = document.body;
+		var rootElement = document.querySelector("#demo2");
+		replacePhoneNumber( rootElement );
+	});//end event
 
 
 //window.onload = function(){}//end load()

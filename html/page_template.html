@@ -209,80 +209,9 @@ crossorigin="anonymous">
 -->
 </head>
 
-<body>
+<body class="bg-black-800 color-white">
 
 <style>
-html, body{
-	height:100%;
-margin:0;
-padding:0;
-}
-
-body {background-color: #c6d6de;}
-
-
-/* GRID */
-.w10{	width:10%;}
-.w20{	width:20%;}
-.w25{	width:25%;}
-.w30{	width:30%;}
-.w33{	width:33%;}
-.w50{	width:50%;}
-.w60{	width:60%;}
-.w65{	width:65%;}
-.w70{	width:70%;}
-.w80{	width:80%;}
-.w90{	width:90%;}
-
-.row {
-	/* float: none; */
-	clear: both;
-	overflow: hidden;
-}
-.float-left {float: left;}
-.float-right {float: right;}
-.text-right{text-align:right;}
-.text-center{text-align:center;}
-.padding-small{padding:5px;}
-.padding20{padding:20px;}
-.margin-small{margin:5px;}
-
-/*====== FLEX ===== */
-@supports (display : flex) {
-   .test-support-flex {
-		background-color : #20ce20 !important;
-	}
-}
-@supports not (display : flex) {
-   .test-support-flex {
-		background-color : #ff7f50 !important;
-	}
-}
-.CSS-support-fail .test-support-flex{
-	background-color : #ff7f50 !important;
-}
-
-
-.lr-flex, .df{
-	display:flex;
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: -ms-flexbox;	
-}
-.CSS-support-fail .lr-flex{
-	display:inline-block !important;
-}
-
-.lr-flex-wrap {	flex-wrap: wrap;}
-.lr-flex-hcenter, .lr-flex-h-center{	justify-content:center;}
-.lr-flex-hbetween{	justify-content:space-between;}
-.lr-flex-hstart{justify-content:start;}
-.lr-flex-h-end{	justify-content:end;}
-.lr-flex-vcenter, .lr-flex-v-center{ align-items:center;}
-.lr-flex-v-top{	align-items: start;}
-.lr-flex-v-end{	align-items: end;}
-
-
 /*----------------*/
 .container {
 	width: 80%;
@@ -325,29 +254,6 @@ body {background-color: #c6d6de;}
     display: block;
 }
 
-/* LIST */
-.list-unstyled {
-	padding-left: 0;
-	list-style: none;
-}
-.list-inline {
-	padding-left: 0;
-	margin-left: -5px;
-	list-style: none;
-}
-.list-inline > li {
-	display: inline-block;
-	padding-right: 5px;
-	padding-left: 5px;
-}
-.list-group-item {
-	position: relative;
-	display: block;
-	padding: 10px 15px;
-	margin-bottom: -1px;
-	background-color: #fff;
-	border: 1px solid #ddd;
-}
 .menu {
 	background-color: #004586;
 /*height: 5%;*/
@@ -494,11 +400,87 @@ margin: 0;
 	border-color: #ebccd1;
 }
 
-@media all and (max-width:700px){
-}
+@media all and (max-width:700px){}
 </style>
 
 
+<!-- 00000000000000000000000000 -->
+	
+<div class="lr-container color-white w80">
+	<div class="lr-lr-page-header text-right">
+		<h1 class="">test JS: replace text on page</h1>
+	</div>
+</div>
+	
+<div class="lr-container bg-saddlebrown w80">
+<div class="_lr-row _text-center lr-flex lr-flex-wrap lr-flex-hcenter lr-flex-vtop">
+
+		<div class="lr-panel w50 lr-margin-small">
+			<div class="lr-panel-heading bg-vivid-orange3 color-black">
+<h4>demo1</h4>
+recurse method, node.childNodes.forEach...
+			</div>
+
+			<div id="demo1" class="lr-panel-body bg-white color-black">
+<div>RandomText1
+	<div><p>RandomText2</p>
+		<ul>
+				<li>RandomText3</li>
+		</ul>
+	</div>
+</div>
+<button id="btn1">replace all</button>
+			</div>
+
+			<div class="lr-panel-heading bg-orange color-black">
+<h4>demo2</h4>
+			</div>
+
+			<div id="demo1" class="lr-panel-body bg-white color-black">
+<div>RandomText1
+	<div><p>RandomText2</p>
+		<ul>
+				<li>RandomText3</li>
+		</ul>
+	</div>
+</div>
+<button id="btn2">replace</button>
+			</div>
+
+		</div><!-- end panel -->
+
+		<div class="lr-panel lr-margin-small">
+			<div class="lr-panel-heading bg-vivid-orange5 color-black">
+<div class="lr-flex lr-flex-vcenter lr-flex-hbetween">				
+	<i class="dashicons dashicons-admin-network lr-margin-10"></i>
+	<h4>info</h4>
+</div>
+			</div>
+			
+			<div class="lr-panel-body bg-white color-black">
+<pre>
+---------------- Replace
+https://developer.mozilla.org/en-US/docs/Web/API/NodeIterator
+NodeIterator
+
+</pre>
+				
+			</div>
+		</div><!-- end panel -->
+
+	</div><!-- end center row -->
+	
+	<div class="log-panel panel">
+		<div class="float-right">
+<!--			<a href="?q=toggle-log" title="Toggle log" class="lr-btn lr-btn-default">-</a> -->
+			<a href="?q=clear-log" title="Clear log" id="btn-clear-log" class="lr-btn lr-btn-default">x</a>
+		</div>
+		<div id="log" class="lr-panel-body lr-row"></div>
+	</div>
+
+</div><!-- end container -->
+
+<!-- 00000000000000000000000000 -->
 <div class="header container">
 		<div class="wrapper">
 
