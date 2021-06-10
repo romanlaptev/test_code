@@ -27,6 +27,24 @@
 
 
 
+			<div class="lr-panel-heading bg-vivid-teal color-black">
+<h4>demo0, innerHTML, reset all events....</h4>
+			</div>
+
+			<div id="demo0" class="lr-panel-body bg-white color-black">
+<div>RandomText1
+	<div><p>RandomText2</p>
+		<ul>
+				<li class="test-event">
+<span class='color-purple'>RandomText3</span>
+				</li>
+		</ul>
+	</div>
+</div>
+<button id="btn0">replace all</button>
+			</div>
+
+
 			<div class="lr-panel-heading bg-vivid-orange3 color-black">
 <h4>demo1, recurse method, node.childNodes.forEach...</h4>
 			</div>
@@ -35,7 +53,9 @@
 <div>RandomText1
 	<div><p>RandomText2</p>
 		<ul>
-				<li>RandomText3</li>
+				<li class="test-event">
+<span class='color-blue'>RandomText3</span>
+				</li>
 		</ul>
 	</div>
 </div>
@@ -54,7 +74,7 @@
 <ul>
 	<li>
 		<a id="ph1" href="tel:88007006951" class="color-blue header__phone" itemprop="telephone">8 800 700–69–51</a>
-		<h1>8 800 700–69–51</h1>
+		<h1 class="test-event">8 800 700–69–51</h1>
 	</li>
 	<li><a href="tel:88007006951" class="color-brown header__phone" itemprop="telephone">8 800 700–69–51</a></li>
 	<li><a href="tel:+78007006951" class="color-darkblue header__phone" itemprop="telephone">7 800 700-69-51</a></li>
@@ -77,8 +97,8 @@
 <div>
   <div>
     RandomText1
-    <div>
-      RandomText2
+    <div class="test-event color-green">
+RandomText2
     </div>
   </div>
 </div>
@@ -255,6 +275,15 @@ func.logAlert( _testObj.logMsg, "info");
 });//end load
 
 
+//-------------- DEMO0
+	document.querySelector("#btn0").addEventListener("click", function(){
+		var sourceText = "RandomText";
+		var replaceText = "Hello world";
+		var rootElement = document.querySelector("#demo0");
+		rootElement.innerHTML = rootElement.innerHTML.replace(new RegExp( sourceText, "g"), replaceText);
+	});//end event
+
+
 //-------------- DEMO2
 //https://question-it.com/questions/290767/bolee-bystryj-sposob-zameny-teksta-vo-vseh-elementah-dom
 //https://developer.mozilla.org/en-US/docs/Web/API/TreeWalker
@@ -338,6 +367,53 @@ console.log(sValue, elementValue);
 		var rootElement = document.querySelector("#demo2");
 		replacePhoneNumber( rootElement );
 	});//end event
+
+
+//-------------- DEMO3
+//https://question-it.com/questions/290767/bolee-bystryj-sposob-zameny-teksta-vo-vseh-elementah-dom
+//https://developer.mozilla.org/en-US/docs/Web/API/NodeIterator
+//https://coderlessons.com/articles/veb-razrabotka-articles/masterstvo-html5-obkhod-dereva
+
+//var replaceValue = "8 (383) 258-56-41";
+
+function textFilter(node) {
+	// if .nodeType is 3 (3 is text, 1 is element)
+	if (node.nodeType === 3) {
+		if ( node.nodeValue.trim() !== "") { // Ignore this node it it an empty text node
+			node.nodeValue = 'helloWorld';
+			return NodeFilter.FILTER_ACCEPT;
+		}
+	}
+	return NodeFilter.FILTER_SKIP;
+}//end
+
+function testNodeIterator( rootNode ) {
+	var iterator = document.createNodeIterator(
+			rootNode, 
+			NodeFilter.SHOW_TEXT, 
+			textFilter
+	);
+//Advance to the next sibling or descend to node's children nodes 
+	var node = iterator.nextNode();
+
+	while (node) {
+		node = iterator.nextNode();
+	}//next
+}//end
+
+	document.querySelector("#btn-iteraror").addEventListener("click", function(){
+		//var rootElement = document.body;
+		var rootElement = document.querySelector("#demo3");
+		testNodeIterator( rootElement );
+	});//end event
+
+	var testEventElements = document.querySelectorAll(".test-event");
+	testEventElements.forEach(function(el, index){
+//console.log(arguments);
+		el.addEventListener("click", function(e){
+console.log(e.type, e.target);
+		});//end event
+	});//next
 
 
 //window.onload = function(){}//end load()
