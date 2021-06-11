@@ -215,12 +215,21 @@ var func = sharedFunc();
 //console.log("func:", func);
 
 var _testObj = {
-	"logMsg": ""
+	"logMsg": "",
+	"support": func.testSupport()
 };
 console.log( _testObj );
 
+
 document.addEventListener("DOMContentLoaded", function(e){
 	_testObj.logMsg = navigator.userAgent;
+	func.logAlert( _testObj.logMsg, "info");
+	
+
+	_testObj.logMsg = "window.TreeWalker: "+_testObj["support"]["TreeWalker"];
+	func.logAlert( _testObj.logMsg, "info");
+
+	_testObj.logMsg = "window.NodeIterator: "+_testObj["support"]["NodeIterator"];
 	func.logAlert( _testObj.logMsg, "info");
 
 	//init test object

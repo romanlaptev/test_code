@@ -646,7 +646,8 @@ var func = sharedFunc();
 //console.log("func:", func);
 
 var _testObj = {
-	"logMsg": ""
+	"logMsg": "",
+	"support": func.testSupport()
 };
 console.log( _testObj );
 
@@ -655,6 +656,11 @@ console.log( _testObj );
 document.addEventListener("DOMContentLoaded", function(e){
 	_testObj.logMsg = navigator.userAgent;
 	func.logAlert( _testObj.logMsg, "info");
+
+	for(key in _testObj["support"]){
+		_testObj.logMsg = key + ": "+_testObj["support"][key];
+func.logAlert( _testObj.logMsg, "info");
+	}//next
 
 	//init test object
 	_testObj["log"] = func.getById("log");

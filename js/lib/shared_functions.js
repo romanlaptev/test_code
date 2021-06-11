@@ -1400,17 +1400,37 @@ ONLY second LEVEL !!!!!!!!!!!!
 		function _testSupport() {
 			return {
 				"jsonSupport" : JSON ? true : false,
-				"promiseSupport": window.Promise  ? true : false,
-				"cacheSupport" : window.caches ? true : false,
-				"serviceWorkerSupport" : navigator.serviceWorker ? true : false,
-				"indexedDBsupport" : window.indexedDB ? true : false,
+				"Promise": window.Promise  ? true : false,
+				"caches" : window.caches ? true : false,
+				"applicationCache": window.applicationCache ? true : false,
+				"serviceWorker" : navigator.serviceWorker ? true : false,
+				"Worker": window.Worker  ? true : false,
+				"indexedDB" : window.indexedDB ? true : false,
 				"webSQLsupport" : window.openDatabase  ? true : false,
-				"localStorageSupport" : window['localStorage']  ? true : false,
+				"sessionStorage" : window['sessionStorage']  ? true : false,
+				"localStorage" : window['localStorage']  ? true : false,
 				"dataStoreType" : _detectDataStoreType(),
-				"geolocationSupport" :  typeof navigator.geolocation !== "undefined",
+				"geolocation" :  typeof navigator.geolocation !== "undefined",
 				"supportTouch" : _supportTouch(),
-				"fileAPI" :  _supportFileAPI(),
-				"formData": typeof window.FormData === "function"
+				"FileAPI" :  _supportFileAPI(),
+				"FormData": typeof window.FormData === "function",
+				"TreeWalker": window.TreeWalker  ? true : false,
+				"NodeIterator": window.NodeIterator  ? true : false,
+				"ActiveXObject": window.ActiveXObject  ? true : false,
+				"XMLHttpRequest": window.XMLHttpRequest  ? true : false,
+				"DOMParser": window.DOMParser  ? true : false, // all browsers, except IE before version 9
+				"fetch": window.fetch  ? true : false,
+				"WebSocket": window.WebSocket  ? true : false,
+				"Notification": window.Notification  ? true : false,
+				"PushManager": window.PushManager  ? true : false,
+				"EventSource": window.EventSource  ? true : false,
+				"InternationalizationAPI": window.Intl  ? true : false,
+				//CanvasSupported
+				//WebGL support
+				//SVG support
+				//classList support
+				//test media support
+				//image attribute loading
 			};
 		};//end _testSupport()
 		
