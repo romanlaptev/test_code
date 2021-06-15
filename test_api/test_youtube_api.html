@@ -122,6 +122,12 @@ console.log("dataUrl: ", dataUrl);
 
 console.log("-- start server request --");
 
+				func.sendRequest({
+					"callback": function(response){
+console.log(arguments);
+					},//end callback
+				});
+/*
 				sendRequest({
 					"dataUrl": dataUrl,
 					//"apiObjectName" : apiObjectName,
@@ -140,7 +146,6 @@ console.log("-- end server request --");
 //func.logAlert( logMsg, "info");
 						}
 console.log(responseData);
-/*
 						
 						if( responseData ){
 							drawResponse({
@@ -148,9 +153,9 @@ console.log(responseData);
 								apiObj: apiObj
 							});
 						}
-*/						
 					}//end callback
 				});
+*/						
 
 			break;
 			

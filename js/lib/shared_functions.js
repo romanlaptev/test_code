@@ -902,7 +902,44 @@ console.log(responseData);
 				});
  */
 //-------------------------		
-		function sendRequest( opt ){
+		function _sendRequest( opt ){
+			var p = {
+				"requestMethod" : "GET", 
+				"responseType" : "", //"", "arraybuffer", "blob", "document","json","text","moz-chunked-arraybuffer","ms-stream"
+				"async" :  true,
+				"dataUrl" : false,
+				"requestParams": false,
+				"formData": null,
+				"headers": null,// { 'x-my-custom-header': 'some value'},					
+				"onProgress" : null,
+				"onSuccess" : null,
+				"onError" : function(){
+		console.log(arguments);			
+				},
+				"onLoadEnd" : null,
+				"callback" : function(){
+		console.log(arguments);
+				}//end callback
+			};
+//console.log(opt);
+			
+	//extend p object
+			for(var key in opt ){
+				p[key] = opt[key];
+			}
+//console.log(p);
+
+			var logMsg = "";
+			if( !p.requestParams){
+				logMsg = "warning, empty requestParams...", p.requestParams;
+	this.logAlert( logMsg, "warning");
+	//console.log( logMsg );			
+				//p["callback"]({
+					//"message" : logMsg
+				//});
+				//return false;
+			}
+
 		}//end sendRequest()
 
 //-------------------------		
@@ -1493,7 +1530,7 @@ ONLY second LEVEL !!!!!!!!!!!!
 			parseHashParams: _parseHashParams,
 			
 			runAjax: _runAjax,
-			//sendRequest: _sendRequest,
+			sendRequest: _sendRequest,
 			
 			convertDateToStr: _convertDateToStr,
 			timeStampToDateStr: _timeStampToDateStr,

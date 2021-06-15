@@ -21,11 +21,9 @@
 </div>
 	
 <div class="lr-container bg-saddlebrown w80">
-<div class="_lr-row _text-center lr-flex lr-flex-wrap lr-flex-hcenter lr-flex-vtop">
+<div class="_lr-row _text-center lr-flex _lr-flex-wrap lr-flex-hbetween lr-flex-vtop">
 
-		<div class="lr-panel w50 lr-margin-small">
-
-
+		<div class="lr-panel _lr-panel-inline _w50 lr-margin-small">
 
 			<div class="lr-panel-heading bg-vivid-teal color-black">
 <h4>demo0, innerHTML, reset all events....</h4>
@@ -56,6 +54,9 @@
 				<li class="test-event">
 <span class='color-blue'>RandomText3</span>
 				</li>
+<li>
+	<a href="tel:+78007006951" class="color-darkblue">7 800 700-69-51</a>
+</li>
 		</ul>
 	</div>
 </div>
@@ -152,7 +153,7 @@ RandomText2
 
 		</div><!-- end panel -->
 
-		<div class="lr-panel lr-margin-small">
+		<div class="lr-panel _lr-panel-inline lr-margin-small w70">
 			<div class="lr-panel-heading bg-vivid-orange5 color-black">
 <div class="lr-flex lr-flex-vcenter lr-flex-hbetween">				
 	<i class="dashicons dashicons-admin-network lr-margin-10"></i>
@@ -162,6 +163,9 @@ RandomText2
 			
 			<div class="lr-panel-body bg-white color-black">
 <pre>
+https//jsfiddle.net/romanlaptev/53Lr6jwy
+https://codepen.io/romanlaptev/pen/qBrQOpR
+
 ---------------- Replace
 https://developer.mozilla.org/en-US/docs/Web/API/NodeIterator
 NodeIterator
@@ -181,6 +185,8 @@ TreeWalker
 
 http://javascriptkit.com/dhtmltutors/treewalker.shtml
 Introduction to the TreeWalker object of DOM
+
+https://runebook.dev/ru/docs/dom/-index-#TreeWalker
 
 https://techarks.ru/qa/javascript/zamena-teksta-s-pomoshyu-tree-NP/
 Замена текста с помощью Treewalker в расширении Chrome
@@ -252,13 +258,32 @@ document.addEventListener("DOMContentLoaded", function(e){
 //https://question-it.com/questions/290767/bolee-bystryj-sposob-zameny-teksta-vo-vseh-elementah-dom
 	var sourceText = "RandomText";
 	var replaceText = "Hello world";
+	var attributesList = {
+		"href": "#"
+	};
 	function replaceTextNodes(node) {
+
+		//check and replace attributes
+		if( node.attributes.length > 0){
+			for(var n = 0; n < node.attributes.length; n++){
+				var attr = node.attributes[n];
+				for(var key in attributesList){
+					if( attr.name === key ){
+						attr.nodeValue = attributesList[key];
+console.log(node, key, attributesList[key]);
+					}
+				};//next
+			}//next
+		}
+
+		//check and replace text content
 		node.childNodes.forEach( function(el) {
 
 			if (el.nodeType === 3) {  // If this is a text node, replace the text
 
 				if (el.nodeValue.trim() !== "") { // Ignore this node it it an empty text node
 //console.log(el.nodeValue);
+//console.log(el);
 					var elementValue = el.nodeValue;
 					if( elementValue.indexOf( sourceText ) !== -1 ){
 _testObj.logMsg = "replace "+elementValue+" with replaceText";
@@ -330,6 +355,9 @@ func.logAlert( _testObj.logMsg, "info");
 	function replacePhoneNumber( rootElement ){
 		var sourceText = "8 800 700–69–51";
 		var replaceValue = "8 (383) 258-56-41";
+		var attributesList = {
+			"href": "tel:+73832585641"
+		};
 
 		//filter search values, phone number, cut country code
 		sValue = sourceText.replace(/\D/g,'');
@@ -355,8 +383,26 @@ func.logAlert( _testObj.logMsg, "info");
 				elementValue = elementValue.substring(1, elementValue.length);
 				var res = elementValue.indexOf(sValue) !== -1;
 				if(res){
-console.log(sValue, elementValue);
+//console.log(sValue, elementValue, allTextNodes.currentNode);
+
+					//replace text content
 					allTextNodes.currentNode.nodeValue =replaceValue;
+//-------------------					
+//check and replace attributes
+var pNode = allTextNodes.currentNode.parentNode;
+if( pNode.attributes.length > 0){
+	for(var n = 0; n < pNode.attributes.length; n++){
+		var attr = pNode.attributes[n];
+		for(var key in attributesList){
+			if( attr.name === key ){
+				attr.nodeValue = attributesList[key];
+console.log(pNode, key, attributesList[key]);
+			}
+		};//next
+	}//next
+}
+//-------------------					
+					
 				}
 
 			}
@@ -386,10 +432,40 @@ console.log(sValue, elementValue);
 //var replaceValue = "8 (383) 258-56-41";
 
 function textFilter(node) {
+	var sourceText = "RandomText2";
+	var replaceValue = "helloWorld";
+	var attributesList = {
+		"class": "color-blue"
+	};
+	
 	// if .nodeType is 3 (3 is text, 1 is element)
 	if (node.nodeType === 3) {
 		if ( node.nodeValue.trim() !== "") { // Ignore this node it it an empty text node
-			node.nodeValue = 'helloWorld';
+//console.log(node);
+			
+			//node.nodeValue = 'helloWorld';
+			var nodeValue = node.nodeValue;
+			if( nodeValue.indexOf( sourceText ) !== -1 ){
+_testObj.logMsg = "replace "+nodeValue+" with "+replaceValue;
+func.logAlert( _testObj.logMsg, "info");
+				node.nodeValue = replaceValue;
+			}
+//-------------------					
+//check and replace attributes
+var pNode = node.parentNode;
+if( pNode.attributes.length > 0){
+	for(var n = 0; n < pNode.attributes.length; n++){
+		var attr = pNode.attributes[n];
+		for(var key in attributesList){
+			if( attr.name === key ){
+				attr.nodeValue = attributesList[key];
+console.log(pNode, key, attributesList[key]);
+			}
+		};//next
+	}//next
+}
+//-------------------					
+			
 			return NodeFilter.FILTER_ACCEPT;
 		}
 	}
