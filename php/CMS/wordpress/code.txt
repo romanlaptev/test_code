@@ -1,3 +1,7 @@
+====================
+https://wp-kama.ru/function/get_page_by_path
+Получает запись по указанному пути этой страницы
+
 //================== CONFIG
 //wp-config.php, rewrite DB site path variables
 

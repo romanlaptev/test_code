@@ -623,7 +623,9 @@ function runTests(){
 /*@
 	@if (@_jscript_version >= 5)
 @*/
-		try{
+//https://habr.com/ru/post/120917/
+//Новые возможности XMLHttpRequest2
+{
 			var xhr = new XMLHttpRequest();
 			var test = {
 				"name" : "Ajax, XMLHttpRequest Level 2 support",

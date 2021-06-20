@@ -455,6 +455,135 @@ console.log( logMsg );
 		}//end _parseHashParams() 
 
 
+//-------------------------		
+		function _sendRequest( opt ){
+			var p = {
+				"useFetch": false,
+				"requestMethod" : "GET", //"HEAD", PUT, DELETE
+				"responseType" : "", //"", "arraybuffer", "blob", "document","json","text","moz-chunked-arraybuffer","ms-stream"
+				"async" :  true,
+				"dataUrl" : false,
+				"requestParams": false,
+				"formData": null,
+				"headers": null,// { 'x-my-custom-header': 'some value'},
+//"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+//"Content-Type": 'application/json;charset=utf-8'
+//Authentication: 'secret'
+				"onProgress" : null,
+				"onSuccess" : null,
+				"onError" : function(){
+		console.log(arguments);			
+				},
+				"onLoadEnd" : null,
+				"callback" : function(){
+		console.log(arguments);
+				}//end callback
+			};
+//console.log(opt);
+			
+	//extend p object
+			for(var key in opt ){
+				p[key] = opt[key];
+			}
+//console.log(p);
+
+			var logMsg = "";
+			
+			if( !p["dataUrl"] || p["dataUrl"].lehgth === 0){
+				logMsg = "sendRequest(), error, empty dataUrl...", p["dataUrl"];
+				this.logAlert( logMsg, "error");
+	//console.log( logMsg );			
+				p["callback"]({
+					"status" : "error",
+					"message" : logMsg
+				});
+				return false;
+			}
+
+			
+			var dataUrl = p["dataUrl"];
+			for(var key in p.requestParams){
+				dataUrl = dataUrl.replace( new RegExp("{{"+key+"}}", "g"), p.requestParams[key] );
+			}//next
+		//console.log( dataUrl );		
+
+//var requestMethod = p["requestMethod"]; 
+//var async = p["async"]; 
+
+			this.vars["support"] = this.testSupport();
+
+//File API
+//FormData
+//ActiveXObject
+//XHR2
+			
+			if ( this.vars["support"]["fetch"] && p.useFetch){
+				_fetchRequest( dataUrl, p);
+				return;
+			}
+			
+			if ( this.vars["support"]["XMLHttpRequest"]){
+				p.dataUrl = dataUrl;
+				_xmlHttpRequest(p);
+				return;
+			}
+
+		}//end sendRequest()
+
+
+		function _fetchRequest(dataUrl, opt){
+//console.log("function _fetchRequest()");
+			
+			var p = {
+				method : opt.requestMethod,
+				//body: JSON.stringify({ items: obj, name: n.name.value, phone: n.phone.value, code: n.code.value }),
+				//referrer: "about:client", 
+				//referrerPolicy: "no-referrer-when-downgrade", // no-referrer, origin, same-origin...
+				//referrerPolicy: ""
+				//mode: "cors", // same-origin, no-cors
+				//credentials: "include",//"same-origin", "omit",
+				//cache: "default", // no-store, reload, no-cache, force-cache или only-if-cached
+				//redirect: "follow", // manual, error
+				//integrity: "", 
+				//keepalive: false, // true
+				//signal: undefined, // AbortController
+				//window: window // null
+			};
+			
+			if(opt.headers){
+				p.headers = opt.headers
+			}
+//console.log(p);
+	
+			fetch( dataUrl, p)
+				.then( thenFunc )
+				.then( thenFunc2 )
+				.catch(catchFunc);
+
+			function thenFunc(response){
+//console.log( response); 
+				return response.text(); 
+			}
+			
+			function thenFunc2(text){
+				if( typeof opt.callback === "function"){
+					opt.callback(text);
+					return;
+				}
+console.log('Request successful', text); 
+			}
+				
+			function catchFunc(err) { 
+console.log('Fetch Error : ', err); 
+			}
+				
+		}//end fetchRequest()
+		
+		
+		function _xmlHttpRequest(opt){
+console.log("function _xmlHttpRequest()", opt);
+		}//end fetchRequest()
+		
 		/*
 			runAjax( {
 				"requestMethod" : "GET", 
@@ -872,75 +1001,8 @@ console.log(e);
 			}
 			
 		}//end _runAjax()
+	
 
-		
-//test
-/*
- 				sendRequest({
-					"dataUrl": dataUrl,
-					"requestParams": apiObj["requestParams"],
-					"callback" : function( response ){
-//console.log(arguments);
-console.log("-- end server request --");
-						var responseData = null;
-						if(response){
-							responseData = parseServerResponse({
-								"contentType": _vars["contentType"],
-								"response": response
-							});
-//var logMsg = "end parse ajax response";
-//func.logAlert( logMsg, "info");
-						}
-console.log(responseData);
-						if( responseData ){
-							drawResponse({
-								data: responseData,
-								apiObj: apiObj
-							});
-						}
-					}//end callback
-				});
- */
-//-------------------------		
-		function _sendRequest( opt ){
-			var p = {
-				"requestMethod" : "GET", 
-				"responseType" : "", //"", "arraybuffer", "blob", "document","json","text","moz-chunked-arraybuffer","ms-stream"
-				"async" :  true,
-				"dataUrl" : false,
-				"requestParams": false,
-				"formData": null,
-				"headers": null,// { 'x-my-custom-header': 'some value'},					
-				"onProgress" : null,
-				"onSuccess" : null,
-				"onError" : function(){
-		console.log(arguments);			
-				},
-				"onLoadEnd" : null,
-				"callback" : function(){
-		console.log(arguments);
-				}//end callback
-			};
-//console.log(opt);
-			
-	//extend p object
-			for(var key in opt ){
-				p[key] = opt[key];
-			}
-//console.log(p);
-
-			var logMsg = "";
-			if( !p.requestParams){
-				logMsg = "warning, empty requestParams...", p.requestParams;
-	this.logAlert( logMsg, "warning");
-	//console.log( logMsg );			
-				//p["callback"]({
-					//"message" : logMsg
-				//});
-				//return false;
-			}
-
-		}//end sendRequest()
 
 //-------------------------		
 		function _createRequestObject() {
@@ -1455,6 +1517,7 @@ ONLY second LEVEL !!!!!!!!!!!!
 				"NodeIterator": window.NodeIterator  ? true : false,
 				"ActiveXObject": window.ActiveXObject  ? true : false,
 				"XMLHttpRequest": window.XMLHttpRequest  ? true : false,
+				"XHR2": _supportXHR2(),
 				"DOMParser": window.DOMParser  ? true : false, // all browsers, except IE before version 9
 				"fetch": window.fetch  ? true : false,
 				"WebSocket": window.WebSocket  ? true : false,
@@ -1506,6 +1569,22 @@ ONLY second LEVEL !!!!!!!!!!!!
 			}
 			return false;
 		}//end __supportFileAPI()
+		
+		var _supportXHR2 =  function(){
+			var result = false;
+			
+			var xhr = new XMLHttpRequest();
+			
+			if ( typeof xhr.responseType !== "undefined" ){
+				result = true;
+			} 
+			if ( typeof xhr.response !== "undefined" ){
+				result = true;
+			} 
+			
+			return result;
+		}//end 
+		
 		
 		
 		// public interfaces

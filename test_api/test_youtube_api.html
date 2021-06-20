@@ -123,8 +123,11 @@ console.log("dataUrl: ", dataUrl);
 console.log("-- start server request --");
 
 				func.sendRequest({
+					"dataUrl": dataUrl,
+					"requestParams": apiObj["requestParams"],
 					"callback": function(response){
-console.log(arguments);
+console.log(response);
+console.log("-- end server request --");
 					},//end callback
 				});
 /*
